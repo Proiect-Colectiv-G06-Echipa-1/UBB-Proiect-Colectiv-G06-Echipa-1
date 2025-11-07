@@ -5,7 +5,7 @@ A Spring Boot REST API project built with Gradle.
 ## Prerequisites
 
 - Java 21 or higher
-- Gradle 8.x or higher (or use the included Gradle Wrapper)
+- Gradle 9.1.x or higher (or use the included Gradle Wrapper)
 
 ## Running the Application
 
