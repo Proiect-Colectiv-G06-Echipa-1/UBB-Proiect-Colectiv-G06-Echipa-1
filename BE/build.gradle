@@ -9,7 +9,7 @@ version = '0.0.1-SNAPSHOT'
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion = JavaLanguageVersion.of(24)
 	}
 }
 
@@ -19,8 +19,41 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.register('openApiExport', Test) {
+    group = 'openapi'
+    dependsOn testClasses
+    useJUnitPlatform()
+
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    filter {
+        includeTestsMatching 'com.example.OpenApiExportTest'
+    }
+
+    outputs.upToDateWhen { false }
+
+    doFirst {
+        println "======================================================"
+        println "------- GENERATING OPENAPI SPEC (openapi.yaml) -------"
+        println "======================================================"
+    }
+
+    doLast {
+        def openapiFile = file("$projectDir/openapi.yaml")
+        if (openapiFile.exists()) {
+            println "openapi.yaml generated successfully at $openapiFile"
+        } else {
+            println "WARNING: openapi.yaml was NOT generated!"
+        }
+    }
 }
