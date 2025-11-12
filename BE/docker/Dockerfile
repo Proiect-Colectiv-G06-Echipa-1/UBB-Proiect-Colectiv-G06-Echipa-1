@@ -12,8 +12,8 @@ COPY gradle ./gradle
 # Copy gradlew scripts for cross-platform support
 COPY gradlew gradlew.bat ./
 
-# Make gradlew executable (Linux/macOS) - Windows uses gradlew.bat automatically
-RUN chmod +x ./gradlew
+# Fix line endings for gradlew script and make it executable
+RUN sed -i 's/\r$//' ./gradlew && chmod +x ./gradlew
 
 # Download dependencies first (better caching)
 RUN ./gradlew dependencies --no-daemon
