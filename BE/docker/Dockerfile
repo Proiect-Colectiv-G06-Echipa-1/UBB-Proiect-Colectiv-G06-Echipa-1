@@ -1,6 +1,6 @@
 # Backend Dockerfile for Spring Boot application
 # Multi-platform support: linux/amd64, linux/arm64, windows/amd64
-FROM --platform=$BUILDPLATFORM eclipse-temurin:21-jdk AS build
+FROM --platform=$BUILDPLATFORM eclipse-temurin:24-jdk AS build
 
 # Set working directory
 WORKDIR /app
@@ -24,8 +24,8 @@ COPY src ./src
 # Build the application - cross-platform (dependencies already downloaded)
 RUN if [ -f "./gradlew" ]; then bash ./gradlew build --no-daemon -x test; else ./gradlew.bat build --no-daemon -x test; fi
 
-# Runtime stage - multi-platform support  
-FROM eclipse-temurin:21-jre-jammy
+# Runtime stage - multi-platform support (Java 24 EA)
+FROM eclipse-temurin:24-jre
 
 WORKDIR /app
 

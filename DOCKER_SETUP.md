@@ -27,14 +27,22 @@ This guide explains how to run the application using Docker and Docker Compose.
 ### 0. Platform Compatibility
 
 This Docker setup works on:
-- **Windows 10/11** with Docker Desktop + WSL2
+- **Windows 10/11** with Docker Desktop (Hyper-V or WSL2 backend)
 - **macOS** (Intel and Apple Silicon)
 - **Linux** (Ubuntu, Debian, CentOS, etc.)
 
 #### Windows Users:
+**Option 1: WSL2 Backend (Recommended)**
 - Enable WSL2 integration in Docker Desktop
-- Use PowerShell or WSL2 terminal
-- Commands work the same across platforms
+- Use PowerShell, Command Prompt, or WSL2 terminal
+- Best performance and Linux compatibility
+
+**Option 2: Hyper-V Backend (Alternative)**
+- Use Windows Hyper-V (older method)
+- Use PowerShell or Command Prompt
+- Works without WSL2
+
+**Commands work the same in both modes:**
 
 ### 1. Setup Environment Variables
 
@@ -177,9 +185,33 @@ lsof -i :5173
 lsof -i :8080
 lsof -i :5432
 
+# Windows (PowerShell/CMD)
+netstat -ano | findstr :5173
+netstat -ano | findstr :8080
+netstat -ano | findstr :5432
+
 # Kill process if needed
-kill -9 <PID>
+# macOS/Linux: kill -9 <PID>
+# Windows: taskkill /PID <PID> /F
 ```
+
+### Windows-Specific Issues
+
+**Docker Desktop Backend Issues:**
+- If using Hyper-V: Ensure Hyper-V is enabled in Windows Features
+- If using WSL2: Install WSL2 and enable integration
+- Switch backends: Docker Desktop Settings → General → Use WSL2 based engine
+
+**File Path Issues:**
+- Use forward slashes `/` or double backslashes `\\` in paths
+- Windows paths work: `C:\Users\...` or `/c/Users/...`
+
+**Line Ending Issues:**
+- If you get "file not found" errors, check Git settings:
+  ```bash
+  git config core.autocrlf false
+  git config core.eol lf
+  ```
 
 ### Database Connection Issues
 
