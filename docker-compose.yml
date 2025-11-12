@@ -3,19 +3,19 @@ services:
   postgres:
     image: postgres:16-alpine
     container_name: pc-postgres
-    environment:
-      POSTGRES_DB: ${POSTGRES_DB:-pcdb}
-      POSTGRES_USER: ${POSTGRES_USER:-pcuser}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pcpassword}
+    env_file:
+      - ".env"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - pc-network
     healthcheck:
-      test: ["CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'"]
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'" ]
       interval: 10s
       timeout: 5s
       retries: 5
+    ports:
+      - "5401:5432"
 
   # Backend Service (Spring Boot)
   backend:
@@ -26,12 +26,8 @@ services:
         - linux/amd64
         - linux/arm64
     container_name: pc-backend
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-pcdb}
-      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-pcuser}
-      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-pcpassword}
-      SPRING_JPA_HIBERNATE_DDL_AUTO: ${HIBERNATE_DDL_AUTO:-update}
-      SPRING_JPA_SHOW_SQL: ${SHOW_SQL:-false}
+    env_file:
+      - ".env"
     depends_on:
       postgres:
         condition: service_healthy

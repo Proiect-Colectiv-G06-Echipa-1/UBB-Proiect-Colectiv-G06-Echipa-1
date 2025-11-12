@@ -131,7 +131,7 @@ docker compose restart frontend
 ## Services Configuration
 
 ### PostgreSQL Database
-- **Port**: 5432
+- **Port**: 5401
 - **Database**: pcdb (configurable via .env)
 - **Username**: pcuser (configurable via .env)
 - **Password**: pcpassword (configurable via .env)
@@ -177,18 +177,18 @@ docker compose restart backend
 
 ### Port Conflicts
 
-If you get port conflicts, ensure ports 5173, 8080, and 5432 are not in use:
+If you get port conflicts, ensure ports 5173, 8080, and 5401 are not in use:
 
 ```bash
 # macOS/Linux
 lsof -i :5173
 lsof -i :8080
-lsof -i :5432
+lsof -i :5401
 
 # Windows (PowerShell/CMD)
 netstat -ano | findstr :5173
 netstat -ano | findstr :8080
-netstat -ano | findstr :5432
+netstat -ano | findstr :5401
 
 # Kill process if needed
 # macOS/Linux: kill -9 <PID>
