@@ -15,14 +15,14 @@ COPY gradlew gradlew.bat ./
 # Make gradlew executable (Linux/macOS) - Windows uses gradlew.bat automatically
 RUN chmod +x ./gradlew
 
-# Download dependencies first (better caching) - cross-platform
-RUN if [ -f "./gradlew" ]; then bash ./gradlew dependencies --no-daemon; else ./gradlew.bat dependencies --no-daemon; fi
+# Download dependencies first (better caching)
+RUN ./gradlew dependencies --no-daemon
 
 # Copy source code
 COPY src ./src
 
-# Build the application - cross-platform (dependencies already downloaded)
-RUN if [ -f "./gradlew" ]; then bash ./gradlew build --no-daemon -x test; else ./gradlew.bat build --no-daemon -x test; fi
+# Build the application (dependencies already downloaded)
+RUN ./gradlew build --no-daemon -x test
 
 # Runtime stage - multi-platform support (Java 24 EA)
 FROM eclipse-temurin:24-jre
