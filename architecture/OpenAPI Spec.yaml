@@ -1,0 +1,239 @@
+openapi: 3.0.0
+info:
+  title: Todo App API
+  version: 1.0.0
+  description: |
+    RESTful API for the goated TuDu app. Thus far, it includes:
+    - CRUD Operations
+    - Dependency tree related endpoints (just GET all for now)
+    - Energy based related endpoints (just GET all for now)
+    
+    **NOTE:** Request schemas only include relevant data for now. In the future, we'll be passing strictly DTOs through HTTP and they'll include all fields an entity should normally have for simplicity. Optional fields will be nullable.
+servers:
+  - url: http://localhost:8080/api
+    description: Local development server
+
+paths:
+  /tasks:
+    get:
+      summary: Get all tasks
+      operationId: getTasks
+      tags:
+        - Task CRUD
+      responses:
+        '200':
+          description: List of tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+    post:
+      summary: Create a new task
+      operationId: createTask
+      tags:
+        - Task CRUD
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskCreateRequest'
+      responses:
+        '201':
+          description: Task created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /tasks/{taskId}:
+    get:
+      summary: Get a task by ID
+      operationId: getTaskById
+      tags:
+        - Task CRUD
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+    put:
+      summary: Update a task
+      operationId: updateTask
+      tags:
+        - Task CRUD
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateRequest'
+      responses:
+        '200':
+          description: Updated task
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+    delete:
+      summary: Delete a task
+      operationId: deleteTask
+      tags:
+        - Task CRUD
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task deleted
+
+  /tasks/{taskId}/dependencies:
+    get:
+      summary: Get dependencies of a task
+      operationId: getTaskDependencies
+      tags:
+        - Dependency Tree
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of dependent tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+        '404':
+          description: Task not found
+
+  /tasks/recommendation:
+    get:
+      summary: Get tasks recommended based on energy level
+      operationId: getRecommendedTasks
+      tags:
+        - Task Recommendations
+      parameters:
+        - name: energy
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 0
+            maximum: 100
+      responses:
+        '200':
+          description: List of recommended tasks
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Task'
+
+components:
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, IN_PROGRESS, COMPLETED, CANCELLED]
+        energyCost:
+          type: integer
+          description: Energy required to complete the task (0-100)
+        damage:
+          type: integer
+          description: Gamification damage dealt on completion
+        procrastinationDamage:
+          type: integer
+          description: Gamification damage from procrastination
+        dependencies:
+          type: array
+          description: List of IDs this task depends on
+          items:
+            type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    TaskCreateRequest:
+      type: object
+      required:
+        - title
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        energyCost:
+          type: integer
+          minimum: 0
+          maximum: 100
+        damage:
+          type: integer
+          default: 0
+        procrastinationDamage:
+          type: integer
+          default: 0
+        dependencies:
+          type: array
+          items:
+            type: string
+    TaskUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+        status:
+          type: string
+          enum: [PENDING, IN_PROGRESS, COMPLETED, CANCELLED]
+        energyCost:
+          type: integer
+          minimum: 0
+          maximum: 100
+        damage:
+          type: integer
+        procrastinationDamage:
+          type: integer
+        dependencies:
+          type: array
+          items:
+            type: string

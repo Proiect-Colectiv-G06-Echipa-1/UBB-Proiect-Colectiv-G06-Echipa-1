@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: BE
+
+springdoc:
+  api-docs:
+    version: openapi_3_0
+  swagger-ui:
+    path: /swagger-ui.html
