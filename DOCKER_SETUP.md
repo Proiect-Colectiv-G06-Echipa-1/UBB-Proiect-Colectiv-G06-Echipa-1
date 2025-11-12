@@ -24,6 +24,18 @@ This guide explains how to run the application using Docker and Docker Compose.
 
 ## Quick Start
 
+### 0. Platform Compatibility
+
+This Docker setup works on:
+- **Windows 10/11** with Docker Desktop + WSL2
+- **macOS** (Intel and Apple Silicon)
+- **Linux** (Ubuntu, Debian, CentOS, etc.)
+
+#### Windows Users:
+- Enable WSL2 integration in Docker Desktop
+- Use PowerShell or WSL2 terminal
+- Commands work the same across platforms
+
 ### 1. Setup Environment Variables
 
 Copy the example environment file and customize if needed:
