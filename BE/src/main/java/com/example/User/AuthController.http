@@ -5,12 +5,6 @@
 ### Variables
 @token = 
 
-### Note: Before testing login, you need to create a user in the database.
-### You can use H2 console at http://localhost:8080/h2-console
-### Or insert via SQL: INSERT INTO users (username, email, password) VALUES ('testuser', 'test@example.com', '$2a$10$...');
-### Password should be BCrypt encoded. Use: https://bcrypt-generator.com/ with rounds=10
-### Example: password "password123" -> $2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy
-
 ### 1. Login with valid credentials
 POST {{baseUrl}}/login
 Content-Type: application/json
