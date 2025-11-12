@@ -1,0 +1,64 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: pc-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-pcdb}
+      POSTGRES_USER: ${POSTGRES_USER:-pcuser}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-pcpassword}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pc-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-pcuser} -d ${POSTGRES_DB:-pcdb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend Service (Spring Boot)
+  backend:
+    build:
+      context: ./BE
+      dockerfile: docker/Dockerfile
+    container_name: pc-backend
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-pcdb}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-pcuser}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-pcpassword}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: ${HIBERNATE_DDL_AUTO:-update}
+      SPRING_JPA_SHOW_SQL: ${SHOW_SQL:-false}
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pc-network
+    restart: unless-stopped
+
+  # Frontend Service (React + Vite)
+  frontend:
+    build:
+      context: ./FE
+      dockerfile: docker/Dockerfile
+    container_name: pc-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://backend:8080}
+    volumes:
+      - ./FE:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - pc-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  pc-network:
+    driver: bridge
