@@ -22,6 +22,9 @@ services:
     build:
       context: ./BE
       dockerfile: docker/Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
     container_name: pc-backend
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-pcdb}
@@ -41,6 +44,9 @@ services:
     build:
       context: ./FE
       dockerfile: docker/Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
     container_name: pc-frontend
     ports:
       - "5173:5173"

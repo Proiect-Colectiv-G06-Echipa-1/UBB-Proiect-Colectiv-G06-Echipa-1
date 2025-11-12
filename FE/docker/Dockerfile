@@ -1,6 +1,6 @@
 # Frontend Dockerfile for React + Vite application
-# Multi-platform support (AMD64, ARM64)
-FROM node:20-alpine3.21
+# Multi-platform support: linux/amd64, linux/arm64, windows/amd64
+FROM --platform=$BUILDPLATFORM node:20-alpine3.21
 
 # Set working directory
 WORKDIR /app
