@@ -1,0 +1,5 @@
+.home{display:flex;flex-direction:column;height:100vh;background:#fff}
+.board{position:relative;background:#A8B1FF;flex:1;padding:24px}
+.section-title{font-family:'Kalam', cursive;font-size:24px;color:#111;display:flex;align-items:center;gap:10px;margin:8px 0 16px}
+.book{font-size:24px}
+.card-row{margin-left:24px;margin-top:12px}
