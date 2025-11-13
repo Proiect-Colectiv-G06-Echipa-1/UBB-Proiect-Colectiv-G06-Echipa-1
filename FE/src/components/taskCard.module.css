@@ -52,7 +52,15 @@
   border-radius: 8px;
   cursor: pointer;
   color: #555;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s;
+  
+  /* Set a fixed size for the button hit-area */
+  width: 32px;
+  height: 32px;
+  
+  /* This helps center the background image */
+  background-position: center;
+  background-repeat: no-repeat;
 }
 
 .iconButton:hover {
@@ -200,4 +208,17 @@
 
 .deleteBtn:hover {
   background: #c62828;
+}
+.editIconButton {
+  /* Adjust size as needed */
+  background-size: 20px 20px; 
+  /* Path goes UP from components, then DOWN into assets */
+  background-image: url('../assets/Edit.png'); 
+}
+
+.deleteIconButton {
+  /* Adjust size as needed */
+  background-size: 20px 20px; 
+  /* Path goes UP from components, then DOWN into assets */
+  background-image: url('../assets/delete.png');
 }

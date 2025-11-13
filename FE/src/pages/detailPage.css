@@ -37,21 +37,17 @@ html, body {
   align-items: center;     
 }
 
+/* src/pages/detailPage.css */
+
 .right-pane {
   position: relative;
   background-color: rgba(159, 175, 255, 1);
-  
+  padding: 2rem 3rem;
+
+  /* 👇 ADD/CONFIRM THESE 3 LINES */
   display: flex;
-  
-  justify-content: flex-start; 
-  
-  align-items: center;     
-  
-  padding-left: 80px; 
-  
-  padding-right: 3rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  justify-content: center; /* Centers Horizontally */
+  align-items: center;     /* Centers Vertically */
 }
 
 

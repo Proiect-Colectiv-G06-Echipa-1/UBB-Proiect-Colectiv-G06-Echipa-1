@@ -5,8 +5,8 @@ import { TaskCard } from '../components/taskCard';
 import { useState } from 'react'; // Import useState
 import type { Task } from '../lib/types';
 import type { TaskFormData } from '../lib/types';
-import { DependencyTree } from '../components/dependencyTree';
 import { dummyTreeData } from '../lib/dummyData';
+import { DependencyNode } from '../components/dependencyNode';
 
 export function DetailPage() {
 const [task, setTask] = useState<Task | null>(initialTask);
@@ -24,6 +24,7 @@ const handleDeleteTask = () => {
     console.log('❌ DELETING TASK:', task?.id);
     setTask(null); 
   };
+  const raytracerNode = dummyTreeData.children![0];
   return (
     <div className="app-container">
 
@@ -49,14 +50,12 @@ const handleDeleteTask = () => {
       </div>
 
       <div className="right-pane"> 
-        
-        <div className="next-text">
-          Next &rarr;
-        </div>
+    
 
-        <div>
-           <DependencyTree node={dummyTreeData} />
-        </div>
+        <DependencyNode 
+          node={raytracerNode} 
+          variant="gray" 
+        />
         
       </div>
     </div>

@@ -4,7 +4,7 @@ import type { Task, TaskFormData } from '../lib/types';
 import { taskSchema, taskStatuses } from '../lib/types';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Edit, Trash2, Save, X, AlertTriangle } from 'lucide-react'; 
+import { Save, X, AlertTriangle } from 'lucide-react'; 
 import styles from './TaskCard.module.css';
 
 interface TaskCardProps {
@@ -108,17 +108,25 @@ export function TaskCard({ task, onSave, onDelete }: TaskCardProps) {
                 </button>
               </>
             ) : (
-              <button type="button" className={styles.iconButton} onClick={() => setIsEditing(true)}>
-                <Edit size={20} />
+              // 👇 UPDATED Edit Button
+              <button 
+                type="button" 
+                // Add a new class for styling
+                className={`${styles.iconButton} ${styles.editIconButton}`} 
+                onClick={() => setIsEditing(true)}
+              >
+                {/* <Edit size={20} /> is removed */}
               </button>
             )}
             
+            {/* 👇 UPDATED Delete Button */}
             <button 
               type="button" 
-              className={`${styles.iconButton} ${styles.deleteButton}`}
+              // Add a new class and remove the old .deleteButton
+              className={`${styles.iconButton} ${styles.deleteIconButton}`}
               onClick={() => setShowDeleteModal(true)}
             >
-              <Trash2 size={20} />
+              {/* <Trash2 size={20} /> is removed */}
             </button>
           </div>
         </div>
