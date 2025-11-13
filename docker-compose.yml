@@ -45,15 +45,18 @@ services:
       platforms:
         - linux/amd64
         - linux/arm64
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080/api}
     container_name: pc-frontend
     ports:
       - "5173:5173"
     environment:
-      VITE_API_URL: ${VITE_API_URL:-http://backend:8080}
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080/api}
     volumes:
-      - ./FE/src:/app/src
+      # - ./FE/src:/app/src
       # Optionally, mount public if needed for hot reload:
-      # - ./FE/public:/app/public
+      - ./FE/public:/app/public
     depends_on:
       - backend
     networks:
