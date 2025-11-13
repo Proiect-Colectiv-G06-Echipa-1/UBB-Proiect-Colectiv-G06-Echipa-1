@@ -1,0 +1,78 @@
+
+.treeContainer {
+  display: flex;
+  align-items: center;
+}
+
+.nodeWrapper {
+  z-index: 2; 
+}
+
+.connector {
+  width: 40px; 
+  height: 2px;
+  background-color: #000;
+}
+
+.childrenColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem; 
+}
+
+.childBranch {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+
+.childBranch::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  border-left: 2px solid #000;
+}
+
+
+.childBranch::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%; 
+  width: 30px; 
+  border-top: 2px solid #000;
+}
+
+.childBranch:first-child::before {
+  top: 50%;
+}
+
+.childBranch:last-child::before {
+  bottom: 50%;
+}
+
+.childBranch:only-child::before {
+  display: none; 
+}
+
+.childBranch > .treeContainer {
+  position: relative;
+  padding-left: 30px; 
+}
+
+.childBranch > .treeContainer::before {
+  content: '';
+  position: absolute;
+  left: 25px; 
+  top: 50%;
+  transform: translateY(-50%);
+  
+  width: 0; 
+  height: 0; 
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 8px solid #000; 
+}

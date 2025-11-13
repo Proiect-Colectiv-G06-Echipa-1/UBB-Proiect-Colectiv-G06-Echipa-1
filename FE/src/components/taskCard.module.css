@@ -1,0 +1,203 @@
+.taskCard {
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+  width: 500px; 
+}
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.energyCircle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #ede7f6; 
+  color: #5e35b1; 
+  font-weight: 600;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111;
+}
+
+.iconGroup {
+  display: flex;
+  gap: 8px;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  padding: 6px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #555;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.iconButton:hover {
+  background-color: #f0f0f0;
+}
+
+.deleteButton {
+  color: #e53935;
+}
+.deleteButton:hover {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+/* --- Form --- */
+.formGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.formField {
+  display: flex;
+  flex-direction: column;
+}
+
+.formField label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 6px;
+}
+
+.formField input,
+.formField textarea,
+.formField select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdcdc;
+  font-size: 14px;
+  font-family: inherit;
+  background-color: #f9f9f9; 
+  color: #555;
+  opacity: 1; 
+}
+
+.formField textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.formField select {
+  font-weight: 600;
+  color: #333;
+  border-color: #b39ddb; 
+  background-color: #ede7f6; 
+}
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; 
+  backdrop-filter: blur(2px); 
+}
+
+.modalContent {
+  background: white;
+  padding: 24px;
+  border-radius: 16px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+  animation: popIn 0.2s ease-out forwards;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modalHeader {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+  color: #e53935;
+}
+
+.warningIcon {
+  background-color: #ffebee;
+  padding: 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modalContent h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.modalContent p {
+  color: #555;
+  margin-top: 0;
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancelBtn {
+  background: #f0f0f0;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  color: #333;
+}
+
+.cancelBtn:hover {
+  background: #e0e0e0;
+}
+
+.deleteBtn {
+  background: #e53935;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  color: white;
+}
+
+.deleteBtn:hover {
+  background: #c62828;
+}
