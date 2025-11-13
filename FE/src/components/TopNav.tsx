@@ -1,5 +1,5 @@
 // Using SVG assets instead of inline/icon components
-import logoSvg from '../assets/create.svg';
+import logoSvg from '../assets/logo.svg';
 import minusSvg from '../assets/Minus circle.svg';
 import plusSvg from '../assets/Plus circle.svg';
 import energySvg from '../assets/green-energy.svg';
