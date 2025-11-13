@@ -33,6 +33,8 @@ services:
         condition: service_healthy
     networks:
       - pc-network
+    ports:
+      - "8080:8080"
     restart: unless-stopped
 
   # Frontend Service (React + Vite)
