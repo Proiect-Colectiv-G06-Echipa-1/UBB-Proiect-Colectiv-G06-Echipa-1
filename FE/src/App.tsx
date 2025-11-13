@@ -15,8 +15,8 @@ function App() {
         </BrowserRouter>
         <ToastContainer 
           containerId="global-toast"
-          position="top-right"
-          autoClose={3000}
+          position="bottom-left"
+          autoClose={2000}
         />
       </AuthProvider>
     </ThemeProvider>

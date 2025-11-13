@@ -2,7 +2,6 @@ import type { JSX } from "react";
 import { useAuth } from "./AuthContext";
 import { Navigate } from "react-router-dom";
 import { CircularProgress, Box } from "@mui/material";
-import NavBar from "../components/NavBar";
 
 
 export function RequireAuth({ children }: { children: JSX.Element }) {
@@ -28,10 +27,5 @@ export function RequireAuth({ children }: { children: JSX.Element }) {
     return <Navigate to="/login" replace />;
   }
 
-  return (
-    <>
-      <NavBar />
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }

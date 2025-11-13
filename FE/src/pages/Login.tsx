@@ -147,7 +147,7 @@ export default function Login() {
                 transition: 'all 0.3s ease',
               }}
             >
-              {loading ? 'Logging ...' : 'Login'}
+              {loading ? 'Logging' : 'Login'}
             </Button>
           </Box>
 
