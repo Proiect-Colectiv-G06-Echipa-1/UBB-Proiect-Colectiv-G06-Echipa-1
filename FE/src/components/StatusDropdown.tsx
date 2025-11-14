@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { KeyboardArrowDown } from '@mui/icons-material';
 import type { Category } from '../types';
 import './StatusDropdown.css';
 
@@ -9,13 +10,12 @@ interface Props {
 }
 
 export const StatusDropdown = ({ categories, selected, onChange }: Props) => {
-  const [open, setOpen] = useState(true); // open like the screenshot
+  const [open, setOpen] = useState(false); 
   return (
     <div className="status-dropdown">
       <button className="pill" onClick={() => setOpen(!open)}>
-        <span className="dot" />
         <span>{selected}</span>
-        <span className="caret">▾</span>
+        <KeyboardArrowDown className="caret" style={{ color: '#aa86ff' }} />
       </button>
       {open && (
         <div className="menu">

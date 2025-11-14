@@ -5,7 +5,10 @@ import { QuestCard } from '../components/QuestCard';
 import { Fab } from '../components/Fab';
 import type { Category, EnergyItem } from '../types';
 import { getAll, getCategories } from '../repository/energyRepository';
+import journalIcon from '../assets/journal.png';
 import './Home.css';
+import '../App.css';
+import { Typography } from '@mui/material';
 
 export const Home = () => {
   const [items, setItems] = useState<EnergyItem[]>([]);
@@ -33,7 +36,10 @@ export const Home = () => {
         onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
       />
       <div className="board">
-        <h2 className="section-title"><span className="book">📒</span>Quests</h2>
+        <h2 className="section-title">
+          <img src={journalIcon} alt="Journal" className="journal-icon" />
+          <Typography variant="h5" className="nanum-pen">Quests</Typography>
+        </h2>
         {first && (
           <div className="card-row">
             <QuestCard
