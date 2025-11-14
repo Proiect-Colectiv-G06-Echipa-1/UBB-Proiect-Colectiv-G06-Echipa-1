@@ -1,5 +1,5 @@
 import type { TreeNode } from '../lib/types';
-import styles from './DependencyNode.module.css';
+import styles from './dependencyNode.module.css';
 
 interface DependencyNodeProps {
   node: TreeNode;

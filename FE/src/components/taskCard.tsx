@@ -5,7 +5,7 @@ import { taskSchema, taskStatuses } from '../lib/types';
 import { useForm, type SubmitHandler } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Save, X, AlertTriangle } from 'lucide-react'; 
-import styles from './TaskCard.module.css';
+import styles from './taskCard.module.css';
 
 interface TaskCardProps {
   task: Task;
