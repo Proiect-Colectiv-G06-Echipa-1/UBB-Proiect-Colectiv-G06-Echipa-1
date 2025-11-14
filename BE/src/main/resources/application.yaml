@@ -1,19 +1,23 @@
 spring:
   application:
     name: BE
+  config:
+    import: optional:file:env.yaml
+
   datasource:
-    url: jdbc:postgresql://localhost:5432/${DB_NAME:tododb}
-    username: ${DB_USERNAME:postgres}
-    password: ${DB_PASSWORD:postgres}
+    url: ${DATABASE_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
+
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: update
-    show-sql: true
-    properties:
-      hibernate:
-        format_sql: true
+      ddl-auto: ${HIBERNATE_DDL_AUTO}
+    show-sql: ${SHOW_SQL}
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
 
 jwt:
   secret: MySecretKeyForJWTTokenGenerationThatShouldBeAtLeast256BitsLongForHS256Algorithm

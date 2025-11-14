@@ -4,7 +4,7 @@ services:
     image: postgres:16-alpine
     container_name: pc-postgres
     env_file:
-      - ".env"
+      - "env.prod.yaml"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
@@ -27,7 +27,7 @@ services:
         - linux/arm64
     container_name: pc-backend
     env_file:
-      - ".env"
+      - "env.prod.yaml"
     depends_on:
       postgres:
         condition: service_healthy
