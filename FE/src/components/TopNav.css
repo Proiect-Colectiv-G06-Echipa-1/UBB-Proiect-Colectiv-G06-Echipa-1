@@ -3,16 +3,15 @@
 .brand-name{font-weight:700;letter-spacing:.06em;color:#111}
 .brand-logo{height:28px;display:block}
 .actions{display:flex;align-items:center;gap:14px}
-.circle-btn{width:32px;height:32px;border-radius:50%;border:2px solid #222;display:flex;align-items:center;justify-content:center;background:#fff;cursor:pointer}
+.circle-btn{width:32px;height:32px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;background:#fff;cursor:pointer}
 .circle-btn.disabled{opacity:.4;cursor:not-allowed}
-.icon-btn{width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:2px solid #222;border-radius:6px;background:#fff}
+.icon-btn{width:px;height:28px;display:flex;align-items:center;justify-content:center;border:none;border-radius:6px;background:#fff}
 .icon-btn.user{border-radius:50%}
-.circle-btn img,.icon-btn img{width:18px;height:18px;display:block}
-.segments{display:flex;gap:4px;background:#d0d0d0;border-radius:12px;padding:6px 10px;border:2px solid #222}
-.seg{width:16px;height:20px;background:#cfcfcf;border-left:1px solid #9d9d9d}
+.circle-btn img,.icon-btn img{width:27px;height:28px;display:block}
+.segments{display:flex;gap:0;flex:2;align-items:center;height:32px;border-radius:14px;padding:0;background:transparent; overflow:hidden;min-width:220px;border:1px solid #000;}
+.seg{flex:1;height:100%;background:#fff;box-sizing:border-box;border-right:1px solid #000;}
 .seg:first-child{border-left:none;border-top-left-radius:4px;border-bottom-left-radius:4px}
-.seg:last-child{border-top-right-radius:4px;border-bottom-right-radius:4px}
-.seg.active{background:#9f9f9f}
-.logout-btn{padding:8px 16px;border:2px solid #222;border-radius:6px;background:#fff;color:#111;font-weight:600;font-size:14px;cursor:pointer;transition:all 0.2s ease}
+.seg:last-child{border-right:none}
+.seg.active{background:#05f90d}
+.logout-btn{padding:8px 16px;border:none;border-radius:6px;background:#fff;color:#111;font-weight:600;font-size:14px;cursor:pointer;transition:all 0.2s ease}
 .logout-btn:hover{background:#222;color:#fff}
-.nanum-pen {font-family:'Nanum Pen Script',cursive}
