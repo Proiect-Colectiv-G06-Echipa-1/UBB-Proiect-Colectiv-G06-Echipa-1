@@ -1,13 +1,12 @@
 .vscode/
+/.idea/
 
 # Docker & Environment
-.env
-.env.local
+env.prod.yaml
 docker-compose.override.yml
 
 # OS specific
 .DS_Store
 Thumbs.db
-
 # IDE 
 .idea/
