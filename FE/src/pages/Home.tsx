@@ -26,7 +26,6 @@ export const Home = () => {
   }, []);
 
   const inSelected = items.filter(i => i.category === selected);
-  const first = inSelected[0];
 
   return (
     <div className="home">
@@ -40,16 +39,17 @@ export const Home = () => {
           <img src={journalIcon} alt="Journal" className="journal-icon" />
           <Typography variant="h5" className="nanum-pen">Quests</Typography>
         </h2>
-        {first && (
-          <div className="card-row">
+        <div className="card-grid">
+          {inSelected.map((item) => (
             <QuestCard
-              title={first.name}
-              created={first.description?.split('\n')[0].replace('Created: ','') || ''}
-              deadline={first.description?.split('\n')[1].replace('Deadline: ','') || ''}
-              count={first.energyLevel}
+              key={item.id}
+              title={item.name}
+              created={item.description?.split('\n')[0].replace('Created: ','') || ''}
+              deadline={item.description?.split('\n')[1].replace('Deadline: ','') || ''}
+              count={item.energyLevel}
             />
-          </div>
-        )}
+          ))}
+        </div>
         <StatusDropdown
           categories={categories}
           selected={selected}
