@@ -9,12 +9,15 @@ import journalIcon from '../assets/journal.png';
 import './Home.css';
 import '../App.css';
 import { Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 export const Home = () => {
   const [items, setItems] = useState<EnergyItem[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [selected, setSelected] = useState('In Progress');
   const [energyLevel, setEnergyLevel] = useState(6);
+
+  const navigator = useNavigate();
 
   useEffect(() => {
     const load = async () => {
@@ -55,7 +58,7 @@ export const Home = () => {
           selected={selected}
           onChange={setSelected}
         />
-        <Fab onClick={() => { /* future: open modal */ }} />
+        <Fab onClick={() => { navigator('/add') }} />
       </div>
     </div>
   );
