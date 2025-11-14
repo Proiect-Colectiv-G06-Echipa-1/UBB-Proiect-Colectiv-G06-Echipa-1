@@ -28,6 +28,14 @@ export const Home = () => {
     load();
   }, []);
 
+  const formatDate = (date: Date | string) => {
+    const d = date instanceof Date ? date : new Date(date);
+    const day = d.getDate().toString().padStart(2, '0');
+    const month = (d.getMonth() + 1).toString().padStart(2, '0');
+    const year = d.getFullYear();
+    return `${day}/${month}/${year}`;
+  };
+
   const inSelected = items.filter(i => i.category === selected);
 
   return (
@@ -38,17 +46,18 @@ export const Home = () => {
         onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
       />
       <div className="board">
-        <h2 className="section-title">
+        <div className='section-title'>
           <img src={journalIcon} alt="Journal" className="journal-icon" />
           <Typography variant="h5" className="nanum-pen">Quests</Typography>
-        </h2>
+        </div>
+
         <div className="card-grid">
           {inSelected.map((item) => (
             <QuestCard
               key={item.id}
               title={item.name}
-              created={item.description?.split('\n')[0].replace('Created: ','') || ''}
-              deadline={item.description?.split('\n')[1].replace('Deadline: ','') || ''}
+              created={formatDate(item.createdAt)}
+              deadline={formatDate(item.deadline)}
               count={item.energyLevel}
             />
           ))}

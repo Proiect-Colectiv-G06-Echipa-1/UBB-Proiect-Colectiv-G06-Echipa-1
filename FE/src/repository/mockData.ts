@@ -17,7 +17,8 @@ export const MOCK_ITEMS: EnergyItem[] = [
     energyLevel: 3, // used as badge count for now
     description: 'Created: 20/10/2025\nDeadline: 07/11/2025',
     createdAt: new Date('2025-10-20'),
-    updatedAt: new Date('2025-11-07'),
+    deadline: new Date('2025-11-07'),
+    dependencies: [],
   },
    {
     id: '2',
@@ -26,7 +27,8 @@ export const MOCK_ITEMS: EnergyItem[] = [
     energyLevel: 3, // used as badge count for now
     description: 'Created: 20/10/2025\nDeadline: 07/11/2025',
     createdAt: new Date('2025-10-20'),
-    updatedAt: new Date('2025-11-07'),
+    deadline: new Date('2025-11-07'),
+    dependencies: [],
   },
   {
     id: '3',
@@ -35,6 +37,7 @@ export const MOCK_ITEMS: EnergyItem[] = [
     energyLevel: 3, // used as badge count for now
     description: 'Created: 20/10/2025\nDeadline: 07/11/2025',
     createdAt: new Date('2025-10-20'),
-    updatedAt: new Date('2025-11-07'),
+    deadline: new Date('2025-11-07'),
+    dependencies: [],
   },
 ];

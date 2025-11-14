@@ -1,3 +1,4 @@
+import { de } from 'zod/v4/locales';
 import type { EnergyItem, Category, CreateEditFormData } from '../types';
 import { MOCK_CATEGORIES, MOCK_ITEMS } from './mockData';
 
@@ -12,7 +13,7 @@ const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 export async function getAll(): Promise<EnergyItem[]> {
   await delay(SIMULATED_DELAY);
   return JSON.parse(JSON.stringify(items.sort((a, b) => 
-    new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    new Date(b.deadline).getTime() - new Date(a.deadline).getTime()
   )));
 }
 
@@ -37,7 +38,7 @@ export async function modifyEnergyLevel(
   if (!item) throw new Error('Item not found');
   
   item.energyLevel = Math.max(0, Math.min(100, newEnergyLevel));
-  item.updatedAt = new Date();
+  item.deadline = new Date();
   
   return JSON.parse(JSON.stringify(item));
 }
@@ -51,8 +52,9 @@ export async function createItem(data: CreateEditFormData): Promise<EnergyItem> 
     category: data.category,
     energyLevel: data.energyLevel,
     description: data.description,
-    createdAt: new Date(),
-    updatedAt: new Date(),
+    createdAt: data.createdAt,
+    deadline: data.deadline,
+    dependencies: data.dependencies,
   };
   
   items.push(newItem);
@@ -75,7 +77,9 @@ export async function updateItem(
   item.category = data.category;
   item.energyLevel = data.energyLevel;
   item.description = data.description;
-  item.updatedAt = new Date();
+  item.createdAt = data.createdAt;
+  item.deadline = data.deadline;
+  item.dependencies = data.dependencies;
   
   return JSON.parse(JSON.stringify(item));
 }
@@ -100,6 +104,6 @@ export async function getItemsByCategory(categoryName: string): Promise<EnergyIt
   return JSON.parse(JSON.stringify(
     items
       .filter(i => i.category === categoryName)
-      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime())
+      .sort((a, b) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime())
   ));
 }

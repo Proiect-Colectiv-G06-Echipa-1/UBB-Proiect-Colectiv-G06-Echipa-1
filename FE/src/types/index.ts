@@ -2,10 +2,11 @@ export interface EnergyItem {
   id: string;
   name: string;
   category: string;
-  energyLevel: number; // 0-100
-  description?: string;
+  energyLevel: number; // 0-10
+  description: string;
   createdAt: Date;
-  updatedAt: Date;
+  deadline: Date;
+  dependencies: string[];
 }
 
 export interface Category {
@@ -20,4 +21,7 @@ export interface CreateEditFormData {
   category: string;
   energyLevel: number;
   description: string;
+  createdAt: Date;
+  deadline: Date;
+  dependencies: string[];
 }
