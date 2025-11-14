@@ -15,3 +15,4 @@
 .seg.active{background:#9f9f9f}
 .logout-btn{padding:8px 16px;border:2px solid #222;border-radius:6px;background:#fff;color:#111;font-weight:600;font-size:14px;cursor:pointer;transition:all 0.2s ease}
 .logout-btn:hover{background:#222;color:#fff}
+.nanum-pen {font-family:'Nanum Pen Script',cursive}

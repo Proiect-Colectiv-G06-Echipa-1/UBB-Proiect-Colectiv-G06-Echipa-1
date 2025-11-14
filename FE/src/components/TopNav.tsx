@@ -8,6 +8,8 @@ import userSvg from '../assets/User.svg';
 import { useAuth } from '../authentication/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import './TopNav.css';
+import '../App.css';
+import { Typography } from '@mui/material';
 
 interface TopNavProps {
   energyLevel: number; // 0-10 segments
@@ -31,7 +33,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
     <div className="topnav">
       <div className="brand">
         <img src={logoSvg} alt="TUDU Logo" className="brand-logo" />
-        <span className="brand-name">TUDU</span>
+        <Typography variant="h5" className="nanum-pen">TUDU</Typography>
       </div>
       <div className="actions">
         <button

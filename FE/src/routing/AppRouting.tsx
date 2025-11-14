@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import { useAuth } from "../authentication/AuthContext";
 import { RequireAuth } from "../authentication/RequireAuth";
-import { Home } from "../screens/Home";
+import { Home } from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 
