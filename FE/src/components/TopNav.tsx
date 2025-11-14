@@ -5,6 +5,8 @@ import plusSvg from '../assets/Plus circle.svg';
 import energySvg from '../assets/green-energy.svg';
 import toolsSvg from '../assets/swords.svg';
 import userSvg from '../assets/User.svg';
+import { useAuth } from '../authentication/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import './TopNav.css';
 
 interface TopNavProps {
@@ -17,6 +19,14 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
   const segments = 10;
   const atMin = energyLevel <= 0;
   const atMax = energyLevel >= segments;
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
+
   return (
     <div className="topnav">
       <div className="brand">
@@ -54,6 +64,13 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
         <div className="icon-btn user" aria-label="User">
           <img src={userSvg} alt="user" />
         </div>
+        <button 
+          className="logout-btn"
+          onClick={handleLogout}
+          aria-label="Logout"
+        >
+          Logout
+        </button>
       </div>
     </div>
   );

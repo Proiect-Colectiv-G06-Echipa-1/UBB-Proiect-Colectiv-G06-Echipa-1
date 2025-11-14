@@ -5,11 +5,15 @@ FROM --platform=$BUILDPLATFORM node:20-alpine3.21
 # Set working directory
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Accept build arguments for environment variables
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+
+# Copy package files first for better layer caching
+COPY package.json package-lock.json* ./
 
 # Install dependencies
-RUN npm install
+RUN npm ci || npm install
 
 # Copy application source code
 COPY . .
@@ -17,5 +21,5 @@ COPY . .
 # Expose the Vite development server port
 EXPOSE 5173
 
-# Start the development server
+# Start the development server with host binding
 CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
