@@ -15,7 +15,6 @@ import SaveIcon from "@mui/icons-material/Save";
 export default function Form({existingTask, mode}: {existingTask?: EnergyItem, mode: 'create' | 'edit'}) {
     const [title, setTitle] = useState(existingTask ? existingTask.name : "");
     const [description, setDescription] = useState(existingTask ? existingTask.description : "");
-    const [createdAt, setCreatedAt] = useState(existingTask? existingTask.createdAt : new Date());
     const [deadline, setDeadline] = useState(existingTask? existingTask.deadline : new Date());
     const [energy, setEnergy] = useState(existingTask ? existingTask.energyLevel : 0);
     const [dependency, setDependency] = useState<string[]>(existingTask ? existingTask.dependencies : []);
@@ -42,23 +41,17 @@ export default function Form({existingTask, mode}: {existingTask?: EnergyItem, m
             return;
         }
 
-        if (!createdAt) {
-            // TODO:
-            return;
-        }
 
         if (!deadline) {
             // TODO:
             return;
         }
 
-        console.log("Submitting:", {title, description, createdAt, deadline, energy, dependency});
-
         if (mode === 'edit' && existingTask) {
-            await updateItem(existingTask.id, {name: title, category: existingTask.category, description: description, createdAt: createdAt, deadline: deadline, energyLevel: energy, dependencies: dependency});
+            await updateItem(existingTask.id, {name: title, category: existingTask.category, description: description, createdAt: new Date(), deadline: deadline, energyLevel: energy, dependencies: dependency});
         }
         else{
-            await createItem({name: title, category: "Backlog", description: description, createdAt: createdAt, deadline: deadline, energyLevel: energy, dependencies: dependency});
+            await createItem({name: title, category: "Backlog", description: description, createdAt: new Date(), deadline: deadline, energyLevel: energy, dependencies: dependency});
         }
         navigate("/home");
     };
@@ -70,7 +63,6 @@ export default function Form({existingTask, mode}: {existingTask?: EnergyItem, m
                     <StringFormInput label="Title" value={title} setValue={setTitle} />
                     <StringFormInput label="Description" value={description} setValue={setDescription} />
 
-                    <DateFormInput label="Created At" value={createdAt} setValue={setCreatedAt} />
                     <DateFormInput label="Deadline" value={deadline} setValue={setDeadline} />
 
                     <EnergyFormInput label="Energy Level" value={energy} setValue={setEnergy} />
