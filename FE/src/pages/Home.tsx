@@ -3,31 +3,31 @@ import { TopNav } from '../components/TopNav';
 import { StatusDropdown } from '../components/StatusDropdown';
 import { QuestCard } from '../components/QuestCard';
 import { Fab } from '../components/Fab';
-import type { Category, EnergyItem } from '../types';
-import { getAll, getCategories } from '../repository/energyRepository';
 import journalIcon from '../assets/journal.png';
-import './Home.css';
-import '../App.css';
 import { Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { taskApi } from '../api/api';
+import { TaskDTOStatusEnum, type TaskDTO } from '../../typescript-client';
+import './Home.css';
+import '../App.css';
 
 export const Home = () => {
-  const [items, setItems] = useState<EnergyItem[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selected, setSelected] = useState('In Progress');
+  const [tasks, setTasks] = useState<TaskDTO[]>([]);
+  // TO DO: Change this to backlog
+  const [selected, setSelected] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Pending);
   const [energyLevel, setEnergyLevel] = useState(6);
 
   const navigator = useNavigate();
-
+  
   useEffect(() => {
     const load = async () => {
-      const [i, c] = await Promise.all([getAll(), getCategories()]);
-      setItems(i);
-      setCategories(c);
+      const tasks = await taskApi.getAll();
+      setTasks(tasks);
     };
     load();
   }, []);
 
+  // TO DO: Find why date is undefined and delete this function afterwards
   const formatDate = (date: Date | string) => {
     const d = date instanceof Date ? date : new Date(date);
     const day = d.getDate().toString().padStart(2, '0');
@@ -36,7 +36,7 @@ export const Home = () => {
     return `${day}/${month}/${year}`;
   };
 
-  const inSelected = items.filter(i => i.category === selected);
+  const inSelected = tasks.filter(i => i.status === selected);
 
   return (
     <div className="home">
@@ -53,20 +53,17 @@ export const Home = () => {
 
         <div className="card-grid">
           {inSelected.map((item) => (
+            // TODO: Remove after undefined is fixed
             <QuestCard
               key={item.id}
-              title={item.name}
-              created={formatDate(item.createdAt)}
-              deadline={formatDate(item.deadline)}
-              count={item.energyLevel}
+              title={item?.title || ''}
+              created={formatDate(item?.creationDate || new Date())}
+              deadline={formatDate(item?.lastUpdateDate || new Date())}
+              count={item?.energyCost || 0}
             />
           ))}
         </div>
-        <StatusDropdown
-          categories={categories}
-          selected={selected}
-          onChange={setSelected}
-        />
+        <StatusDropdown selected={selected} setSelected={setSelected} />
         <Fab onClick={() => { navigator('/add') }} />
       </div>
     </div>

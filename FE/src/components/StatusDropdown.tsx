@@ -1,16 +1,25 @@
 import { useState } from 'react';
 import { KeyboardArrowDown } from '@mui/icons-material';
-import type { Category } from '../types';
 import './StatusDropdown.css';
+import { TaskDTOStatusEnum } from '../../typescript-client';
 
-interface Props {
-  categories: Category[];
-  selected: string;
-  onChange: (value: string) => void;
+interface Category {
+  id: number;
+  name: TaskDTOStatusEnum;
 }
 
-export const StatusDropdown = ({ categories, selected, onChange }: Props) => {
-  const [open, setOpen] = useState(false); 
+interface Props {
+  selected: TaskDTOStatusEnum;
+  setSelected: React.Dispatch<React.SetStateAction<TaskDTOStatusEnum>>;
+}
+
+// TO DO: Change this to Backlog, ... etc.
+const categories: Category[] = [{ id: 1, name: TaskDTOStatusEnum.Pending }, { id: 2, name: TaskDTOStatusEnum.InProgress },
+    { id: 3, name: TaskDTOStatusEnum.Cancelled }, { id: 4, name: TaskDTOStatusEnum.Completed }];
+
+export const StatusDropdown = ({selected, setSelected} : Props) => {
+  const [open, setOpen] = useState(false);
+
   return (
     <div className="status-dropdown">
       <button className="pill" onClick={() => setOpen(!open)}>
@@ -19,8 +28,8 @@ export const StatusDropdown = ({ categories, selected, onChange }: Props) => {
       </button>
       {open && (
         <div className="menu">
-          {categories.filter(c => c.name !== selected).map(c => (
-            <button key={c.id} className="menu-item" onClick={() => { onChange(c.name); setOpen(false); }}>
+          {categories.filter(category => category.name !== selected).map(c => (
+            <button key={c.id} className="menu-item" onClick={() => { setSelected(c.name); setOpen(false); }}>
               {c.name}
             </button>
           ))}

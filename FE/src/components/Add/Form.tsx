@@ -1,29 +1,27 @@
 import { useEffect, useState } from "react";
-import type { EnergyItem } from "../../types";
 import { useNavigate } from "react-router-dom";
-import { createItem, getAll, updateItem } from "../../repository/energyRepository";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import StringFormInput from "./StringFormInput";
 import DateFormInput from "./DateFormInput";
 import EnergyFormInput from "./EnergyFormInput";
-import DependencyFormInput from "./DependencyFormInput";
+//import DependencyFormInput from "./DependencyFormInput";
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import SaveIcon from "@mui/icons-material/Save";
+import { taskApi } from "../../api/api";
+import { TaskDTOStatusEnum, type AddRequest, type TaskDTO } from "../../../typescript-client";
+//import SaveIcon from "@mui/icons-material/Save";
 
-export default function Form({existingTask, mode}: {existingTask?: EnergyItem, mode: 'create' | 'edit'}) {
-    const [title, setTitle] = useState(existingTask ? existingTask.name : "");
-    const [description, setDescription] = useState(existingTask ? existingTask.description : "");
-    const [deadline, setDeadline] = useState(existingTask? existingTask.deadline : new Date());
-    const [energy, setEnergy] = useState(existingTask ? existingTask.energyLevel : 0);
-    const [dependency, setDependency] = useState<string[]>(existingTask ? existingTask.dependencies : []);
-    const [items, setItems] = useState<EnergyItem[]>([]);
+export default function Form() {
+    const [title, setTitle] = useState("");
+    const [description, setDescription] = useState("");
+    const [deadline, setDeadline] = useState(new Date());
+    const [energy, setEnergy] = useState(0);
+    const [dependency, setDependency] = useState<Set<number>>(new Set());
 
     useEffect(() => {
         const load = async () => {
-            const [i] = await Promise.all([getAll()]);
-            setItems(i);
+            // TO DO:
         }
         load();
     }, []);
@@ -47,12 +45,29 @@ export default function Form({existingTask, mode}: {existingTask?: EnergyItem, m
             return;
         }
 
-        if (mode === 'edit' && existingTask) {
-            await updateItem(existingTask.id, {name: title, category: existingTask.category, description: description, createdAt: new Date(), deadline: deadline, energyLevel: energy, dependencies: dependency});
+        const damage = energy;
+        const procrastinationDamage = energy;
+
+        const newTask : TaskDTO = {
+            title: title,
+            description: description,
+            status: TaskDTOStatusEnum.Pending,
+            energyCost: energy,
+            damage: damage,
+            procrastinationDamage: procrastinationDamage,
+            creationDate: new Date(),
+            // TODO: Change this to deadline
+            lastUpdateDate: deadline,
+            parents: dependency,
         }
-        else{
-            await createItem({name: title, category: "Backlog", description: description, createdAt: new Date(), deadline: deadline, energyLevel: energy, dependencies: dependency});
+
+        const request : AddRequest = {
+            taskDTO: newTask,
         }
+
+        await taskApi.add(request);
+
+        
         navigate("/home");
     };
     
@@ -67,13 +82,14 @@ export default function Form({existingTask, mode}: {existingTask?: EnergyItem, m
 
                     <EnergyFormInput label="Energy Level" value={energy} setValue={setEnergy} />
 
-                    <DependencyFormInput label="Dependency" selectedItems={dependency} setSelectedItems={setDependency} availableItems={items.filter(item => item.id !== existingTask?.id).map(item => item.name)}/>
+                    {/* <DependencyFormInput label="Dependency" selectedItems={dependency} setSelectedItems={setDependency} availableItems={items.filter(item => item.id !== existingTask?.id).map(item => item.name)}/> */}
 
                     <IconButton onClick={handleSubmit} sx={{position: "absolute", bottom: 24, right: 24, bgcolor: "primary.main", color: "white", width: 48, height: 48,
                         "&:hover": { bgcolor: "primary.dark"},
                         "&:disabled": {bgcolor: "grey.400", color: "grey.600"}
                     }}>
-                        {mode === 'edit' ? <SaveIcon /> : <AddIcon />}
+                        {/* {mode === 'edit' ? <SaveIcon /> : <AddIcon />} */}
+                        <AddIcon />
                     </IconButton>
                 </Stack>
             </Box>

@@ -3,20 +3,20 @@ import {TextField, Box, Chip, Paper, List, ListItem, ListItemButton, ListItemTex
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";
 
-export default function DependencyFormInput({label, selectedItems, setSelectedItems, availableItems}: {label: string; selectedItems: string[]; setSelectedItems: (items: string[]) => void; availableItems: string[]}) {
+export default function DependencyFormInput({label, selectedItems, setSelectedItems, availableItems}: {label: string; selectedItems: number[]; setSelectedItems: (items: number[]) => void; availableItems: string[]}) {
     const [inputValue, setInputValue] = useState("");
     const [showSuggestions, setShowSuggestions] = useState(false);
 
-    const filteredItems = availableItems.filter((item) => item.toLowerCase().includes(inputValue.toLowerCase()) &&!selectedItems.includes(item));
+    //const filteredItems = availableItems.filter((item) => item.toLowerCase().includes(inputValue.toLowerCase()) &&!selectedItems.includes(item));
 
-    const handleSelectItem = (item: string) => {
-        setSelectedItems([...selectedItems, item]);
-        setInputValue("");
-        setShowSuggestions(false);
+    const handleSelectItem = (item: number) => {
+        // setSelectedItems([...selectedItems, item]);
+        // setInputValue("");
+        // setShowSuggestions(false);
     };
 
-    const handleRemoveItem = (itemToRemove: string) => {
-        setSelectedItems(selectedItems.filter((item) => item !== itemToRemove));
+    const handleRemoveItem = (itemToRemove: number) => {
+        // setSelectedItems(selectedItems.filter((item) => item !== itemToRemove));
     };
 
     return (
@@ -64,7 +64,7 @@ export default function DependencyFormInput({label, selectedItems, setSelectedIt
                 fullWidth
             />
 
-            {showSuggestions && filteredItems.length > 0 && (
+            {/* {showSuggestions && filteredItems.length > 0 && (
                 <Paper
                     sx={{
                         position: "absolute",
@@ -90,7 +90,7 @@ export default function DependencyFormInput({label, selectedItems, setSelectedIt
                         ))}
                     </List>
                 </Paper>
-            )}
+            )} */}
 
             {selectedItems.length > 0 && (
                 <Box
