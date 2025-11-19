@@ -33,10 +33,10 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(AuthenticationManager authenticationManager, 
-                         JwtService jwtService,
-                         UserRepository userRepository,
-                         PasswordEncoder passwordEncoder) {
+    public AuthController(AuthenticationManager authenticationManager,
+            JwtService jwtService,
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
@@ -58,14 +58,13 @@ public class AuthController {
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtService.generateJwtToken(authentication);
 
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            
+
             AuthResponse response = new AuthResponse();
             response.setToken(jwt);
             response.setTokenType("Bearer");
@@ -113,16 +112,17 @@ public class AuthController {
             user.setUsername(registerRequest.getUsername());
             user.setEmail(registerRequest.getEmail());
             user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+            // FIXME currently there is no way for admin users to be created
+            user.setRole(UserRole.ROLE_USER);
 
             // Save user to database
             userRepository.save(user);
 
             // Return success response
             RegisterResponse response = new RegisterResponse(
-                "User registered successfully",
-                user.getUsername(),
-                user.getEmail()
-            );
+                    "User registered successfully",
+                    user.getUsername(),
+                    user.getEmail());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
@@ -132,4 +132,3 @@ public class AuthController {
         }
     }
 }
-

@@ -18,7 +18,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public TaskDTO add(TaskDTO taskDTO) {
-        Task task = mapper.toEntity(taskDTO).setStatus(TaskStatus.PENDING);
+        Task task = mapper.toEntity(taskDTO).setStatus(TaskStatus.BACKLOG);
         validator.validate(task);
         throwIfParentsDoNotExist(task);
         return mapper.toDTO(repository.save(task));
@@ -59,7 +59,8 @@ public class TaskServiceImpl implements TaskService {
         return repository.findAll().stream().map(mapper::toDTO).toList();
     }
 
-    // NOTE(DC): For better exception messages we could use the task's title and id but only if that's required by
+    // NOTE(DC): For better exception messages we could use the task's title and id
+    // but only if that's required by
     // the frontend. For now, I'm leaving it like this for simplicity
     private void throwIfUpdatingEntityWouldCreateCycles(Task newTask) throws IllegalStateException {
         Set<Integer> visited = new HashSet<>();
@@ -69,7 +70,8 @@ public class TaskServiceImpl implements TaskService {
             Task current = stack.pop();
 
             if (current.getId().equals(newTask.getId())) {
-                throw new IllegalStateException("Cannot update task with id=" + newTask.getId() + " because it would create cycles");
+                throw new IllegalStateException(
+                        "Cannot update task with id=" + newTask.getId() + " because it would create cycles");
             }
 
             if (!visited.contains(current.getId())) {
