@@ -63,7 +63,7 @@ export default function TaskCard({id}: {id: number}) {
 
                     <CaptionAndContent caption="Description:" content={task.description || "No description provided."} />
                     <CaptionAndContent caption="Created:" content={task.creationDate ? formatDate(task.creationDate) : "N/A"} />
-                    <CaptionAndContent caption="Deadline:" content={task.lastUpdateDate ? formatDate(task.lastUpdateDate) : "N/A"} />
+                    <CaptionAndContent caption="Deadline:" content={task.deadline ? formatDate(task.deadline) : "N/A"} />
                 </CardContent>
             </Card>
 

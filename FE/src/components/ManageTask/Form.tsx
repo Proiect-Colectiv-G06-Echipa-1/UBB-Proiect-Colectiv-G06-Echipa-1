@@ -37,7 +37,7 @@ export default function Form() {
 
                 setTitle(existingTask.title || "");
                 setDescription(existingTask.description || "");
-                setDeadline(existingTask.lastUpdateDate || new Date());
+                setDeadline(existingTask.deadline || new Date());
                 setEnergy(existingTask.energyCost || 0);
                 setDependency(new Set(existingTask.parents || []));
             }
@@ -55,14 +55,12 @@ export default function Form() {
         const newTask : TaskDTO = {
             title: title,
             description: description,
-            // TODO: Change this to Backlog (when BE is updated)
-            status: TaskDTOStatusEnum.Pending,
+            status: TaskDTOStatusEnum.Backlog,
             energyCost: energy,
             damage: damage,
             procrastinationDamage: procrastinationDamage,
             creationDate: creationDate,
-            // TODO: Change this to deadline
-            lastUpdateDate: deadline,
+            deadline: deadline,
             parents: dependency,
         }
 

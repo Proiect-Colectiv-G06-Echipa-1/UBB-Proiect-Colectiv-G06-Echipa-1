@@ -14,9 +14,12 @@ import { formatDate } from '../lib/date';
 
 export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
-  // TO DO: Change this to backlog
-  const [selected, setSelected] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Pending);
+  const [selected, setSelected] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Backlog);
   const [energyLevel, setEnergyLevel] = useState(6);
+
+  const handleSelect = (status: TaskDTOStatusEnum) => {
+    setSelected(status);
+  };
 
   const navigator = useNavigate();
   
@@ -38,25 +41,25 @@ export const Home = () => {
         onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
       />
       <div className="board">
-        <div className='section-title'>
-          <img src={journalIcon} alt="Journal" className="journal-icon" />
-          <Typography variant="h5" className="nanum-pen">Quests</Typography>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className='section-title'>
+            <img src={journalIcon} alt="Journal" className="journal-icon" />
+            <Typography variant="h5" className="nanum-pen">Quests</Typography>
+          </div>
+          <StatusDropdown selected={selected} handleSelect={handleSelect} />
         </div>
-
         <div className="card-grid">
-          {inSelected.map((item) => (
-            // TODO: Remove "else" after undefined is fixed
+          {inSelected.map((item) => (            
             <QuestCard
               key={item.id}
               id ={item.id || 0}
               title={item?.title || ''}
               created={formatDate(item?.creationDate || new Date())}
-              deadline={formatDate(item?.lastUpdateDate || new Date())}
+              deadline={formatDate(item?.deadline || new Date())}
               count={item?.energyCost || 0}
             />
           ))}
         </div>
-        <StatusDropdown selected={selected} setSelected={setSelected} />
         <Fab onClick={() => { navigator('/manage-task') }} />
       </div>
     </div>
