@@ -8,5 +8,7 @@ docker-compose.override.yml
 # OS specific
 .DS_Store
 Thumbs.db
-# IDE 
-.idea/
+
+.env
+BE/target/
+BE/openapi.yaml

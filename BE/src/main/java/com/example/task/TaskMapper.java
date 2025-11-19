@@ -1,5 +1,6 @@
 package com.example.task;
 
+import com.example.User.User;
 import org.mapstruct.Mapper;
 
 import java.util.Set;
@@ -17,5 +18,17 @@ public interface TaskMapper {
 
     default Set<Task> mapIdsToEntities(Set<Integer> taskIds) {
         return taskIds == null ? null : taskIds.stream().map(id -> new Task().setId(id)).collect(Collectors.toSet());
+    }
+
+    default Set<Long> mapUsersToIds(Set<User> users) {
+        return users == null ? null : users.stream().map(User::getId).collect(Collectors.toSet());
+    }
+
+    default Set<User> mapIdsToUsers(Set<Long> userIds) {
+        return userIds == null ? null : userIds.stream().map(id -> {
+            User user = new User();
+            user.setId(id);
+            return user;
+        }).collect(Collectors.toSet());
     }
 }

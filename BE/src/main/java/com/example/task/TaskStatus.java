@@ -1,8 +1,8 @@
 package com.example.task;
 
 public enum TaskStatus {
-    PENDING,
+    BACKLOG,
     IN_PROGRESS,
     COMPLETED,
-    CANCELLED
+    ON_HOLD
 }
