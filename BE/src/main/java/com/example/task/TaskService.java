@@ -8,4 +8,9 @@ public interface TaskService {
     void delete(Integer id);
     TaskDTO get(Integer id);
     List<TaskDTO> getAll();
+
+    // User-Task assignment methods
+    void assignTaskToUser(Integer taskId, Long userId);
+    void unassignTaskFromUser(Integer taskId, Long userId);
+    List<TaskDTO> getTasksAssignedToUser(Long userId);
 }

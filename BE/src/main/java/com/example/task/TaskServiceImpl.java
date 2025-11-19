@@ -1,5 +1,7 @@
 package com.example.task;
 
+import com.example.User.User;
+import com.example.User.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository repository;
     private final TaskMapper mapper;
     private final TaskValidator validator;
+    private final UserRepository userRepository;
 
     @Override
     public TaskDTO add(TaskDTO taskDTO) {
@@ -27,6 +30,10 @@ public class TaskServiceImpl implements TaskService {
         Task newTask = mapper.toEntity(newTaskDTO);
         validator.validate(newTask);
         newTask.setId(id);
+
+        // Validate status transition
+        validateStatusTransition(currentTask.getStatus(), newTask.getStatus(), newTask);
+
         if (!currentTask.getParents().equals(newTask.getParents())) {
             throwIfParentsDoNotExist(newTask);
             throwIfUpdatingEntityWouldCreateCycles(newTask);
@@ -81,5 +88,99 @@ public class TaskServiceImpl implements TaskService {
                 throw new IllegalArgumentException("Parent with id=" + parent.getId() + " does not exist");
             }
         });
+    }
+
+    private void validateStatusTransition(TaskStatus currentStatus, TaskStatus newStatus, Task task) {
+        // Disallow changing from BACKLOG to COMPLETED directly (must go through
+        // IN_PROGRESS)
+        if (currentStatus == TaskStatus.BACKLOG && newStatus == TaskStatus.COMPLETED) {
+            throw new IllegalStateException(
+                    "Cannot change status from BACKLOG to COMPLETED directly. Must go through IN_PROGRESS first.");
+        }
+
+        // Cannot change to COMPLETE if dependencies are incomplete
+        if (newStatus == TaskStatus.COMPLETED) {
+            if (hasIncompleteDependencies(task)) {
+                throw new IllegalStateException("Cannot mark task as COMPLETE while it has incomplete dependencies");
+            }
+        }
+
+        // Only allow status changes to BACKLOG, IN_PROGRESS, or COMPLETED
+        // ON_HOLD might be allowed for administrative purposes
+        if (newStatus != TaskStatus.BACKLOG && newStatus != TaskStatus.IN_PROGRESS &&
+                newStatus != TaskStatus.COMPLETED && newStatus != TaskStatus.ON_HOLD) {
+            throw new IllegalArgumentException("Invalid status: " + newStatus);
+        }
+    }
+
+    private boolean hasIncompleteDependencies(Task task) {
+        Set<Integer> visited = new HashSet<>();
+        Deque<Task> stack = new ArrayDeque<>(task.getParents());
+
+        while (!stack.isEmpty()) {
+            Task current = stack.pop();
+
+            if (!visited.contains(current.getId())) {
+                visited.add(current.getId());
+
+                // If parent is not completed, we have incomplete dependencies
+                if (current.getStatus() != TaskStatus.COMPLETED) {
+                    return true;
+                }
+
+                // Add grandparents to check
+                stack.addAll(repository.getParentsOf(current.getId()));
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public void assignTaskToUser(Integer taskId, Long userId) {
+        Task task = repository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task with id " + taskId + " not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
+
+        task.getAssignees().add(user);
+        user.getAssignedTasks().add(task);
+
+        // If this is the first assignee, change status to IN_PROGRESS
+        if (task.getAssignees().size() == 1 && task.getStatus() == TaskStatus.BACKLOG) {
+            task.setStatus(TaskStatus.IN_PROGRESS);
+        }
+
+        repository.save(task);
+    }
+
+    @Override
+    public void unassignTaskFromUser(Integer taskId, Long userId) {
+        Task task = repository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task with id " + taskId + " not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
+
+        task.getAssignees().remove(user);
+        user.getAssignedTasks().remove(task);
+
+        // If no assignees left, change status back to BACKLOG
+        if (task.getAssignees().isEmpty() && task.getStatus() == TaskStatus.IN_PROGRESS) {
+            task.setStatus(TaskStatus.BACKLOG);
+        }
+
+        repository.save(task);
+    }
+
+    @Override
+    public List<TaskDTO> getTasksAssignedToUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
+
+        return user.getAssignedTasks().stream()
+                .map(mapper::toDTO)
+                .toList();
     }
 }

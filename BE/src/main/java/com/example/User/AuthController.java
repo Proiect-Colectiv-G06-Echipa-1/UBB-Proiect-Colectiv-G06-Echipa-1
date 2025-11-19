@@ -6,6 +6,11 @@ import com.example.User.dto.LoginRequest;
 import com.example.User.dto.RegisterRequest;
 import com.example.User.dto.RegisterResponse;
 import com.example.User.service.JwtService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,6 +43,17 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Operation(summary = "Authenticate user and return JWT token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successful",
+                    content = {
+                        @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = AuthResponse.class))}),
+            @ApiResponse(responseCode = "401", description = "Invalid username or password",
+                    content = {
+                        @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class))})
+    })
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
@@ -61,6 +77,21 @@ public class AuthController {
         }
     }
 
+    @Operation(summary = "Register a new user account")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User registered successfully",
+                    content = {
+                        @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = RegisterResponse.class))}),
+            @ApiResponse(responseCode = "400", description = "Username or email already exists",
+                    content = {
+                        @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class))}),
+            @ApiResponse(responseCode = "500", description = "Internal server error during registration",
+                    content = {
+                        @Content(mediaType = "application/json",
+                        schema = @Schema(implementation = ErrorResponse.class))})
+    })
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {

@@ -1,5 +1,6 @@
 package com.example.task;
 
+import com.example.User.User;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -62,4 +63,12 @@ public class Task {
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Task> parents = new HashSet<>();
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_tasks",
+            joinColumns = @JoinColumn(name = "task_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private Set<User> assignees = new HashSet<>();
 }
