@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TopNav } from '../components/TopNav';
-import { StatusDropdown } from '../components/StatusDropdown';
+import { StatusDropdown } from '../components/Generic/StatusDropdown';
 import { QuestCard } from '../components/QuestCard';
 import { Fab } from '../components/Fab';
 import journalIcon from '../assets/journal.png';
