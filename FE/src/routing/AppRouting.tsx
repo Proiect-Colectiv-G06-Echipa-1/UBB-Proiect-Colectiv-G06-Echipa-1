@@ -7,6 +7,7 @@ import { Home } from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
 import AddTask from "../pages/AddTask";
+import { TaskDetailPage } from "../pages/TaskDetailPage";
 
 const loadingPageSx = {
   display: "flex",
@@ -71,6 +72,14 @@ function AppRouting() {
           }>
 
         </Route>
+        <Route
+          path="/task/:id"
+          element={
+            <RequireAuth>
+              <TaskDetailPage />
+            </RequireAuth>
+          }>
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );
@@ -84,7 +93,9 @@ function AppRouting() {
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Navigate to="/login" replace />} />
         <Route path="/add" element={<Navigate to="/login" replace />} />
+        <Route path="/task/:id" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </Box>
   );

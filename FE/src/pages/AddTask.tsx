@@ -13,7 +13,7 @@ export default function AddTask() {
                 onDecrease={() => setEnergyLevel(prev => Math.max(0, prev - 1))}
                 onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
             />
-            <Form mode="create" />
+            <Form/>
         </Box>
     )
 }

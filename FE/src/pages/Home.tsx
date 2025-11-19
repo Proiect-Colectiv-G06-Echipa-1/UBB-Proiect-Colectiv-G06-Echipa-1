@@ -10,6 +10,7 @@ import { taskApi } from '../api/api';
 import { TaskDTOStatusEnum, type TaskDTO } from '../../typescript-client';
 import './Home.css';
 import '../App.css';
+import { formatDate } from '../lib/date';
 
 export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -26,15 +27,6 @@ export const Home = () => {
     };
     load();
   }, []);
-
-  // TO DO: Find why date is undefined and delete this function afterwards
-  const formatDate = (date: Date | string) => {
-    const d = date instanceof Date ? date : new Date(date);
-    const day = d.getDate().toString().padStart(2, '0');
-    const month = (d.getMonth() + 1).toString().padStart(2, '0');
-    const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
-  };
 
   const inSelected = tasks.filter(i => i.status === selected);
 
@@ -53,9 +45,10 @@ export const Home = () => {
 
         <div className="card-grid">
           {inSelected.map((item) => (
-            // TODO: Remove after undefined is fixed
+            // TODO: Remove "else" after undefined is fixed
             <QuestCard
               key={item.id}
+              id ={item.id || 0}
               title={item?.title || ''}
               created={formatDate(item?.creationDate || new Date())}
               deadline={formatDate(item?.lastUpdateDate || new Date())}
