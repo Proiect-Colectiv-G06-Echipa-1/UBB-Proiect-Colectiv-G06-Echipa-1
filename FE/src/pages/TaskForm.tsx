@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Box } from "@mui/material";
 import { TopNav } from "../components/TopNav";
-import Form from "../components/Add/Form";
+import Form from "../components/ManageTask/Form";
 
-export default function AddTask() {
+export default function TaskForm() {
     const [energyLevel, setEnergyLevel] = useState(6);
 
     return (

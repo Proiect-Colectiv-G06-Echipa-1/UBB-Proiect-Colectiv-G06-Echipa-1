@@ -57,7 +57,7 @@ export const Home = () => {
           ))}
         </div>
         <StatusDropdown selected={selected} setSelected={setSelected} />
-        <Fab onClick={() => { navigator('/add') }} />
+        <Fab onClick={() => { navigator('/manage-task') }} />
       </div>
     </div>
   );

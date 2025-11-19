@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import StringFormInput from "./StringFormInput";
@@ -9,9 +9,9 @@ import EnergyFormInput from "./EnergyFormInput";
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { taskApi } from "../../api/api";
-import { TaskDTOStatusEnum, type AddRequest, type TaskDTO } from "../../../typescript-client";
+import { TaskDTOStatusEnum, type AddRequest, type GetByIdRequest, type TaskDTO, type UpdateRequest } from "../../../typescript-client";
 import { TaskFormSchema } from "../../lib/zod";
-//import SaveIcon from "@mui/icons-material/Save";
+import SaveIcon from "@mui/icons-material/Save";
 
 const maxDamage = 20;
 const maxProcrastinationDamage = 10;
@@ -23,14 +23,27 @@ export default function Form() {
     const [energy, setEnergy] = useState(0);
     const [dependency, setDependency] = useState<Set<number>>(new Set());
 
+    const {id} = useParams<{id: string}>();
+
     const [error, setError] = useState<string>("");
 
     useEffect(() => {
         const load = async () => {
-            // TO DO:
+            if (id) {
+                const request : GetByIdRequest = {
+                    id: Number(id)
+                }
+                const existingTask = await taskApi.getById(request);
+
+                setTitle(existingTask.title || "");
+                setDescription(existingTask.description || "");
+                setDeadline(existingTask.lastUpdateDate || new Date());
+                setEnergy(existingTask.energyCost || 0);
+                setDependency(new Set(existingTask.parents || []));
+            }
         }
         load();
-    }, []);
+    }, [id]);
 
     const navigate = useNavigate();
 
@@ -62,12 +75,23 @@ export default function Form() {
 
         setError("");
 
-        const request : AddRequest = {
-            taskDTO: newTask,
+        if (id) {
+            newTask.id = Number(id);
+
+            const request: UpdateRequest = {
+                id: Number(id),
+                taskDTO: newTask,
+            }
+            
+            await taskApi.update(request);
         }
-
-        await taskApi.add(request);
-
+        else{
+            const request : AddRequest = {
+                taskDTO: newTask,
+            }
+    
+            await taskApi.add(request);
+        }
         
         navigate("/home");
     };
@@ -91,8 +115,7 @@ export default function Form() {
                         "&:hover": { bgcolor: "primary.dark"},
                         "&:disabled": {bgcolor: "grey.400", color: "grey.600"}
                     }}>
-                        {/* {mode === 'edit' ? <SaveIcon /> : <AddIcon />} */}
-                        <AddIcon />
+                        {id ? <SaveIcon /> : <AddIcon />}
                     </IconButton>
                 </Stack>
             </Box>

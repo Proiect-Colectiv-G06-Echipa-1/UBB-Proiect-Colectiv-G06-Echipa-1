@@ -6,7 +6,7 @@ import { RequireAuth } from "../authentication/RequireAuth";
 import { Home } from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
-import AddTask from "../pages/AddTask";
+import TaskForm from "../pages/TaskForm";
 import { TaskDetailPage } from "../pages/TaskDetailPage";
 
 const loadingPageSx = {
@@ -64,10 +64,10 @@ function AppRouting() {
           }
         />
         <Route
-          path="/add"
+          path="/manage-task/:id?"
           element={
             <RequireAuth>
-              <AddTask />
+              <TaskForm />
             </RequireAuth>
           }>
 
@@ -92,7 +92,7 @@ function AppRouting() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Navigate to="/login" replace />} />
-        <Route path="/add" element={<Navigate to="/login" replace />} />
+        <Route path="/manage-task/:id?" element={<Navigate to="/login" replace />} />
         <Route path="/task/:id" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
 

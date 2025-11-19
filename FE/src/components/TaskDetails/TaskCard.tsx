@@ -52,7 +52,7 @@ export default function TaskCard({id}: {id: number}) {
                             {task.title}
                         </Typography>
                         <Box sx={{ display: 'flex', gap: 0.5, ml: 'auto' }}>
-                            <IconButton size="small" sx={{ padding: '4px' }}>
+                            <IconButton size="small" sx={{ padding: '4px' }} onClick={() => {navigate(`/manage-task/${task.id}`)}}>
                                 <EditIcon sx={{ fontSize: '18px' }} />
                             </IconButton>
                             <IconButton size="small" sx={{ padding: '4px' }} onClick={() => setOpen(true)}>
