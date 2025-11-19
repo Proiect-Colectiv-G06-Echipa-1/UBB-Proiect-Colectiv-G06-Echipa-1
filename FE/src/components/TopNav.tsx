@@ -6,7 +6,7 @@ import energySvg from '../assets/green-energy.svg';
 import toolsSvg from '../assets/swords.svg';
 import userSvg from '../assets/User.svg';
 import { useAuth } from '../authentication/AuthContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import './TopNav.css';
 import '../App.css';
 import { Typography } from '@mui/material';

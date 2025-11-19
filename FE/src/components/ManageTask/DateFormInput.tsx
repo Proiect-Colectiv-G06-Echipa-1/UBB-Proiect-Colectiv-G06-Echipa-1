@@ -5,7 +5,7 @@ export default function DateFormInput({ label, value, setValue }: { label: strin
     
     return (
         <FormControl fullWidth variant="filled">
-            <Box sx={{gcolor: "#ece6f0", border: 1, borderRadius: 4, borderColor: "black", position: "relative"}}>
+            <Box sx={{bgcolor: "#ece6f0", border: 1, borderRadius: 4, borderColor: "black", position: "relative"}}>
                 <InputLabel shrink={true} sx={{color: "black", fontSize: "0.75rem", fontWeight: 500, transform: "translate(14px, 6px) scale(1)", "&.Mui-focused": {color: "black" }}}>
                     {label}
                 </InputLabel>
