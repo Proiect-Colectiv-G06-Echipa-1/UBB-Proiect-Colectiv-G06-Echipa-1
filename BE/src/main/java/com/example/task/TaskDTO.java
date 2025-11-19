@@ -12,7 +12,7 @@ public record TaskDTO(
         Integer damage,
         Integer procrastinationDamage,
         LocalDate creationDate,
-        LocalDate lastUpdateDate,
+        LocalDate deadline,
         Set<Integer> parents,
         Set<Long> assignees
 ) {}

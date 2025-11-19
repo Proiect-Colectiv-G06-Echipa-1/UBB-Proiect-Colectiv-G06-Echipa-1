@@ -1,13 +1,15 @@
 // Using SVG assets instead of inline/icon components
-import logoSvg from '../assets/create.svg';
+import logoSvg from '../assets/logo.svg';
 import minusSvg from '../assets/Minus circle.svg';
 import plusSvg from '../assets/Plus circle.svg';
 import energySvg from '../assets/green-energy.svg';
 import toolsSvg from '../assets/swords.svg';
 import userSvg from '../assets/User.svg';
 import { useAuth } from '../authentication/AuthContext';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import './TopNav.css';
+import '../App.css';
+import { Typography } from '@mui/material';
 
 interface TopNavProps {
   energyLevel: number; // 0-10 segments
@@ -29,9 +31,9 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
 
   return (
     <div className="topnav">
-      <div className="brand">
+      <div className="brand" onClick={() => navigate('/')} style={{cursor: 'pointer'}}>
         <img src={logoSvg} alt="TUDU Logo" className="brand-logo" />
-        <span className="brand-name">TUDU</span>
+        <Typography variant="h5" className="nanum-pen">TUDU</Typography>
       </div>
       <div className="actions">
         <button

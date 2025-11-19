@@ -3,27 +3,35 @@ import { TopNav } from '../components/TopNav';
 import { StatusDropdown } from '../components/StatusDropdown';
 import { QuestCard } from '../components/QuestCard';
 import { Fab } from '../components/Fab';
-import type { Category, EnergyItem } from '../types';
-import { getAll, getCategories } from '../repository/energyRepository';
+import journalIcon from '../assets/journal.png';
+import { Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { taskApi } from '../api/api';
+import { TaskDTOStatusEnum, type TaskDTO } from '../../typescript-client';
 import './Home.css';
+import '../App.css';
+import { formatDate } from '../lib/date';
 
 export const Home = () => {
-  const [items, setItems] = useState<EnergyItem[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [selected, setSelected] = useState('In Progress');
+  const [tasks, setTasks] = useState<TaskDTO[]>([]);
+  const [selected, setSelected] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Backlog);
   const [energyLevel, setEnergyLevel] = useState(6);
 
+  const handleSelect = (status: TaskDTOStatusEnum) => {
+    setSelected(status);
+  };
+
+  const navigator = useNavigate();
+  
   useEffect(() => {
     const load = async () => {
-      const [i, c] = await Promise.all([getAll(), getCategories()]);
-      setItems(i);
-      setCategories(c);
+      const tasks = await taskApi.getAll();
+      setTasks(tasks);
     };
     load();
   }, []);
 
-  const inSelected = items.filter(i => i.category === selected);
-  const first = inSelected[0];
+  const inSelected = tasks.filter(i => i.status === selected);
 
   return (
     <div className="home">
@@ -33,23 +41,26 @@ export const Home = () => {
         onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
       />
       <div className="board">
-        <h2 className="section-title"><span className="book">📒</span>Quests</h2>
-        {first && (
-          <div className="card-row">
-            <QuestCard
-              title={first.name}
-              created={first.description?.split('\n')[0].replace('Created: ','') || ''}
-              deadline={first.description?.split('\n')[1].replace('Deadline: ','') || ''}
-              count={first.energyLevel}
-            />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <div className='section-title'>
+            <img src={journalIcon} alt="Journal" className="journal-icon" />
+            <Typography variant="h5" className="nanum-pen">Quests</Typography>
           </div>
-        )}
-        <StatusDropdown
-          categories={categories}
-          selected={selected}
-          onChange={setSelected}
-        />
-        <Fab onClick={() => { /* future: open modal */ }} />
+          <StatusDropdown selected={selected} handleSelect={handleSelect} />
+        </div>
+        <div className="card-grid">
+          {inSelected.map((item) => (            
+            <QuestCard
+              key={item.id}
+              id ={item.id || 0}
+              title={item?.title || ''}
+              created={formatDate(item?.creationDate || new Date())}
+              deadline={formatDate(item?.deadline || new Date())}
+              count={item?.energyCost || 0}
+            />
+          ))}
+        </div>
+        <Fab onClick={() => { navigator('/manage-task') }} />
       </div>
     </div>
   );

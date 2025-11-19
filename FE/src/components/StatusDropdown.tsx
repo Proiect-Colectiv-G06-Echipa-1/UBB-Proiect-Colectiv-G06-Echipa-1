@@ -1,31 +1,46 @@
 import { useState } from 'react';
-import type { Category } from '../types';
-import './StatusDropdown.css';
+import { Box, Button, Menu, MenuItem } from '@mui/material';
+import { KeyboardArrowDown } from '@mui/icons-material';
+import { TaskDTOStatusEnum } from '../../typescript-client';
+import { formatStatus } from '../lib/status';
 
 interface Props {
-  categories: Category[];
-  selected: string;
-  onChange: (value: string) => void;
+  selected: TaskDTOStatusEnum;
+  backgroundColor?: string;
+  keyColor?: string;
+  handleSelect: (status: TaskDTOStatusEnum) => void;
 }
 
-export const StatusDropdown = ({ categories, selected, onChange }: Props) => {
-  const [open, setOpen] = useState(true); // open like the screenshot
+const categories = [TaskDTOStatusEnum.Backlog, TaskDTOStatusEnum.InProgress, TaskDTOStatusEnum.OnHold, TaskDTOStatusEnum.Completed];
+
+export const StatusDropdown = ({selected, backgroundColor, keyColor, handleSelect} : Props) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <div className="status-dropdown">
-      <button className="pill" onClick={() => setOpen(!open)}>
-        <span className="dot" />
-        <span>{selected}</span>
-        <span className="caret">▾</span>
-      </button>
-      {open && (
-        <div className="menu">
-          {categories.filter(c => c.name !== selected).map(c => (
-            <button key={c.id} className="menu-item" onClick={() => { onChange(c.name); setOpen(false); }}>
-              {c.name}
-            </button>
-          ))}
-        </div>
-      )}
-    </div>
+    <Box>
+      <Button onClick={handleClick} endIcon={<KeyboardArrowDown sx={{ color: keyColor || '#aa86ff' }} />} sx={{backgroundColor: backgroundColor || '#5A3D99',
+       color: '#fff', borderRadius: '28px', width: 'auto', fontSize: '16px',fontWeight: 700,textTransform: 'none',padding: '8px 16px','&:hover': {backgroundColor: '#4A2D89'}}}>
+        {formatStatus(selected)}
+      </Button>
+      <Menu anchorEl={anchorEl} open={open} onClose={handleClose} 
+       MenuListProps={{sx: {padding: 0}}}
+       PaperProps={{sx: {backgroundColor: '#6F6471', color: '#fff', borderRadius: '12px', width: 'auto', minWidth: 'unset'}}}>
+        {categories.filter(category => category !== selected).map((category) => (
+          <MenuItem key={category} onClick={() => {handleSelect(category); handleClose();}} sx={{fontSize: '16px', fontWeight: 700,padding: '10px 16px',
+           borderBottom: '1px solid rgba(255,255,255,0.5)','&:last-child': {borderBottom: 'none'},'&:hover': {backgroundColor: 'rgba(255,255,255,0.08)'}}}>
+            {formatStatus(category)}
+          </MenuItem>
+        ))}
+      </Menu>
+    </Box>
   );
 };
