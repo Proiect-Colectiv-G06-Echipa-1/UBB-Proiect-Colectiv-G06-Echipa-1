@@ -1,11 +1,10 @@
-import { Box } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import createIcon from '../assets/create.svg';
 
 interface Props { onClick: () => void }
 
 export const Fab = ({ onClick }: Props) => (
-  <Box
-    component="button"
+  <Button
     onClick={onClick}
     aria-label="Create"
     sx={{
@@ -47,5 +46,5 @@ export const Fab = ({ onClick }: Props) => (
         display: 'block' 
       }} 
     />
-  </Box>
+  </Button>
 );

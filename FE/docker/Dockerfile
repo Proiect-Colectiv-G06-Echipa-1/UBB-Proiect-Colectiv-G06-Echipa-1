@@ -13,9 +13,7 @@ ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 COPY package.json package-lock.json* ./
 
 # Install dependencies
-RUN rm -rf node_modules package-lock.json && \
-    npm install --legacy-peer-deps && \
-    npm cache clean --force
+RUN npm ci || npm install
 
 # Copy application source code
 COPY . .

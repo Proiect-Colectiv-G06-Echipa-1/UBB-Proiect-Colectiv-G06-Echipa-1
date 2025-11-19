@@ -71,8 +71,8 @@ export const QuestCard = ({ id, title, created, deadline, count }: QuestCardProp
               lineHeight: 1.3
             }}
           >
-            <Box component="div">Created: {created}</Box>
-            <Box component="div">Deadline: {deadline}</Box>
+            <Box>Created: {created}</Box>
+            <Box>Deadline: {deadline}</Box>
           </Box>
         </Box>
       </Card>
