@@ -5,13 +5,13 @@ import Stack from "@mui/material/Stack";
 import StringFormInput from "./StringFormInput";
 import DateFormInput from "./DateFormInput";
 import EnergyFormInput from "./EnergyFormInput";
-//import DependencyFormInput from "./DependencyFormInput";
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { taskApi } from "../../api/api";
 import { TaskDTOStatusEnum, type AddRequest, type GetByIdRequest, type TaskDTO, type UpdateRequest } from "../../../typescript-client";
 import { TaskFormSchema } from "../../lib/zod";
 import SaveIcon from "@mui/icons-material/Save";
+import DependencyFormInput from "./DependencyFormInput";
 
 const maxDamage = 20;
 const maxProcrastinationDamage = 10;
@@ -22,10 +22,11 @@ export default function Form() {
     const [deadline, setDeadline] = useState(new Date());
     const [energy, setEnergy] = useState(0);
     const [dependency, setDependency] = useState<Set<number>>(new Set());
+    const [error, setError] = useState<string>("");
+    const [tasks, setTasks] = useState<TaskDTO[]>([]);
+    const [selectedTasks, setSelectedTasks] = useState<TaskDTO[]>([]);
 
     const {id} = useParams<{id: string}>();
-
-    const [error, setError] = useState<string>("");
 
     useEffect(() => {
         const load = async () => {
@@ -45,12 +46,24 @@ export default function Form() {
         load();
     }, [id]);
 
+    useEffect(() => {
+        const loadAllTasks = async () => {
+            const allTasks = await taskApi.getAll();
+            setTasks(allTasks);
+        }
+        loadAllTasks();
+    }, []);
+
     const navigate = useNavigate();
 
     const handleSubmit = async () => {
         const damage = (energy * 2) % maxDamage + 1;
         const procrastinationDamage = energy % maxProcrastinationDamage + 1;
         const creationDate = new Date();
+        const dependencyIds : Set<number> = new Set();
+        selectedTasks.forEach((task) => {
+            if (task.id) dependencyIds.add(task.id);
+        });
         
         const newTask : TaskDTO = {
             title: title,
@@ -61,7 +74,7 @@ export default function Form() {
             procrastinationDamage: procrastinationDamage,
             creationDate: creationDate,
             deadline: deadline,
-            parents: dependency,
+            parents: dependencyIds,
         }
 
         const result = TaskFormSchema.safeParse(newTask);
@@ -105,7 +118,7 @@ export default function Form() {
 
                     <EnergyFormInput label="Energy Level" value={energy} setValue={setEnergy} />
 
-                    {/* <DependencyFormInput label="Dependency" selectedItems={dependency} setSelectedItems={setDependency} availableItems={items.filter(item => item.id !== existingTask?.id).map(item => item.name)}/> */}
+                    <DependencyFormInput label="Dependency" selectedTasks={selectedTasks} setSelectedTasks={setSelectedTasks} tasks={tasks} />
 
                     {error && <Box color="error.main">{error}</Box>}
 
