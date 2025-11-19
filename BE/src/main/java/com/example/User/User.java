@@ -22,19 +22,23 @@ public class User implements UserDetails {
     @Column(unique = true, nullable = false)
     private String email;
 
+    @Column(unique = false, nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
+
     @Column(nullable = false)
     private String password;
 
     public User() {
     }
 
-    public User(String username, String email, String password) {
+    public User(String username, String email, String password, UserRole role) {
         this.username = username;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
-    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -69,10 +73,17 @@ public class User implements UserDetails {
         this.password = password;
     }
 
-    // UserDetails implementation
+    public UserRole getRole() {
+        return role;
+    }
+
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"));
+        return Collections.singletonList(new SimpleGrantedAuthority(this.role.name()));
     }
 
     @Override
@@ -95,4 +106,3 @@ public class User implements UserDetails {
         return true;
     }
 }
-

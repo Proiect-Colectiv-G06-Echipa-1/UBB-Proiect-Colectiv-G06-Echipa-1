@@ -1,0 +1,5 @@
+ALTER TABLE users
+ADD COLUMN role VARCHAR(255) NOT NULL;
+
+ALTER TABLE tasks
+RENAME COLUMN last_update_date TO deadline;

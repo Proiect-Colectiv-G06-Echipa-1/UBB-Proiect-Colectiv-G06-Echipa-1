@@ -18,7 +18,8 @@ import java.util.Set;
 
 @Entity(name = "tasks")
 @NoArgsConstructor
-@Getter @Setter
+@Getter
+@Setter
 @Accessors(chain = true)
 public class Task {
     @Id
@@ -37,28 +38,27 @@ public class Task {
     private TaskStatus status;
 
     @NotNull
-    @Min(1) @Max(100)
+    @Min(0)
+    @Max(10)
     private Integer energyCost;
 
     @NotNull
-    @Min(1) @Max(100)
+    @Min(1)
+    @Max(100)
     private Integer damage;
 
     @NotNull
-    @Min(1) @Max(100)
+    @Min(1)
+    @Max(100)
     private Integer procrastinationDamage;
 
     @NotNull
     private LocalDate creationDate;
 
-    private LocalDate lastUpdateDate;
+    private LocalDate deadline;
 
     @ManyToMany
-    @JoinTable(
-            name = "task_dependencies",
-            joinColumns = @JoinColumn(name = "task_id", nullable = false),
-            inverseJoinColumns = @JoinColumn(name = "parent_task_id", nullable = false)
-    )
+    @JoinTable(name = "task_dependencies", joinColumns = @JoinColumn(name = "task_id", nullable = false), inverseJoinColumns = @JoinColumn(name = "parent_task_id", nullable = false))
 
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Set<Task> parents = new HashSet<>();
