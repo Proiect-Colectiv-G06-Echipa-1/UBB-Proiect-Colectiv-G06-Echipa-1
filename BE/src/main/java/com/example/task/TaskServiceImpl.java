@@ -59,6 +59,28 @@ public class TaskServiceImpl implements TaskService {
         return repository.findAll().stream().map(mapper::toDTO).toList();
     }
 
+    @Override
+    public List<TaskDTO> getByStatus(TaskStatus status) {
+        return repository.findAllByStatus(status).stream().map(mapper::toDTO).toList();
+    }
+
+    @Override
+    public Long getTotalNumberOfTasks() {
+        return repository.count();
+    }
+
+    @Override
+    public List<TaskDTO> getCompletedTasksFromUser(Long userID) {
+        List<Task> tasks = repository.findByStatusAndAssignees_Id(TaskStatus.COMPLETED, userID);
+        return tasks.stream().map(mapper::toDTO).toList();
+    }
+
+    @Override
+    public Long getNumberOfDependentTasks() {
+
+        return repository.countBlockedTasks();
+    }
+
     // NOTE(DC): For better exception messages we could use the task's title and id
     // but only if that's required by
     // the frontend. For now, I'm leaving it like this for simplicity
