@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { TopNav } from '../components/TopNav';
-import { StatusDropdown } from '../components/StatusDropdown';
+import { StatusDropdown } from '../components/Generic/StatusDropdown';
 import { QuestCard } from '../components/QuestCard';
 import { Fab } from '../components/Fab';
 import journalIcon from '../assets/journal.png';
@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { taskApi } from '../api/api';
 import { TaskDTOStatusEnum, type TaskDTO } from '../../typescript-client';
 import { formatDate } from '../lib/date';
+import { toast } from 'react-toastify';
 
 export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -23,8 +24,17 @@ export const Home = () => {
 
   useEffect(() => {
     const load = async () => {
-      const tasks = await taskApi.getAll();
-      setTasks(tasks);
+      try {
+        const tasks = await taskApi.getAll();
+
+        if (!tasks) {
+          toast.error('Failed to load tasks.', { containerId: 'global-toast' });
+          return;
+        }
+        setTasks(tasks);
+      } catch (error) {
+        toast.error('An error occurred while loading tasks.', { containerId: 'global-toast' });
+      }
     };
     load();
   }, []);

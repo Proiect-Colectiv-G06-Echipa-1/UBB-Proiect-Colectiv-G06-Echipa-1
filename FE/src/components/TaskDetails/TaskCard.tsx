@@ -1,7 +1,9 @@
-import { Card, CardContent, Typography, Box, IconButton } from "@mui/material";
+import { Card, CardContent, Typography, Box, IconButton, Button } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import type { DeleteRequest, GetByIdRequest, TaskDTO } from "../../../typescript-client";
+import AddIcon from '@mui/icons-material/Add';
+import type { DeleteRequest, GetByIdRequest, TaskDTO, UpdateRequest } from "../../../typescript-client";
+import { TaskDTOStatusEnum } from "../../../typescript-client";
 import { useEffect, useState } from "react";
 import { taskApi } from "../../api/api";
 import { formatDate } from "../../lib/date";
@@ -9,6 +11,8 @@ import EnergyRoundedContainer from "../Generic/EnergyRoundedContainer";
 import CaptionAndContent from "../Generic/CaptionAndContent";
 import ResponsiveDialog from "../Generic/ResponsiveDialog";
 import { useNavigate } from "react-router-dom";
+import { StatusDropdown } from "../Generic/StatusDropdown";
+import { toast } from "react-toastify";
 
 export default function TaskCard({id}: {id: number}) {
     const navigate = useNavigate(); 
@@ -20,7 +24,13 @@ export default function TaskCard({id}: {id: number}) {
         const deleteRequest : DeleteRequest = {
             id: id
         }
-        await taskApi._delete(deleteRequest);
+
+        try{
+            await taskApi._delete(deleteRequest);
+            toast.success("Task deleted successfully.", { containerId: 'global-toast' });
+        } catch (error) {
+            toast.error("Failed to delete task.", { containerId: 'global-toast' });
+        }
         setOpen(false);
 
         navigate("/");
@@ -31,11 +41,46 @@ export default function TaskCard({id}: {id: number}) {
             const request : GetByIdRequest = {
                 id: id
             }
-            const fetchedTask = taskApi.getById(request);
-            setTask(await fetchedTask);
+
+            try {
+                const fetchedTask = taskApi.getById(request);
+                
+                if (!fetchedTask) {
+                    toast.error('Failed to load task.', { containerId: 'global-toast' });
+                    return;
+                }
+                setTask(await fetchedTask);
+            } catch (error) {
+                toast.error('Failed to load task.', { containerId: 'global-toast' });
+                return;
+            }
         };
         fetchTask();
     }, [id]);
+
+    const handleSelect = async (status: TaskDTOStatusEnum) => {
+        const updatedTask: TaskDTO = {
+            ...task,
+            status: status
+        };
+
+        const updateRequest : UpdateRequest = {
+            id: updatedTask.id!,
+            taskDTO: updatedTask
+        }
+
+        try{
+            await taskApi.update(updateRequest);
+            setTask(updatedTask);
+            toast.success("Task status updated successfully.", { containerId: 'global-toast' });
+        } catch (error) {
+            toast.error("Failed to update task status.", { containerId: 'global-toast' });
+        }
+    }
+
+    const handleTakeTaskClick = async () => {
+        // TODO: Implement user-task assignment logic
+    } 
 
     // HELP: If anyone knows a better way to handle, please fix
     if (task === undefined) {
@@ -64,6 +109,14 @@ export default function TaskCard({id}: {id: number}) {
                     <CaptionAndContent caption="Description:" content={task.description || "No description provided."} />
                     <CaptionAndContent caption="Created:" content={task.creationDate ? formatDate(task.creationDate) : "N/A"} />
                     <CaptionAndContent caption="Deadline:" content={task.deadline ? formatDate(task.deadline) : "N/A"} />
+
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
+                        <Button onClick={handleTakeTaskClick} startIcon={<AddIcon sx={{ color: '#FFFFFF' }} />} sx={{backgroundColor: '#9fafff', color: '#fff', borderRadius: '28px',
+                            width: 'auto', fontSize: '16px',fontWeight: 700,textTransform: 'none', padding: '8px 16px','&:hover': {backgroundColor: '#8a9fff'}}}>
+                            Take Task
+                        </Button>
+                        <StatusDropdown selected={task.status || TaskDTOStatusEnum.Backlog} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" keyColor="#FFFFFF" handleSelect={handleSelect} />
+                    </Box>
                 </CardContent>
             </Card>
 

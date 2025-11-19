@@ -5,13 +5,15 @@ import Stack from "@mui/material/Stack";
 import StringFormInput from "./StringFormInput";
 import DateFormInput from "./DateFormInput";
 import EnergyFormInput from "./EnergyFormInput";
-//import DependencyFormInput from "./DependencyFormInput";
 import { IconButton } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { taskApi } from "../../api/api";
 import { TaskDTOStatusEnum, type AddRequest, type GetByIdRequest, type TaskDTO, type UpdateRequest } from "../../../typescript-client";
 import { TaskFormSchema } from "../../lib/zod";
 import SaveIcon from "@mui/icons-material/Save";
+import DependencyFormInput from "./DependencyFormInput";
+import { toast } from "react-toastify";
+import { set } from "zod";
 
 const maxDamage = 20;
 const maxProcrastinationDamage = 10;
@@ -21,11 +23,13 @@ export default function Form() {
     const [description, setDescription] = useState("");
     const [deadline, setDeadline] = useState(new Date());
     const [energy, setEnergy] = useState(0);
+    const [status, setStatus] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Backlog);
     const [dependency, setDependency] = useState<Set<number>>(new Set());
+    const [error, setError] = useState<string>("");
+    const [tasks, setTasks] = useState<TaskDTO[]>([]);
+    const [selectedTasks, setSelectedTasks] = useState<TaskDTO[]>([]);
 
     const {id} = useParams<{id: string}>();
-
-    const [error, setError] = useState<string>("");
 
     useEffect(() => {
         const load = async () => {
@@ -33,17 +37,46 @@ export default function Form() {
                 const request : GetByIdRequest = {
                     id: Number(id)
                 }
-                const existingTask = await taskApi.getById(request);
+
+                let existingTask: TaskDTO | undefined;
+
+                try {
+                    existingTask = await taskApi.getById(request);
+
+                    if (!existingTask) {
+                        toast.error('Failed to load task.', { containerId: 'global-toast' });
+                        return;
+                    }
+                }
+                catch (error) {
+                    toast.error('Failed to load task.', { containerId: 'global-toast' });
+                    return;
+                }
 
                 setTitle(existingTask.title || "");
                 setDescription(existingTask.description || "");
                 setDeadline(existingTask.deadline || new Date());
                 setEnergy(existingTask.energyCost || 0);
                 setDependency(new Set(existingTask.parents || []));
+                setStatus(existingTask.status || TaskDTOStatusEnum.Backlog);
             }
         }
         load();
     }, [id]);
+
+    useEffect(() => {
+        const loadAllTasks = async () => {
+            const allTasks = await taskApi.getAll();
+            setTasks(allTasks);
+        }
+        loadAllTasks();
+    }, []);
+
+    useEffect(() => {
+        const taskDependencies = tasks.filter((task) => dependency.has(task.id || -1));
+        setSelectedTasks(taskDependencies);
+        console.log(taskDependencies);
+    }, [dependency]);
 
     const navigate = useNavigate();
 
@@ -51,17 +84,21 @@ export default function Form() {
         const damage = (energy * 2) % maxDamage + 1;
         const procrastinationDamage = energy % maxProcrastinationDamage + 1;
         const creationDate = new Date();
+        const dependencyIds : Set<number> = new Set();
+        selectedTasks.forEach((task) => {
+            if (task.id) dependencyIds.add(task.id);
+        });
         
         const newTask : TaskDTO = {
             title: title,
             description: description,
-            status: TaskDTOStatusEnum.Backlog,
+            status: status,
             energyCost: energy,
             damage: damage,
             procrastinationDamage: procrastinationDamage,
             creationDate: creationDate,
             deadline: deadline,
-            parents: dependency,
+            parents: dependencyIds,
         }
 
         const result = TaskFormSchema.safeParse(newTask);
@@ -115,7 +152,7 @@ export default function Form() {
 
                     <EnergyFormInput label="Energy Level" value={energy} setValue={setEnergy} />
 
-                    {/* <DependencyFormInput label="Dependency" selectedItems={dependency} setSelectedItems={setDependency} availableItems={items.filter(item => item.id !== existingTask?.id).map(item => item.name)}/> */}
+                    <DependencyFormInput label="Dependency" selectedTasksDependencies={selectedTasks} setSelectedTasksDependencies={setSelectedTasks} allTasks={tasks} />
 
                     {error && <Box sx={{ color: 'error.main' }}>{error}</Box>}
 
