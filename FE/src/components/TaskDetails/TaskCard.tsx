@@ -1,13 +1,30 @@
 import { Card, CardContent, Typography, Box, IconButton } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
-import type { GetByIdRequest, TaskDTO } from "../../../typescript-client";
+import type { DeleteRequest, GetByIdRequest, TaskDTO } from "../../../typescript-client";
 import { useEffect, useState } from "react";
 import { taskApi } from "../../api/api";
 import { formatDate } from "../../lib/date";
+import EnergyRoundedContainer from "../Generic/EnergyRoundedContainer";
+import CaptionAndContent from "../Generic/CaptionAndContent";
+import ResponsiveDialog from "../Generic/ResponsiveDialog";
+import { useNavigate } from "react-router-dom";
 
 export default function TaskCard({id}: {id: number}) {
+    const navigate = useNavigate(); 
+
     const [task, setTask] = useState<TaskDTO>();
+    const [open, setOpen] = useState(false);
+
+    const handleDeleteConfirm = async () => {
+        const deleteRequest : DeleteRequest = {
+            id: id
+        }
+        await taskApi._delete(deleteRequest);
+        setOpen(false);
+
+        navigate("/");
+    };
 
     useEffect(() => {
         const fetchTask = async () => {
@@ -30,10 +47,7 @@ export default function TaskCard({id}: {id: number}) {
             <Card sx={{ width: '100%', minWidth: 360, maxWidth: 360, borderRadius: 3, boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative'}}>
                 <CardContent sx={{ padding: 2, '&:last-child': { paddingBottom: 2 } }}>
                     <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
-                        <Box sx={{width: 32, height: 32, borderRadius: '50%', bgcolor: '#E9E3F2', color: '#4F378A', display: 'flex',
-                            alignItems: 'center', justifyContent: 'center', fontWeight: 700, fontSize: '14px', flexShrink: 0}}>
-                            {task.energyCost}
-                        </Box>
+                        <EnergyRoundedContainer energyCost={task.energyCost || 0} />
                         <Typography variant="subtitle1" sx={{ fontWeight: 700, flex: 1, fontSize: '18px' }}>
                             {task.title}
                         </Typography>
@@ -41,32 +55,19 @@ export default function TaskCard({id}: {id: number}) {
                             <IconButton size="small" sx={{ padding: '4px' }}>
                                 <EditIcon sx={{ fontSize: '18px' }} />
                             </IconButton>
-                            <IconButton size="small" sx={{ padding: '4px' }}>
+                            <IconButton size="small" sx={{ padding: '4px' }} onClick={() => setOpen(true)}>
                                 <DeleteIcon sx={{ fontSize: '18px' }} />
                             </IconButton>
                         </Box>
                     </Box>
 
-                    <Box sx={{ mb: 1.5 }}>
-                        <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', mb: 0.5, wordBreak: "break-word",}}>
-                            Description: {task.description}
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{ mb: 1.5 }}>
-                        <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', mb: 0.5 }}>
-                            Created: {task.creationDate && formatDate(task.creationDate)}
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{ mb: 2 }}>
-                        <Typography variant="caption" sx={{ fontWeight: 700, display: 'block', mb: 0.5 }}>
-                            Deadline: {/* TODO: Change this to Deadline */}
-                            {task.lastUpdateDate && formatDate(task.lastUpdateDate)}
-                        </Typography>
-                    </Box>
+                    <CaptionAndContent caption="Description:" content={task.description || "No description provided."} />
+                    <CaptionAndContent caption="Created:" content={task.creationDate ? formatDate(task.creationDate) : "N/A"} />
+                    <CaptionAndContent caption="Deadline:" content={task.lastUpdateDate ? formatDate(task.lastUpdateDate) : "N/A"} />
                 </CardContent>
             </Card>
+
+            <ResponsiveDialog open={open} dialogTitle="Delete Task" dialogContent="Are you sure you want to delete this task?" cancelButtonText="Cancel" confirmButtonText="Delete" onCancel={() => setOpen(false)} onConfirm={handleDeleteConfirm} />
         </Box>
     );
 }
