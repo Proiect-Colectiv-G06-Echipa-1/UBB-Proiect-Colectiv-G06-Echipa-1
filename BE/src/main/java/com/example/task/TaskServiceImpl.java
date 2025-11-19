@@ -27,6 +27,10 @@ public class TaskServiceImpl implements TaskService {
         Task newTask = mapper.toEntity(newTaskDTO);
         validator.validate(newTask);
         newTask.setId(id);
+        
+        // Validate status transition
+        validateStatusTransition(currentTask.getStatus(), newTask.getStatus(), newTask);
+        
         if (!currentTask.getParents().equals(newTask.getParents())) {
             throwIfParentsDoNotExist(newTask);
             throwIfUpdatingEntityWouldCreateCycles(newTask);
@@ -79,5 +83,49 @@ public class TaskServiceImpl implements TaskService {
                 throw new IllegalArgumentException("Parent with id=" + parent.getId() + " does not exist");
             }
         });
+    }
+
+    private void validateStatusTransition(TaskStatus currentStatus, TaskStatus newStatus, Task task) {
+        // Disallow changing from PENDING to COMPLETED directly (must go through IN_PROGRESS)
+        if (currentStatus == TaskStatus.PENDING && newStatus == TaskStatus.COMPLETED) {
+            throw new IllegalStateException("Cannot change status from PENDING to COMPLETED directly. Must go through IN_PROGRESS first.");
+        }
+
+        // Cannot change to COMPLETE if dependencies are incomplete
+        if (newStatus == TaskStatus.COMPLETED) {
+            if (hasIncompleteDependencies(task)) {
+                throw new IllegalStateException("Cannot mark task as COMPLETE while it has incomplete dependencies");
+            }
+        }
+
+        // Only allow status changes to PENDING, IN_PROGRESS, or COMPLETED
+        // CANCELLED might be allowed for administrative purposes
+        if (newStatus != TaskStatus.PENDING && newStatus != TaskStatus.IN_PROGRESS && 
+            newStatus != TaskStatus.COMPLETED && newStatus != TaskStatus.CANCELLED) {
+            throw new IllegalArgumentException("Invalid status: " + newStatus);
+        }
+    }
+
+    private boolean hasIncompleteDependencies(Task task) {
+        Set<Integer> visited = new HashSet<>();
+        Deque<Task> stack = new ArrayDeque<>(task.getParents());
+
+        while (!stack.isEmpty()) {
+            Task current = stack.pop();
+
+            if (!visited.contains(current.getId())) {
+                visited.add(current.getId());
+
+                // If parent is not completed, we have incomplete dependencies
+                if (current.getStatus() != TaskStatus.COMPLETED) {
+                    return true;
+                }
+
+                // Add grandparents to check
+                stack.addAll(repository.getParentsOf(current.getId()));
+            }
+        }
+
+        return false;
     }
 }
