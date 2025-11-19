@@ -4,12 +4,10 @@ import { StatusDropdown } from '../components/StatusDropdown';
 import { QuestCard } from '../components/QuestCard';
 import { Fab } from '../components/Fab';
 import journalIcon from '../assets/journal.png';
-import { Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { taskApi } from '../api/api';
 import { TaskDTOStatusEnum, type TaskDTO } from '../../typescript-client';
-import './Home.css';
-import '../App.css';
 import { formatDate } from '../lib/date';
 
 export const Home = () => {
@@ -22,7 +20,7 @@ export const Home = () => {
   };
 
   const navigator = useNavigate();
-  
+
   useEffect(() => {
     const load = async () => {
       const tasks = await taskApi.getAll();
@@ -34,34 +32,112 @@ export const Home = () => {
   const inSelected = tasks.filter(i => i.status === selected);
 
   return (
-    <div className="home">
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100vh',
+        width: '100vw',
+        bgcolor: '#fff',
+        m: 0,
+        p: 0,
+        overflow: 'hidden',
+        position: 'fixed',
+        top: 0,
+        left: 0,
+      }}
+    >
       <TopNav
         energyLevel={energyLevel}
         onDecrease={() => setEnergyLevel(prev => Math.max(0, prev - 1))}
         onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
       />
-      <div className="board">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div className='section-title'>
-            <img src={journalIcon} alt="Journal" className="journal-icon" />
-            <Typography variant="h5" className="nanum-pen">Quests</Typography>
-          </div>
+      <Box
+        className="board" // Păstrat pentru consistență dacă ai nevoie, dar stilul e în sx
+        sx={{
+          position: 'relative',
+          bgcolor: '#A8B1FF',
+          flex: 1,
+          padding: '24px',
+          overflowY: 'auto',
+        }}
+      >
+        {/* Header Section */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            mb: 2,
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '10px',
+              margin: '8px 0 16px',
+            }}
+          >
+            <Box
+              component="img"
+              src={journalIcon}
+              alt="Journal"
+              sx={{
+                width: 40,
+                height: 40,
+                objectFit: 'contain',
+                display: 'block',
+              }}
+            />
+            <Typography
+              variant="h5"
+              sx={{
+                fontFamily: '"Kalam", cursive',
+                fontSize: '24px',
+                color: '#111',
+                fontWeight: 500,
+                lineHeight: 1,
+              }}
+            >
+              Quests
+            </Typography>
+          </Box>
           <StatusDropdown selected={selected} handleSelect={handleSelect} />
-        </div>
-        <div className="card-grid">
-          {inSelected.map((item) => (            
+        </Box>
+
+        {/* Card Grid */}
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(3, 1fr)',
+            gap: '16px',
+            marginTop: '16px',
+            width: '100%',
+            justifyItems: 'start',
+            // Traducerea selectorilor CSS nth-child:
+            '& > :nth-of-type(3n+2)': {
+              justifySelf: 'center',
+            },
+            '& > :nth-of-type(3n)': {
+              justifySelf: 'end',
+            },
+          }}
+        >
+          {inSelected.map((item) => (
             <QuestCard
               key={item.id}
-              id ={item.id || 0}
+              id={item.id || 0}
               title={item?.title || ''}
               created={formatDate(item?.creationDate || new Date())}
               deadline={formatDate(item?.deadline || new Date())}
               count={item?.energyCost || 0}
             />
           ))}
-        </div>
+        </Box>
+        
         <Fab onClick={() => { navigator('/manage-task') }} />
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 };
