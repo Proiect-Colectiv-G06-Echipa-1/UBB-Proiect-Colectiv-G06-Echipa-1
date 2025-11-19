@@ -3,9 +3,11 @@ import { Navigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
 import { useAuth } from "../authentication/AuthContext";
 import { RequireAuth } from "../authentication/RequireAuth";
-import { Home } from "../screens/Home";
+import { Home } from "../pages/Home";
 import Login from "../pages/Login";
 import Register from "../pages/Register";
+import TaskForm from "../pages/TaskForm";
+import { TaskDetailPage } from "../pages/TaskDetailPage";
 
 const loadingPageSx = {
   display: "flex",
@@ -61,6 +63,23 @@ function AppRouting() {
             </RequireAuth>
           }
         />
+        <Route
+          path="/manage-task/:id?"
+          element={
+            <RequireAuth>
+              <TaskForm />
+            </RequireAuth>
+          }>
+
+        </Route>
+        <Route
+          path="/task/:id"
+          element={
+            <RequireAuth>
+              <TaskDetailPage />
+            </RequireAuth>
+          }>
+        </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     );
@@ -73,7 +92,10 @@ function AppRouting() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/home" element={<Navigate to="/login" replace />} />
+        <Route path="/manage-task/:id?" element={<Navigate to="/login" replace />} />
+        <Route path="/task/:id" element={<Navigate to="/login" replace />} />
         <Route path="*" element={<Navigate to="/" replace />} />
+
       </Routes>
     </Box>
   );

@@ -1,3 +1,10 @@
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap");
+
+.nanum-pen {
+  font-family: 'Nanum Pen Script', cursive !important;
+}
+
+
 .app {
   display: flex;
   flex-direction: column;
@@ -28,4 +35,3 @@ body {
 #root {
   height: 100vh;
 }
-
