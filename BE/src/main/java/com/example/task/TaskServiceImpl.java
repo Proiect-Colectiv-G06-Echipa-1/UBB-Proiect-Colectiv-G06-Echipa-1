@@ -1,5 +1,7 @@
 package com.example.task;
 
+import com.example.User.User;
+import com.example.User.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository repository;
     private final TaskMapper mapper;
     private final TaskValidator validator;
+    private final UserRepository userRepository;
 
     @Override
     public TaskDTO add(TaskDTO taskDTO) {
@@ -127,5 +130,53 @@ public class TaskServiceImpl implements TaskService {
         }
 
         return false;
+    }
+
+    @Override
+    public void assignTaskToUser(Integer taskId, Long userId) {
+        Task task = repository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task with id " + taskId + " not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
+
+        task.getAssignees().add(user);
+        user.getAssignedTasks().add(task);
+
+        // If this is the first assignee, change status to IN_PROGRESS
+        if (task.getAssignees().size() == 1 && task.getStatus() == TaskStatus.PENDING) {
+            task.setStatus(TaskStatus.IN_PROGRESS);
+        }
+
+        repository.save(task);
+    }
+
+    @Override
+    public void unassignTaskFromUser(Integer taskId, Long userId) {
+        Task task = repository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task with id " + taskId + " not found"));
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
+
+        task.getAssignees().remove(user);
+        user.getAssignedTasks().remove(task);
+
+        // If no assignees left, change status back to PENDING
+        if (task.getAssignees().isEmpty() && task.getStatus() == TaskStatus.IN_PROGRESS) {
+            task.setStatus(TaskStatus.PENDING);
+        }
+
+        repository.save(task);
+    }
+
+    @Override
+    public List<TaskDTO> getTasksAssignedToUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
+
+        return user.getAssignedTasks().stream()
+                .map(mapper::toDTO)
+                .toList();
     }
 }

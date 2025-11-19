@@ -48,14 +48,14 @@ class TaskServiceImplTest {
                 .setParents(new HashSet<>());
 
         taskDTO = new TaskDTO(1, "Test Task", "Test Description", TaskStatus.PENDING,
-                50, 30, 20, LocalDate.now(), null, new HashSet<>());
+                50, 30, 20, LocalDate.now(), null, new HashSet<>(), new HashSet<>());
     }
 
     @Test
     void update_shouldAllowPendingToInProgress() {
         // Given
         TaskDTO newTaskDTO = new TaskDTO(1, "Test Task", "Test Description", TaskStatus.IN_PROGRESS,
-                50, 30, 20, LocalDate.now(), null, new HashSet<>());
+                50, 30, 20, LocalDate.now(), null, new HashSet<>(), new HashSet<>());
         Task newTask = new Task().setId(1).setStatus(TaskStatus.IN_PROGRESS);
 
         when(repository.findById(1)).thenReturn(Optional.of(task));
@@ -78,7 +78,7 @@ class TaskServiceImplTest {
         // Given
         task.setStatus(TaskStatus.IN_PROGRESS);
         TaskDTO newTaskDTO = new TaskDTO(1, "Test Task", "Test Description", TaskStatus.COMPLETED,
-                50, 30, 20, LocalDate.now(), null, new HashSet<>());
+                50, 30, 20, LocalDate.now(), null, new HashSet<>(), new HashSet<>());
         Task newTask = new Task().setId(1).setStatus(TaskStatus.COMPLETED).setParents(new HashSet<>());
 
         when(repository.findById(1)).thenReturn(Optional.of(task));
@@ -100,7 +100,7 @@ class TaskServiceImplTest {
     void update_shouldPreventPendingToCompleted() {
         // Given
         TaskDTO newTaskDTO = new TaskDTO(1, "Test Task", "Test Description", TaskStatus.COMPLETED,
-                50, 30, 20, LocalDate.now(), null, new HashSet<>());
+                50, 30, 20, LocalDate.now(), null, new HashSet<>(), new HashSet<>());
         Task newTask = new Task().setId(1).setStatus(TaskStatus.COMPLETED);
 
         when(repository.findById(1)).thenReturn(Optional.of(task));
@@ -122,7 +122,7 @@ class TaskServiceImplTest {
         task.getParents().add(parentTask);
 
         TaskDTO newTaskDTO = new TaskDTO(1, "Test Task", "Test Description", TaskStatus.COMPLETED,
-                50, 30, 20, LocalDate.now(), null, Set.of(2));
+                50, 30, 20, LocalDate.now(), null, Set.of(2), new HashSet<>());
         Task newTask = new Task().setId(1).setStatus(TaskStatus.COMPLETED);
         newTask.getParents().add(parentTask);
 
@@ -143,7 +143,7 @@ class TaskServiceImplTest {
         // For now, allowing CANCELLED as it's in the enum
         task.setStatus(TaskStatus.IN_PROGRESS);
         TaskDTO newTaskDTO = new TaskDTO(1, "Test Task", "Test Description", TaskStatus.CANCELLED,
-                50, 30, 20, LocalDate.now(), null, new HashSet<>());
+                50, 30, 20, LocalDate.now(), null, new HashSet<>(), new HashSet<>());
         Task newTask = new Task().setId(1).setStatus(TaskStatus.CANCELLED);
 
         when(repository.findById(1)).thenReturn(Optional.of(task));
