@@ -27,7 +27,7 @@ export default function TaskCard({id}: {id: number}) {
 
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', padding: 0 }}>
-            <Card sx={{ width: '100%', maxWidth: 360, borderRadius: 3, boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative'}}>
+            <Card sx={{ width: '100%', minWidth: 360, maxWidth: 360, borderRadius: 3, boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative'}}>
                 <CardContent sx={{ padding: 2, '&:last-child': { paddingBottom: 2 } }}>
                     <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
                         <Box sx={{width: 32, height: 32, borderRadius: '50%', bgcolor: '#E9E3F2', color: '#4F378A', display: 'flex',
