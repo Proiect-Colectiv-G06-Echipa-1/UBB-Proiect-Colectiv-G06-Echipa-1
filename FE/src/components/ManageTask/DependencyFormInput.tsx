@@ -16,7 +16,7 @@ export default function DependencyFormInput({label, selectedTasksDependencies, s
     const [inputValue, setInputValue] = useState("");
     const [showSuggestions, setShowSuggestions] = useState(false);
 
-    const filteredItems = allTasks.filter((task) => {
+    const availableTaskDependencies = allTasks.filter((task) => {
         if (task.title !== undefined) {
             return task.title.toLowerCase().includes(inputValue.toLowerCase()) && !selectedTasksDependencies.includes(task);
         }
@@ -55,10 +55,10 @@ export default function DependencyFormInput({label, selectedTasksDependencies, s
                     </IconButton>
                     )}}
                 sx={{"& .MuiFilledInput-root": {bgcolor: "#ece6f0", border: 1, borderRadius: 4, borderColor: "black"}, "& .MuiInputLabel-root": {color: "black"}}} fullWidth/>
-            {showSuggestions && filteredItems.length > 0 && (
+            {showSuggestions && availableTaskDependencies.length > 0 && (
                 <Paper sx={{position: "absolute", top: "100%", left: 0, right: 0, zIndex: 1000, maxHeight: "200px", overflowY: "auto", mt: 1, border: 1, borderColor: "black", borderRadius: 2}}>
                     <List disablePadding>
-                        {filteredItems.map((item, index) => (
+                        {availableTaskDependencies.map((item, index) => (
                             <ListItem key={index} disablePadding>
                                 <ListItemButton onClick={() => handleSelectTask(item)}>
                                     <ListItemText primary={item.title} />

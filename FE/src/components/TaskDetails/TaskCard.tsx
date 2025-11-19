@@ -50,7 +50,6 @@ export default function TaskCard({id}: {id: number}) {
                     return;
                 }
                 setTask(await fetchedTask);
-                toast.success('Task loaded successfully.', { containerId: 'global-toast' });
             } catch (error) {
                 toast.error('Failed to load task.', { containerId: 'global-toast' });
                 return;

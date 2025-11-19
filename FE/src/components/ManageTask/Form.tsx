@@ -13,6 +13,7 @@ import { TaskFormSchema } from "../../lib/zod";
 import SaveIcon from "@mui/icons-material/Save";
 import DependencyFormInput from "./DependencyFormInput";
 import { toast } from "react-toastify";
+import { set } from "zod";
 
 const maxDamage = 20;
 const maxProcrastinationDamage = 10;
@@ -37,25 +38,27 @@ export default function Form() {
                     id: Number(id)
                 }
 
+                let existingTask: TaskDTO | undefined;
+
                 try {
-                    const existingTask = await taskApi.getById(request);
+                    existingTask = await taskApi.getById(request);
 
                     if (!existingTask) {
                         toast.error('Failed to load task.', { containerId: 'global-toast' });
                         return;
                     }
-                    setTitle(existingTask.title || "");
-                    setDescription(existingTask.description || "");
-                    setDeadline(existingTask.deadline || new Date());
-                    setEnergy(existingTask.energyCost || 0);
-                    setDependency(new Set(existingTask.parents || []));
-                    setStatus(existingTask.status || TaskDTOStatusEnum.Backlog);
-                    toast.success('Task loaded successfully.', { containerId: 'global-toast' });
                 }
                 catch (error) {
                     toast.error('Failed to load task.', { containerId: 'global-toast' });
                     return;
                 }
+
+                setTitle(existingTask.title || "");
+                setDescription(existingTask.description || "");
+                setDeadline(existingTask.deadline || new Date());
+                setEnergy(existingTask.energyCost || 0);
+                setDependency(new Set(existingTask.parents || []));
+                setStatus(existingTask.status || TaskDTOStatusEnum.Backlog);
             }
         }
         load();
@@ -68,6 +71,12 @@ export default function Form() {
         }
         loadAllTasks();
     }, []);
+
+    useEffect(() => {
+        const taskDependencies = tasks.filter((task) => dependency.has(task.id || -1));
+        setSelectedTasks(taskDependencies);
+        console.log(taskDependencies);
+    }, [dependency]);
 
     const navigate = useNavigate();
 

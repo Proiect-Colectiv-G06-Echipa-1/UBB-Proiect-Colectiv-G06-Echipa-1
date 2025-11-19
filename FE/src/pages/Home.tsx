@@ -34,7 +34,6 @@ export const Home = () => {
           return;
         }
         setTasks(tasks);
-        toast.success('Tasks loaded successfully.', { containerId: 'global-toast' });
       } catch (error) {
         toast.error('An error occurred while loading tasks.', { containerId: 'global-toast' });
       }
