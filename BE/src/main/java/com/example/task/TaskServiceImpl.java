@@ -30,10 +30,10 @@ public class TaskServiceImpl implements TaskService {
         Task newTask = mapper.toEntity(newTaskDTO);
         validator.validate(newTask);
         newTask.setId(id);
-        
+
         // Validate status transition
         validateStatusTransition(currentTask.getStatus(), newTask.getStatus(), newTask);
-        
+
         if (!currentTask.getParents().equals(newTask.getParents())) {
             throwIfParentsDoNotExist(newTask);
             throwIfUpdatingEntityWouldCreateCycles(newTask);
@@ -91,9 +91,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     private void validateStatusTransition(TaskStatus currentStatus, TaskStatus newStatus, Task task) {
-        // Disallow changing from PENDING to COMPLETED directly (must go through IN_PROGRESS)
-        if (currentStatus == TaskStatus.PENDING && newStatus == TaskStatus.COMPLETED) {
-            throw new IllegalStateException("Cannot change status from PENDING to COMPLETED directly. Must go through IN_PROGRESS first.");
+        // Disallow changing from BACKLOG to COMPLETED directly (must go through
+        // IN_PROGRESS)
+        if (currentStatus == TaskStatus.BACKLOG && newStatus == TaskStatus.COMPLETED) {
+            throw new IllegalStateException(
+                    "Cannot change status from BACKLOG to COMPLETED directly. Must go through IN_PROGRESS first.");
         }
 
         // Cannot change to COMPLETE if dependencies are incomplete
@@ -103,10 +105,10 @@ public class TaskServiceImpl implements TaskService {
             }
         }
 
-        // Only allow status changes to PENDING, IN_PROGRESS, or COMPLETED
-        // CANCELLED might be allowed for administrative purposes
-        if (newStatus != TaskStatus.PENDING && newStatus != TaskStatus.IN_PROGRESS && 
-            newStatus != TaskStatus.COMPLETED && newStatus != TaskStatus.CANCELLED) {
+        // Only allow status changes to BACKLOG, IN_PROGRESS, or COMPLETED
+        // ON_HOLD might be allowed for administrative purposes
+        if (newStatus != TaskStatus.BACKLOG && newStatus != TaskStatus.IN_PROGRESS &&
+                newStatus != TaskStatus.COMPLETED && newStatus != TaskStatus.ON_HOLD) {
             throw new IllegalArgumentException("Invalid status: " + newStatus);
         }
     }
@@ -146,7 +148,7 @@ public class TaskServiceImpl implements TaskService {
         user.getAssignedTasks().add(task);
 
         // If this is the first assignee, change status to IN_PROGRESS
-        if (task.getAssignees().size() == 1 && task.getStatus() == TaskStatus.PENDING) {
+        if (task.getAssignees().size() == 1 && task.getStatus() == TaskStatus.BACKLOG) {
             task.setStatus(TaskStatus.IN_PROGRESS);
         }
 
@@ -164,9 +166,9 @@ public class TaskServiceImpl implements TaskService {
         task.getAssignees().remove(user);
         user.getAssignedTasks().remove(task);
 
-        // If no assignees left, change status back to PENDING
+        // If no assignees left, change status back to BACKLOG
         if (task.getAssignees().isEmpty() && task.getStatus() == TaskStatus.IN_PROGRESS) {
-            task.setStatus(TaskStatus.PENDING);
+            task.setStatus(TaskStatus.BACKLOG);
         }
 
         repository.save(task);

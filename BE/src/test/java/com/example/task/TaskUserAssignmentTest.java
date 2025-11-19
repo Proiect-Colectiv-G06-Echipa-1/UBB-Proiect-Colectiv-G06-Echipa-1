@@ -48,7 +48,7 @@ class TaskUserAssignmentTest {
                 .setId(1)
                 .setTitle("Test Task")
                 .setDescription("Test Description")
-                .setStatus(TaskStatus.PENDING)
+                .setStatus(TaskStatus.BACKLOG)
                 .setEnergyCost(50)
                 .setDamage(30)
                 .setProcrastinationDamage(20)
@@ -62,7 +62,7 @@ class TaskUserAssignmentTest {
         user.setEmail("test@example.com");
         user.setAssignedTasks(new HashSet<>());
 
-        taskDTO = new TaskDTO(1, "Test Task", "Test Description", TaskStatus.PENDING,
+        taskDTO = new TaskDTO(1, "Test Task", "Test Description", TaskStatus.BACKLOG,
                 50, 30, 20, LocalDate.now(), null, new HashSet<>(), new HashSet<>());
     }
 
@@ -130,7 +130,7 @@ class TaskUserAssignmentTest {
     }
 
     @Test
-    void unassignTaskFromUser_shouldUnassignTaskAndChangeStatusToPending_whenLastAssignee() {
+    void unassignTaskFromUser_shouldUnassignTaskAndChangeStatusToBackLog_whenLastAssignee() {
         // Given
         task.setStatus(TaskStatus.IN_PROGRESS);
         task.getAssignees().add(user);
@@ -146,7 +146,7 @@ class TaskUserAssignmentTest {
         // Then
         assertFalse(task.getAssignees().contains(user));
         assertFalse(user.getAssignedTasks().contains(task));
-        assertEquals(TaskStatus.PENDING, task.getStatus());
+        assertEquals(TaskStatus.BACKLOG, task.getStatus());
         verify(taskRepository).save(task);
     }
 
