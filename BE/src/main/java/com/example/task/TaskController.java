@@ -83,4 +83,39 @@ public class TaskController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
+
+    @Operation(summary = "Assign a task to a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task assigned successfully"),
+            @ApiResponse(responseCode = "404", description = "Task or user not found")
+    })
+    @PostMapping("/{taskId}/assign/{userId}")
+    public ResponseEntity<Void> assignTaskToUser(@PathVariable Integer taskId, @PathVariable Long userId) {
+        service.assignTaskToUser(taskId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Unassign a task from a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task unassigned successfully"),
+            @ApiResponse(responseCode = "404", description = "Task or user not found")
+    })
+    @PostMapping("/{taskId}/unassign/{userId}")
+    public ResponseEntity<Void> unassignTaskFromUser(@PathVariable Integer taskId, @PathVariable Long userId) {
+        service.unassignTaskFromUser(taskId, userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @Operation(summary = "Get all tasks assigned to a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Tasks retrieved successfully",
+                    content = {
+                        @Content(mediaType = "application/json",
+                        array = @ArraySchema(schema = @Schema(implementation = TaskDTO.class)))}),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<TaskDTO>> getTasksAssignedToUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(service.getTasksAssignedToUser(userId));
+    }
 }
