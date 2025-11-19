@@ -6,26 +6,31 @@ import type { TaskDTO } from "../../../typescript-client";
 
 export interface DependencyFormInputProps {
     label: string;
-    tasks: TaskDTO[];
-    selectedTasks: TaskDTO[];
-    setSelectedTasks: (tasks: TaskDTO[]) => void;
+    allTasks: TaskDTO[];
+    selectedTasksDependencies: TaskDTO[];
+    setSelectedTasksDependencies: (tasks: TaskDTO[]) => void;
 }
 
 
-export default function DependencyFormInput({label, selectedTasks, setSelectedTasks, tasks}: DependencyFormInputProps) {
+export default function DependencyFormInput({label, selectedTasksDependencies, setSelectedTasksDependencies, allTasks}: DependencyFormInputProps) {
     const [inputValue, setInputValue] = useState("");
     const [showSuggestions, setShowSuggestions] = useState(false);
 
-    const filteredItems = tasks.filter((task) => task.title && task.title.toLowerCase().includes(inputValue.toLowerCase()) && !selectedTasks.includes(task));
+    const filteredItems = allTasks.filter((task) => {
+        if (task.title !== undefined) {
+            return task.title.toLowerCase().includes(inputValue.toLowerCase()) && !selectedTasksDependencies.includes(task);
+        }
+        return false;
+    });
 
     const handleSelectTask = (task: TaskDTO) => {
-         setSelectedTasks([...selectedTasks, task]);
+         setSelectedTasksDependencies([...selectedTasksDependencies, task]);
          setInputValue("");
          setShowSuggestions(false);
     };
 
     const handleRemoveTask = (taskToRemove: TaskDTO) => {
-         setSelectedTasks(selectedTasks.filter((task) => task !== taskToRemove));
+         setSelectedTasksDependencies(selectedTasksDependencies.filter((task) => task !== taskToRemove));
     };
 
     const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,9 +69,9 @@ export default function DependencyFormInput({label, selectedTasks, setSelectedTa
                 </Paper>
             )}
 
-            {selectedTasks.length > 0 && (
+            {selectedTasksDependencies.length > 0 && (
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2}}>
-                    {selectedTasks.map((item, index) => (
+                    {selectedTasksDependencies.map((item, index) => (
                         <Chip key={index} label={item.title} onDelete={() => handleRemoveTask(item)} deleteIcon={<CancelIcon />}
                             sx={{ bgcolor: "#7c3aed", color: "white", borderRadius: "20px", "& .MuiChip-deleteIcon": { color: "white", "&:hover": { color: "#f3f4f6"}}}}/>
                     ))}

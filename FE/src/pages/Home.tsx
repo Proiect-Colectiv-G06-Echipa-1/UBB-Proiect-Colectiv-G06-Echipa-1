@@ -11,6 +11,7 @@ import { TaskDTOStatusEnum, type TaskDTO } from '../../typescript-client';
 import './Home.css';
 import '../App.css';
 import { formatDate } from '../lib/date';
+import { toast } from 'react-toastify';
 
 export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -25,8 +26,18 @@ export const Home = () => {
   
   useEffect(() => {
     const load = async () => {
-      const tasks = await taskApi.getAll();
-      setTasks(tasks);
+      try {
+        const tasks = await taskApi.getAll();
+
+        if (!tasks) {
+          toast.error('Failed to load tasks.', { containerId: 'global-toast' });
+          return;
+        }
+        setTasks(tasks);
+        toast.success('Tasks loaded successfully.', { containerId: 'global-toast' });
+      } catch (error) {
+        toast.error('An error occurred while loading tasks.', { containerId: 'global-toast' });
+      }
     };
     load();
   }, []);

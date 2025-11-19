@@ -12,6 +12,7 @@ import { TaskDTOStatusEnum, type AddRequest, type GetByIdRequest, type TaskDTO, 
 import { TaskFormSchema } from "../../lib/zod";
 import SaveIcon from "@mui/icons-material/Save";
 import DependencyFormInput from "./DependencyFormInput";
+import { toast } from "react-toastify";
 
 const maxDamage = 20;
 const maxProcrastinationDamage = 10;
@@ -21,6 +22,7 @@ export default function Form() {
     const [description, setDescription] = useState("");
     const [deadline, setDeadline] = useState(new Date());
     const [energy, setEnergy] = useState(0);
+    const [status, setStatus] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Backlog);
     const [dependency, setDependency] = useState<Set<number>>(new Set());
     const [error, setError] = useState<string>("");
     const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -34,13 +36,26 @@ export default function Form() {
                 const request : GetByIdRequest = {
                     id: Number(id)
                 }
-                const existingTask = await taskApi.getById(request);
 
-                setTitle(existingTask.title || "");
-                setDescription(existingTask.description || "");
-                setDeadline(existingTask.deadline || new Date());
-                setEnergy(existingTask.energyCost || 0);
-                setDependency(new Set(existingTask.parents || []));
+                try {
+                    const existingTask = await taskApi.getById(request);
+
+                    if (!existingTask) {
+                        toast.error('Failed to load task.', { containerId: 'global-toast' });
+                        return;
+                    }
+                    setTitle(existingTask.title || "");
+                    setDescription(existingTask.description || "");
+                    setDeadline(existingTask.deadline || new Date());
+                    setEnergy(existingTask.energyCost || 0);
+                    setDependency(new Set(existingTask.parents || []));
+                    setStatus(existingTask.status || TaskDTOStatusEnum.Backlog);
+                    toast.success('Task loaded successfully.', { containerId: 'global-toast' });
+                }
+                catch (error) {
+                    toast.error('Failed to load task.', { containerId: 'global-toast' });
+                    return;
+                }
             }
         }
         load();
@@ -68,7 +83,7 @@ export default function Form() {
         const newTask : TaskDTO = {
             title: title,
             description: description,
-            status: TaskDTOStatusEnum.Backlog,
+            status: status,
             energyCost: energy,
             damage: damage,
             procrastinationDamage: procrastinationDamage,
@@ -118,7 +133,7 @@ export default function Form() {
 
                     <EnergyFormInput label="Energy Level" value={energy} setValue={setEnergy} />
 
-                    <DependencyFormInput label="Dependency" selectedTasks={selectedTasks} setSelectedTasks={setSelectedTasks} tasks={tasks} />
+                    <DependencyFormInput label="Dependency" selectedTasksDependencies={selectedTasks} setSelectedTasksDependencies={setSelectedTasks} allTasks={tasks} />
 
                     {error && <Box color="error.main">{error}</Box>}
 

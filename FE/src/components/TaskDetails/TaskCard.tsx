@@ -12,6 +12,7 @@ import CaptionAndContent from "../Generic/CaptionAndContent";
 import ResponsiveDialog from "../Generic/ResponsiveDialog";
 import { useNavigate } from "react-router-dom";
 import { StatusDropdown } from "../Generic/StatusDropdown";
+import { toast } from "react-toastify";
 
 export default function TaskCard({id}: {id: number}) {
     const navigate = useNavigate(); 
@@ -23,7 +24,13 @@ export default function TaskCard({id}: {id: number}) {
         const deleteRequest : DeleteRequest = {
             id: id
         }
-        await taskApi._delete(deleteRequest);
+
+        try{
+            await taskApi._delete(deleteRequest);
+            toast.success("Task deleted successfully.", { containerId: 'global-toast' });
+        } catch (error) {
+            toast.error("Failed to delete task.", { containerId: 'global-toast' });
+        }
         setOpen(false);
 
         navigate("/");
@@ -34,17 +41,25 @@ export default function TaskCard({id}: {id: number}) {
             const request : GetByIdRequest = {
                 id: id
             }
-            const fetchedTask = taskApi.getById(request);
-            setTask(await fetchedTask);
+
+            try {
+                const fetchedTask = taskApi.getById(request);
+                
+                if (!fetchedTask) {
+                    toast.error('Failed to load task.', { containerId: 'global-toast' });
+                    return;
+                }
+                setTask(await fetchedTask);
+                toast.success('Task loaded successfully.', { containerId: 'global-toast' });
+            } catch (error) {
+                toast.error('Failed to load task.', { containerId: 'global-toast' });
+                return;
+            }
         };
         fetchTask();
     }, [id]);
 
     const handleSelect = async (status: TaskDTOStatusEnum) => {
-        if (task === undefined) {
-            return;
-        }
-
         const updatedTask: TaskDTO = {
             ...task,
             status: status
@@ -55,12 +70,17 @@ export default function TaskCard({id}: {id: number}) {
             taskDTO: updatedTask
         }
 
-        await taskApi.update(updateRequest);
-        setTask(updatedTask);
+        try{
+            await taskApi.update(updateRequest);
+            setTask(updatedTask);
+            toast.success("Task status updated successfully.", { containerId: 'global-toast' });
+        } catch (error) {
+            toast.error("Failed to update task status.", { containerId: 'global-toast' });
+        }
     }
 
     const handleTakeTaskClick = async () => {
-
+        // TODO: Implement user-task assignment logic
     } 
 
     // HELP: If anyone knows a better way to handle, please fix
