@@ -31,6 +31,58 @@ public class TaskController {
         return ResponseEntity.ok(service.getAll());
     }
 
+    @Operation(summary =  "Get all tasks filtered by status")
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "200", description = "Filtered tasks retrieved successfully",
+                    content = {
+                        @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = TaskDTO.class)))
+                    })
+        })
+    @GetMapping("/filter")
+    public ResponseEntity<List<TaskDTO>> getByStatus(@RequestParam TaskStatus status) {
+        return ResponseEntity.ok(service.getByStatus(status));
+    }
+
+    @Operation(summary = "Get the total number of tasks")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Total count retrieved successfully",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Long.class))
+                    })
+    })
+    @GetMapping("/count")
+    public ResponseEntity<Long> getTotalCount() {
+        return ResponseEntity.ok(service.getTotalNumberOfTasks());
+    }
+
+    @Operation(summary = "Get all completed tasks assigned to a user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Completed tasks retrieved successfully",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = TaskDTO.class)))}),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    @GetMapping("/user/{userId}/completed")
+    public ResponseEntity<List<TaskDTO>> getCompletedTasksByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(service.getCompletedTasksFromUser(userId));
+    }
+
+    @Operation(summary = "Get the count of tasks that depend on incomplete tasks")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Count retrieved successfully",
+                    content = {
+                            @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = Long.class))
+                    })
+    })
+    @GetMapping("/count-blocked")
+    public ResponseEntity<Long> getBlockedTaskCount() {
+        return ResponseEntity.ok(service.getNumberOfDependentTasks());
+    }
+
     @Operation(summary = "Get a task by its id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Task retrieved successfully",
