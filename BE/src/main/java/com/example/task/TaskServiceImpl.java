@@ -184,7 +184,10 @@ public class TaskServiceImpl implements TaskService {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
-
+        
+        if (!task.getAssignees().contains(user)) {
+            throw new IllegalStateException("User with id " + userId + " is not assigned to task with id " + taskId);
+        }
         task.getAssignees().remove(user);
         user.getAssignedTasks().remove(task);
 
