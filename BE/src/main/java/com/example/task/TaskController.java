@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import com.example.User.User;
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/tasks")
@@ -179,37 +180,37 @@ public class TaskController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Task assigned successfully"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "404", description = "Task not found")
+            @ApiResponse(responseCode = "404", description = "Task not found"),
+            @ApiResponse(responseCode = "409", description = "Conflict - invalid assignment")
+
     })
     @PostMapping("/{taskId}/assign")
     public ResponseEntity<Void> assignTaskToUser(@PathVariable Integer taskId,
                                                  @AuthenticationPrincipal User currentUser) {
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
         try {
             service.assignTaskToUser(taskId, currentUser.getId());
-        } catch (Exception e) {
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        
         return ResponseEntity.ok().build();
     }
     @Operation(summary = "Unassign the current authenticated user from a task")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Task unassigned successfully"),
             @ApiResponse(responseCode = "401", description = "Unauthorized"),
-            @ApiResponse(responseCode = "404", description = "Task not found")
+            @ApiResponse(responseCode = "404", description = "Task not found"),
+            @ApiResponse(responseCode = "409", description = "Conflict - user not assigned to task")
     })
     @PostMapping("/{taskId}/unassign")
     public ResponseEntity<Void> unassignTaskFromUser(@PathVariable Integer taskId,
                                                    @AuthenticationPrincipal User currentUser) {
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }   
         try{ 
             service.unassignTaskFromUser(taskId, currentUser.getId());
-        } catch (Exception e) {
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        } catch (EntityNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.ok().build();
