@@ -13,7 +13,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("SELECT p FROM tasks t JOIN t.parents p WHERE t.id = :id")
     Set<Task> getParentsOf(@Param("id") Integer id);
     List<Task> findAllByStatus(TaskStatus status);
-    List<Task> findByStatusAndAssignees_Id(TaskStatus status, Long asigneeID);
+    List<Task> findByStatusAndAssignees_Id(TaskStatus status, Long assigneeID);
     @Query(value = """
         WITH RECURSIVE blocked_tasks AS (
             -- 1. Find tasks directly blocked by an incomplete parent

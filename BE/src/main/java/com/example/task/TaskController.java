@@ -12,6 +12,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import com.example.User.User;
+import jakarta.persistence.EntityNotFoundException;
 
 @RestController
 @RequestMapping("/tasks")
@@ -135,7 +138,8 @@ public class TaskController {
         service.delete(id);
         return ResponseEntity.noContent().build();
     }
-
+    
+    //only for admin use, for now keep it here
     @Operation(summary = "Assign a task to a user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Task assigned successfully"),
@@ -147,6 +151,7 @@ public class TaskController {
         return ResponseEntity.ok().build();
     }
 
+    //only for admin use, for now keep it here
     @Operation(summary = "Unassign a task from a user")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Task unassigned successfully"),
@@ -169,5 +174,39 @@ public class TaskController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<TaskDTO>> getTasksAssignedToUser(@PathVariable Long userId) {
         return ResponseEntity.ok(service.getTasksAssignedToUser(userId));
+    }
+
+    @Operation(summary = "Assign the current authenticated user to a task")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task assigned successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Task not found"),
+            @ApiResponse(responseCode = "409", description = "Conflict - invalid assignment")
+
+    })
+    @PostMapping("/{taskId}/assign")
+    public ResponseEntity<Void> assignTaskToUser(@PathVariable Integer taskId,
+                                                 @AuthenticationPrincipal User currentUser) {
+        try {
+            service.assignTaskToUser(taskId, currentUser.getId());
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok().build();
+    }
+    @Operation(summary = "Unassign the current authenticated user from a task")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Task unassigned successfully"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Task not found"),
+            @ApiResponse(responseCode = "409", description = "Conflict - user not assigned to task")
+    })
+    @PostMapping("/{taskId}/unassign")
+    public ResponseEntity<Void> unassignTaskFromUser(@PathVariable Integer taskId,
+                                                   @AuthenticationPrincipal User currentUser) {
+        service.unassignTaskFromUser(taskId, currentUser.getId());
+        return ResponseEntity.ok().build();
     }
 }

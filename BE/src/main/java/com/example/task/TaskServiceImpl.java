@@ -14,7 +14,7 @@ public class TaskServiceImpl implements TaskService {
     private final TaskRepository repository;
     private final TaskMapper mapper;
     private final TaskValidator validator;
-    private final UserRepository userRepository;
+    private final com.example.User.service.UserService userService;
 
     @Override
     public TaskDTO add(TaskDTO taskDTO) {
@@ -163,8 +163,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = repository.findById(taskId)
                 .orElseThrow(() -> new EntityNotFoundException("Task with id " + taskId + " not found"));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
+        User user = userService.getById(userId);
 
         task.getAssignees().add(user);
         user.getAssignedTasks().add(task);
@@ -182,9 +181,11 @@ public class TaskServiceImpl implements TaskService {
         Task task = repository.findById(taskId)
                 .orElseThrow(() -> new EntityNotFoundException("Task with id " + taskId + " not found"));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
-
+        User user = userService.getById(userId);
+        
+        if (!task.getAssignees().contains(user)) {
+            throw new IllegalStateException("User with id " + userId + " is not assigned to task with id " + taskId);
+        }
         task.getAssignees().remove(user);
         user.getAssignedTasks().remove(task);
 
@@ -198,8 +199,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> getTasksAssignedToUser(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new EntityNotFoundException("User with id " + userId + " not found"));
+        User user = userService.getById(userId);
 
         return user.getAssignedTasks().stream()
                 .map(mapper::toDTO)
