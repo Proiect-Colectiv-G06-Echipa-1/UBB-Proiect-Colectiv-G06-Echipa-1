@@ -206,13 +206,7 @@ public class TaskController {
     @PostMapping("/{taskId}/unassign")
     public ResponseEntity<Void> unassignTaskFromUser(@PathVariable Integer taskId,
                                                    @AuthenticationPrincipal User currentUser) {
-        try{ 
-            service.unassignTaskFromUser(taskId, currentUser.getId());
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        } catch (EntityNotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        service.unassignTaskFromUser(taskId, currentUser.getId());
         return ResponseEntity.ok().build();
     }
 }
