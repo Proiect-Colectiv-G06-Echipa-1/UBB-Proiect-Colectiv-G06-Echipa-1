@@ -23,6 +23,7 @@ Thumbs.db
 # Logs
 *.log
 logs/
+pmd/reports
 
 # Application specific
 application-local.properties

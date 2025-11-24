@@ -2,14 +2,13 @@ package com.example.User;
 
 import com.example.task.Task;
 import jakarta.persistence.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
@@ -32,8 +31,10 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
-    public User() {
-    }
+    @ManyToMany(mappedBy = "assignees")
+    private Set<Task> assignedTasks = new HashSet<>();
+
+    public User() {}
 
     public User(String username, String email, String password, UserRole role) {
         this.username = username;
@@ -108,9 +109,6 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-    @ManyToMany(mappedBy = "assignees")
-    private Set<Task> assignedTasks = new HashSet<>();
 
     public Set<Task> getAssignedTasks() {
         return assignedTasks;

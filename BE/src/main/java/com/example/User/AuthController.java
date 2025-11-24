@@ -33,7 +33,8 @@ public class AuthController {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(AuthenticationManager authenticationManager,
+    public AuthController(
+            AuthenticationManager authenticationManager,
             JwtService jwtService,
             UserRepository userRepository,
             PasswordEncoder passwordEncoder) {
@@ -44,16 +45,25 @@ public class AuthController {
     }
 
     @Operation(summary = "Authenticate user and return JWT token")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Login successful",
-                    content = {
-                        @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = AuthResponse.class))}),
-            @ApiResponse(responseCode = "401", description = "Invalid username or password",
-                    content = {
-                        @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ErrorResponse.class))})
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Login successful",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = AuthResponse.class))
+                        }),
+                @ApiResponse(
+                        responseCode = "401",
+                        description = "Invalid username or password",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                        })
+            })
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
@@ -71,27 +81,40 @@ public class AuthController {
             response.setUsername(userDetails.getUsername());
 
             return ResponseEntity.ok(response);
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException _) {
             ErrorResponse errorResponse = new ErrorResponse("Invalid username or password");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse);
         }
     }
 
     @Operation(summary = "Register a new user account")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "User registered successfully",
-                    content = {
-                        @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = RegisterResponse.class))}),
-            @ApiResponse(responseCode = "400", description = "Username or email already exists",
-                    content = {
-                        @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ErrorResponse.class))}),
-            @ApiResponse(responseCode = "500", description = "Internal server error during registration",
-                    content = {
-                        @Content(mediaType = "application/json",
-                        schema = @Schema(implementation = ErrorResponse.class))})
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "201",
+                        description = "User registered successfully",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = RegisterResponse.class))
+                        }),
+                @ApiResponse(
+                        responseCode = "400",
+                        description = "Username or email already exists",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                        }),
+                @ApiResponse(
+                        responseCode = "500",
+                        description = "Internal server error during registration",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                        })
+            })
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
@@ -119,10 +142,8 @@ public class AuthController {
             userRepository.save(user);
 
             // Return success response
-            RegisterResponse response = new RegisterResponse(
-                    "User registered successfully",
-                    user.getUsername(),
-                    user.getEmail());
+            RegisterResponse response =
+                    new RegisterResponse("User registered successfully", user.getUsername(), user.getEmail());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
 

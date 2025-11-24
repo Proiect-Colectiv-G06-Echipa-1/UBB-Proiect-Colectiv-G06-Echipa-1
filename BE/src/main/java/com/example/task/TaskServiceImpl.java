@@ -1,12 +1,10 @@
 package com.example.task;
 
 import com.example.User.User;
-import com.example.User.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.util.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -51,7 +49,6 @@ public class TaskServiceImpl implements TaskService {
         return mapper.toDTO(repository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Task with the provided id not found")));
-
     }
 
     @Override
@@ -71,7 +68,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public List<TaskDTO> getCompletedTasksFromUser(Long userID) {
-        List<Task> tasks = repository.findByStatusAndAssignees_Id(TaskStatus.COMPLETED, userID);
+        List<Task> tasks = repository.findByStatusAndAssigneesId(TaskStatus.COMPLETED, userID);
         return tasks.stream().map(mapper::toDTO).toList();
     }
 
@@ -129,8 +126,10 @@ public class TaskServiceImpl implements TaskService {
 
         // Only allow status changes to BACKLOG, IN_PROGRESS, or COMPLETED
         // ON_HOLD might be allowed for administrative purposes
-        if (newStatus != TaskStatus.BACKLOG && newStatus != TaskStatus.IN_PROGRESS &&
-                newStatus != TaskStatus.COMPLETED && newStatus != TaskStatus.ON_HOLD) {
+        if (newStatus != TaskStatus.BACKLOG
+                && newStatus != TaskStatus.IN_PROGRESS
+                && newStatus != TaskStatus.COMPLETED
+                && newStatus != TaskStatus.ON_HOLD) {
             throw new IllegalArgumentException("Invalid status: " + newStatus);
         }
     }
@@ -160,7 +159,8 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void assignTaskToUser(Integer taskId, Long userId) {
-        Task task = repository.findById(taskId)
+        Task task = repository
+                .findById(taskId)
                 .orElseThrow(() -> new EntityNotFoundException("Task with id " + taskId + " not found"));
 
         User user = userService.getById(userId);
@@ -178,11 +178,12 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public void unassignTaskFromUser(Integer taskId, Long userId) {
-        Task task = repository.findById(taskId)
+        Task task = repository
+                .findById(taskId)
                 .orElseThrow(() -> new EntityNotFoundException("Task with id " + taskId + " not found"));
 
         User user = userService.getById(userId);
-        
+
         if (!task.getAssignees().contains(user)) {
             throw new IllegalStateException("User with id " + userId + " is not assigned to task with id " + taskId);
         }
@@ -201,8 +202,6 @@ public class TaskServiceImpl implements TaskService {
     public List<TaskDTO> getTasksAssignedToUser(Long userId) {
         User user = userService.getById(userId);
 
-        return user.getAssignedTasks().stream()
-                .map(mapper::toDTO)
-                .toList();
+        return user.getAssignedTasks().stream().map(mapper::toDTO).toList();
     }
 }

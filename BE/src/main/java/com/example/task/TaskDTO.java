@@ -14,5 +14,4 @@ public record TaskDTO(
         LocalDate creationDate,
         LocalDate deadline,
         Set<Integer> parents,
-        Set<Long> assignees
-) {}
+        Set<Long> assignees) {}
