@@ -6,8 +6,7 @@ public class RegisterResponse {
     private String username;
     private String email;
 
-    public RegisterResponse() {
-    }
+    public RegisterResponse() {}
 
     public RegisterResponse(String message, String username, String email) {
         this.message = message;

@@ -3,12 +3,34 @@ plugins {
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
     id 'org.openapi.generator' version '7.17.0'
+    id 'com.diffplug.spotless' version '8.1.0'
+    id 'pmd'
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
 def frontendPath = "$projectDir/../FE"
+
+// NOTE(DC): This is already configured to order imports, remove unused ones
+// and add newline to every file. Pretty much everything we need
+spotless {
+    java {
+        palantirJavaFormat()
+    }
+}
+
+pmd {
+    consoleOutput = true
+    ruleSetFiles = files("pmd/ruleset.xml")
+    reportsDir = file("/pmd/reports")
+    ruleSets = []
+}
+
+// NOTE(DC): This is just for convenience
+tasks.named('pmdMain') {
+    group = 'verification'
+}
 
 java {
 	toolchain {
