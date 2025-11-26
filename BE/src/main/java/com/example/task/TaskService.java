@@ -17,7 +17,9 @@ public interface TaskService {
 
     Long getTotalNumberOfTasks();
 
-    List<TaskDTO> getCompletedTasksFromUser(Long userID);
+    Long getTotalNumberOfTasksByStatus(TaskStatus status);
+
+    List<TaskDTO> getTasksAssignedToUserByStatus(Long userID, TaskStatus status);
 
     Long getNumberOfDependentTasks();
     // User-Task assignment methods
