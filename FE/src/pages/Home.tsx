@@ -63,7 +63,6 @@ export const Home = () => {
         onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
       />
       <Box
-        className="board" // Păstrat pentru consistență dacă ai nevoie, dar stilul e în sx
         sx={{
           position: 'relative',
           bgcolor: '#A8B1FF',
@@ -103,10 +102,10 @@ export const Home = () => {
             <Typography
               variant="h5"
               sx={{
-                fontFamily: '"Kalam", cursive',
-                fontSize: '24px',
+                fontFamily: "'Nanum Pen Script', cursive",
+                fontWeight: 400,
+                fontSize: '36px',
                 color: '#111',
-                fontWeight: 500,
                 lineHeight: 1,
               }}
             >
@@ -125,7 +124,6 @@ export const Home = () => {
             marginTop: '16px',
             width: '100%',
             justifyItems: 'start',
-            // Traducerea selectorilor CSS nth-child:
             '& > :nth-of-type(3n+2)': {
               justifySelf: 'center',
             },
@@ -145,7 +143,7 @@ export const Home = () => {
             />
           ))}
         </Box>
-        
+
         <Fab onClick={() => { navigator('/manage-task') }} />
       </Box>
     </Box>
