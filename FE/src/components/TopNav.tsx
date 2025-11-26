@@ -39,7 +39,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
     cursor: disabled ? 'not-allowed' : 'pointer',
     opacity: disabled ? 0.4 : 1,
     padding: 0,
-    minWidth: 0, 
+    minWidth: 0,
   });
 
   const iconBtnStyle = {
@@ -85,8 +85,9 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
         <Typography
           variant="h5"
           sx={{
-            fontFamily: '"Nanum Pen Script", cursive', 
-            fontWeight: 700,
+            fontFamily: "'Nanum Pen Script', cursive",
+            fontWeight: 400,
+            fontSize: '36px',
             letterSpacing: '.06em',
             color: '#111',
           }}
@@ -97,7 +98,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
 
       {/* ACTIONS SECTION */}
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-        
+
         {/* Decrease Button */}
         <Box
           component="button"
@@ -167,7 +168,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
         <Box
           sx={{
             ...iconBtnStyle,
-            borderRadius: '50%', 
+            borderRadius: '50%',
           }}
           aria-label="User"
         >
