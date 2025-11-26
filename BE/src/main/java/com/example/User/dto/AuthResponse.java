@@ -6,8 +6,7 @@ public class AuthResponse {
     private String tokenType;
     private String username;
 
-    public AuthResponse() {
-    }
+    public AuthResponse() {}
 
     public String getToken() {
         return token;
@@ -33,4 +32,3 @@ public class AuthResponse {
         this.username = username;
     }
 }
-

@@ -10,8 +10,7 @@ public class LoginRequest {
     @NotBlank
     private String password;
 
-    public LoginRequest() {
-    }
+    public LoginRequest() {}
 
     public String getUsername() {
         return username;
@@ -29,4 +28,3 @@ public class LoginRequest {
         this.password = password;
     }
 }
-

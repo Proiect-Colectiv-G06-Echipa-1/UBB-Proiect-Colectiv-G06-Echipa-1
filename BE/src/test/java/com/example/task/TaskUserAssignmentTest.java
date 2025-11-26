@@ -1,24 +1,23 @@
 package com.example.task;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
 import com.example.User.User;
 import com.example.User.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class TaskUserAssignmentTest {
@@ -62,8 +61,18 @@ class TaskUserAssignmentTest {
         user.setEmail("test@example.com");
         user.setAssignedTasks(new HashSet<>());
 
-        taskDTO = new TaskDTO(1, "Test Task", "Test Description", TaskStatus.BACKLOG,
-                50, 30, 20, LocalDate.now(), null, new HashSet<>(), new HashSet<>());
+        taskDTO = new TaskDTO(
+                1,
+                "Test Task",
+                "Test Description",
+                TaskStatus.BACKLOG,
+                50,
+                30,
+                20,
+                LocalDate.now(),
+                null,
+                new HashSet<>(),
+                new HashSet<>());
     }
 
     @Test
@@ -112,8 +121,8 @@ class TaskUserAssignmentTest {
         when(taskRepository.findById(1)).thenReturn(Optional.empty());
 
         // When & Then
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> taskService.assignTaskToUser(1, 1L));
+        EntityNotFoundException exception =
+                assertThrows(EntityNotFoundException.class, () -> taskService.assignTaskToUser(1, 1L));
         assertEquals("Task with id 1 not found", exception.getMessage());
     }
 
@@ -124,8 +133,8 @@ class TaskUserAssignmentTest {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         // When & Then
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> taskService.assignTaskToUser(1, 1L));
+        EntityNotFoundException exception =
+                assertThrows(EntityNotFoundException.class, () -> taskService.assignTaskToUser(1, 1L));
         assertEquals("User with id 1 not found", exception.getMessage());
     }
 
@@ -184,8 +193,8 @@ class TaskUserAssignmentTest {
         when(taskRepository.findById(1)).thenReturn(Optional.empty());
 
         // When & Then
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> taskService.unassignTaskFromUser(1, 1L));
+        EntityNotFoundException exception =
+                assertThrows(EntityNotFoundException.class, () -> taskService.unassignTaskFromUser(1, 1L));
         assertEquals("Task with id 1 not found", exception.getMessage());
     }
 
@@ -196,8 +205,8 @@ class TaskUserAssignmentTest {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         // When & Then
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> taskService.unassignTaskFromUser(1, 1L));
+        EntityNotFoundException exception =
+                assertThrows(EntityNotFoundException.class, () -> taskService.unassignTaskFromUser(1, 1L));
         assertEquals("User with id 1 not found", exception.getMessage());
     }
 
@@ -213,8 +222,18 @@ class TaskUserAssignmentTest {
         user.getAssignedTasks().add(task);
         user.getAssignedTasks().add(task2);
 
-        TaskDTO taskDTO2 = new TaskDTO(2, "Test Task 2", null, TaskStatus.IN_PROGRESS,
-                0, 0, 0, LocalDate.now(), null, new HashSet<>(), Set.of(1L));
+        TaskDTO taskDTO2 = new TaskDTO(
+                2,
+                "Test Task 2",
+                null,
+                TaskStatus.IN_PROGRESS,
+                0,
+                0,
+                0,
+                LocalDate.now(),
+                null,
+                new HashSet<>(),
+                Set.of(1L));
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(taskMapper.toDTO(task)).thenReturn(taskDTO);
@@ -235,8 +254,8 @@ class TaskUserAssignmentTest {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         // When & Then
-        EntityNotFoundException exception = assertThrows(EntityNotFoundException.class,
-                () -> taskService.getTasksAssignedToUser(1L));
+        EntityNotFoundException exception =
+                assertThrows(EntityNotFoundException.class, () -> taskService.getTasksAssignedToUser(1L));
         assertEquals("User with id 1 not found", exception.getMessage());
     }
 

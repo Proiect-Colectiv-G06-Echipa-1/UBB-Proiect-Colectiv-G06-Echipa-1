@@ -1,7 +1,7 @@
 ﻿import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
-import { register } from '../api/axiosCalls';
+import { authApi } from '../api/api.ts';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
 
@@ -60,7 +60,7 @@ export default function Register() {
     setLoading(true);
 
     try {
-      await register(username, email, password);
+      await authApi.register({registerRequest: {username, password, email}});
       toast.success('Registration successful! Please login.', { containerId: 'global-toast' });
       setTimeout(() => {
         navigate('/login');
