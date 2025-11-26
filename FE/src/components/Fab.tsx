@@ -11,6 +11,7 @@ export const Fab = ({ onClick }: Props) => (
       position: 'absolute',
       right: 24,
       bottom: 48,
+      minWidth: 0,
       width: 52,
       height: 52,
       borderRadius: '14px',
