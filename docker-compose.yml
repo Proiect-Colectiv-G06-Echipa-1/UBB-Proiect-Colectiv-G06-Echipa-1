@@ -54,9 +54,9 @@ services:
       VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
       VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080/api}
     volumes:
-      - ./FE/src:/app/src
-      # Optionally, mount public if needed for hot reload:
-      - ./FE/public:/app/public
+      - ./FE/src:/app/src:ro
+      - ./FE/public:/app/public:ro
+      - ./FE/index.html:/app/index.html:ro
     depends_on:
       - backend
     networks:

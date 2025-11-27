@@ -1,7 +1,5 @@
-// Skeleton component removed — kept as a stub to avoid accidental imports.
-// If you want to restore the skeletons, re-implement them or move these
-// definitions into `/src/unused_components/` for archival.
+import { Skeleton } from '@mui/material';
 
-export const CardSkeleton = () => null;
+export const CardSkeleton = () => <Skeleton variant="rectangular" width={240} height={100} sx={{ borderRadius: 3 }} />;
 export const ListSkeleton = () => null;
 export const DetailSkeleton = () => null;

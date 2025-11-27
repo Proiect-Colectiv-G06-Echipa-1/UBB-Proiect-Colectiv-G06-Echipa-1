@@ -132,8 +132,18 @@ export default function Form() {
     };
     
     return (
-        <Box flexGrow={1} display="flex" justifyContent="center" alignItems="center">
-            <Box p={4} border={1} borderRadius={8} borderColor="grey.300" minWidth={570} bgcolor={"white"} position="relative" pb={8}>
+        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 0, padding: 0 }}>
+            <Box sx={{ 
+                p: 4, 
+                border: '1px solid', 
+                borderColor: 'grey.300', 
+                borderRadius: 8, 
+                minWidth: 570, 
+                bgcolor: 'white', 
+                position: 'relative', 
+                pb: 8,
+                margin: 0
+            }}>
                 <Stack spacing={2} mb={4}>
                     <StringFormInput label="Title" value={title} setValue={setTitle} />
                     <StringFormInput label="Description" value={description} setValue={setDescription} />
@@ -144,11 +154,18 @@ export default function Form() {
 
                     <DependencyFormInput label="Dependency" selectedTasksDependencies={selectedTasks} setSelectedTasksDependencies={setSelectedTasks} allTasks={tasks} />
 
-                    {error && <Box color="error.main">{error}</Box>}
+                    {error && <Box sx={{ color: 'error.main' }}>{error}</Box>}
 
-                    <IconButton onClick={handleSubmit} sx={{position: "absolute", bottom: 24, right: 24, bgcolor: "primary.main", color: "white", width: 48, height: 48,
-                        "&:hover": { bgcolor: "primary.dark"},
-                        "&:disabled": {bgcolor: "grey.400", color: "grey.600"}
+                    <IconButton onClick={handleSubmit} sx={{
+                        position: 'absolute', 
+                        bottom: 24, 
+                        right: 24, 
+                        bgcolor: 'primary.main', 
+                        color: 'white', 
+                        width: 48, 
+                        height: 48,
+                        '&:hover': { bgcolor: 'primary.dark' },
+                        '&:disabled': { bgcolor: 'grey.400', color: 'grey.600' }
                     }}>
                         {id ? <SaveIcon /> : <AddIcon />}
                     </IconButton>

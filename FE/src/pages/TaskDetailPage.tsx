@@ -12,7 +12,19 @@ export function TaskDetailPage() {
   const {id} = useParams<{id: string}>();
 
     return (
-        <Box display="flex" flexDirection="column" minHeight="100vh" bgcolor={"#9FAFFF"}>
+        <Box sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          display: 'flex',
+          flexDirection: 'column',
+          bgcolor: '#9FAFFF',
+          margin: 0,
+          padding: 0,
+          overflow: 'hidden'
+        }}>
             <TopNav
                 energyLevel={energyLevel}
                 onDecrease={() => setEnergyLevel(prev => Math.max(0, prev - 1))}
@@ -24,7 +36,7 @@ export function TaskDetailPage() {
                     <Box sx={{ px: 3, pb: 2 }}>
                         <img src={notesIcon} alt="Notes" height={60} width={60}/>
                     </Box>
-                    <Box sx={{ flex: 1,display: 'flex', alignItems: 'center', justifyContent: 'center', paddingRight: 2}}>
+                    <Box sx={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', paddingRight: 2}}>
                         <TaskCard id={Number(id)} />
                     </Box>
                 </Box>

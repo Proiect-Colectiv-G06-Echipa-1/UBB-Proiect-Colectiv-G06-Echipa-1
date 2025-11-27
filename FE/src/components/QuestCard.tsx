@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './QuestCard.css';
+import { Box, Typography, Card } from '@mui/material';
 
 interface QuestCardProps {
   id: number;
@@ -11,17 +11,71 @@ interface QuestCardProps {
 
 export const QuestCard = ({ id, title, created, deadline, count }: QuestCardProps) => {
   return (
-    <Link to={`/task/${id}`} className='quest-card-link'>
-      <div className="quest-card">
-        <div className="badge">{count}</div>
-          <div className="content">
-            <h4>{title}</h4>
-            <div className="meta">
-            <div>Created: {created}</div>
-            <div>Deadline: {deadline}</div>
-          </div>
-        </div>
-      </div>
+    <Link to={`/task/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+      <Card 
+        elevation={0}
+        sx={{
+          bgcolor: '#fff',
+          borderRadius: '12px',
+          padding: '14px 16px',
+          display: 'flex',
+          gap: '12px',
+          alignItems: 'flex-start',
+          width: '240px',
+          boxShadow: '0 2px 0 #cfc7d8',
+          transition: 'transform 0.1s ease',
+          '&:hover': {
+             transform: 'translateY(-1px)'
+          }
+        }}
+      >
+        <Box
+          sx={{
+            width: 32,
+            height: 32,
+            borderRadius: '50%',
+            bgcolor: '#e9e3f2',
+            color: '#4f378a',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            fontWeight: 700,
+            fontSize: '14px',
+            flexShrink: 0
+          }}
+        >
+          {count}
+        </Box>
+        
+        <Box sx={{ flex: 1 }}>
+          <Typography 
+            variant="h6" 
+            component="h4" 
+            sx={{ 
+              margin: '0 0 6px 0', 
+              fontWeight: 700,
+              fontSize: '16px',
+              lineHeight: 1.2 
+            }}
+          >
+            {title}
+          </Typography>
+          
+          <Box 
+            sx={{ 
+              fontSize: '12px', 
+              color: '#000',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 0,
+              lineHeight: 1.3
+            }}
+          >
+            <Box>Created: {created}</Box>
+            <Box>Deadline: {deadline}</Box>
+          </Box>
+        </Box>
+      </Card>
     </Link>
   );
 };
