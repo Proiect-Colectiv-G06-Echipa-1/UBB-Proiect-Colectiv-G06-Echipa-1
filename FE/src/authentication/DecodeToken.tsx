@@ -2,12 +2,14 @@ import { jwtDecode } from "jwt-decode";
 
 interface IJwtPayload {
   sub: string;
+  userId?: number;
   exp?: number;
   iat?: number;
 }
 
 interface ITokenData {
   username: string;
+  userId: number | null;
   expired: boolean;
 }
 
@@ -15,6 +17,7 @@ function decodeToken(token: string): IJwtPayload | null {
   try {
     return jwtDecode<IJwtPayload>(token);
   } catch (err) {
+    console.error("Failed to decode token:", err);
     return null;
   }
 }
@@ -40,6 +43,7 @@ export function getTokenData(): ITokenData | null {
   
   return {
     username: decoded.sub,
+    userId: decoded.userId || null,
     expired: false
   };
 }

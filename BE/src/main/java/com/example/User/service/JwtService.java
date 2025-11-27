@@ -1,5 +1,7 @@
 package com.example.User.service;
 
+import com.example.User.User;
+import com.example.User.UserRepository;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -8,6 +10,7 @@ import java.util.Date;
 import java.util.function.Function;
 import javax.crypto.SecretKey;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,14 +26,22 @@ public class JwtService {
     @Value("${jwt.expiration:86400000}")
     private int jwtExpirationMs;
 
+    @Autowired
+    private UserRepository userRepository;
+
     private SecretKey getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
     public String generateJwtToken(Authentication authentication) {
         String username = authentication.getName();
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
         return Jwts.builder()
                 .subject(username)
+                .claim("userId", user.getId())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getSigningKey())
@@ -38,8 +49,13 @@ public class JwtService {
     }
 
     public String generateTokenFromUsername(String username) {
+        User user = userRepository
+                .findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found: " + username));
+
         return Jwts.builder()
                 .subject(username)
+                .claim("userId", user.getId())
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getSigningKey())
