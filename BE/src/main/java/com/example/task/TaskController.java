@@ -67,10 +67,7 @@ public class TaskController {
             })
     @GetMapping("/count")
     public ResponseEntity<Long> getTotalCount(@RequestParam(required = false) TaskStatus status) {
-        if (status == null) {
-            return ResponseEntity.ok(service.getTotalNumberOfTasks());
-        }
-        return ResponseEntity.ok(service.getTotalNumberOfTasksByStatus(status));
+        return ResponseEntity.ok(service.getTotalNumberOfTasks(status));
     }
 
     @Operation(summary = "Get the count of tasks that depend on incomplete tasks")
@@ -177,7 +174,7 @@ public class TaskController {
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Get all tasks assigned to a user and by status")
+    @Operation(summary = "Get all tasks by status assigned to a given user")
     @ApiResponses(
             value = {
                 @ApiResponse(
@@ -192,14 +189,7 @@ public class TaskController {
             })
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<TaskDTO>> getTasksAssignedToUser(@PathVariable Long userId, @RequestParam(required = false) TaskStatus status) {
-        List<TaskDTO> tasks;
-        if(status == null){
-            tasks = service.getTasksAssignedToUser(userId);
-        }
-        else{
-            tasks = service.getTasksAssignedToUserByStatus(userId, status);
-        }
-        return ResponseEntity.ok(tasks);
+        return ResponseEntity.ok(service.getTasksAssignedToUserByStatus(userId, status));
     }
 
     @Operation(summary = "Assign the current authenticated user to a task")

@@ -62,23 +62,29 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Long getTotalNumberOfTasks() {
-        return repository.count();
-    }
-
-    @Override
-    public Long getTotalNumberOfTasksByStatus(TaskStatus status) {
-        return  repository.countByStatus(status);
+    public Long getTotalNumberOfTasks(TaskStatus status) {
+        Optional<TaskStatus> taskStatus = Optional.ofNullable(status);
+        if (taskStatus.isPresent()) {
+            return repository.countByStatus(taskStatus.get());
+        }
+        else {
+            return repository.count();
+        }
     }
 
     @Override
     public List<TaskDTO> getTasksAssignedToUserByStatus(Long userID, TaskStatus status) {
-        return repository.findByStatusAndAssigneesId(status, userID).stream().map(mapper::toDTO).toList();
+        Optional<TaskStatus> taskStatus = Optional.ofNullable(status);
+        if (taskStatus.isPresent()) {
+            return repository.findByStatusAndAssigneesId(status, userID).stream().map(mapper::toDTO).toList();
+        }
+        else {
+            return userService.getById(userID).getAssignedTasks().stream().map(mapper::toDTO).toList();
+        }
     }
 
     @Override
     public Long getNumberOfDependentTasks() {
-
         return repository.countBlockedTasks();
     }
 
