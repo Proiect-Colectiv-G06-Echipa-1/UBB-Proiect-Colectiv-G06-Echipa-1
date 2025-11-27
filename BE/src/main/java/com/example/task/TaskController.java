@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -66,8 +68,8 @@ public class TaskController {
                             })
             })
     @GetMapping("/count")
-    public ResponseEntity<Long> getTotalCount(@RequestParam(required = false) TaskStatus status) {
-        return ResponseEntity.ok(service.getTotalNumberOfTasks(status));
+    public ResponseEntity<Long> getTotalCount(@RequestParam(required = false) Optional<TaskStatus> status) {
+        return ResponseEntity.ok(service.getTaskCountByStatus(status));
     }
 
     @Operation(summary = "Get the count of tasks that depend on incomplete tasks")

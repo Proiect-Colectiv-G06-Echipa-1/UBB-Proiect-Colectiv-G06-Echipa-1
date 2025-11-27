@@ -62,10 +62,9 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public Long getTotalNumberOfTasks(TaskStatus status) {
-        Optional<TaskStatus> taskStatus = Optional.ofNullable(status);
-        if (taskStatus.isPresent()) {
-            return repository.countByStatus(taskStatus.get());
+    public Long getTaskCountByStatus(Optional<TaskStatus> status) {
+        if (status.isPresent()) {
+            return repository.countByStatus(status.get());
         }
         else {
             return repository.count();
