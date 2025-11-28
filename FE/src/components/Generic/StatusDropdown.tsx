@@ -34,7 +34,10 @@ export const StatusDropdown = ({selected, backgroundColor, hoverBackgroundColor,
 
   return (
     <Box>
-      <GenericButton text={formatStatus(selected)} onClick={handleClick} backgroundColor={backgroundColor} hoverBackgroundColor={hoverBackgroundColor} endIcon={<KeyboardArrowDown sx={{ color: keyColor || '#aa86ff' }} />} />
+      <Button onClick={handleClick} endIcon={<KeyboardArrowDown sx={{ color: keyColor || '#aa86ff' }} />} sx={{backgroundColor: backgroundColor || '#9fafff',
+        color: '#fff', borderRadius: '28px', width: 'auto', fontSize: '16px',fontWeight: 700,textTransform: 'none',padding: '8px 16px','&:hover': {backgroundColor: hoverBackgroundColor || '#8a9fff'}}}>
+        {formatStatus(selected)}
+      </Button>
       
       <Menu
         anchorEl={anchorEl}

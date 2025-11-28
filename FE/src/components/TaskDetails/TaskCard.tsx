@@ -142,7 +142,10 @@ export default function TaskCard({id}: {id: number}) {
                         {isTaskAssignedToUser ? (
                             <StatusDropdown selected={task.status || TaskDTOStatusEnum.Backlog} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" keyColor="#FFFFFF" handleSelect={handleSelect} />
                         ) : (
-                            <GenericButton text="Take Task" onClick={handleTakeTaskClick} startIcon={<AddIcon sx={{ color: '#FFFFFF' }} />} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" />
+                            <Button onClick={handleTakeTaskClick} startIcon={<AddIcon sx={{ color: '#FFFFFF' }} />} sx={{backgroundColor: '#9fafff',
+                                color: '#fff', borderRadius: '28px', width: 'auto', fontSize: '16px',fontWeight: 700,textTransform: 'none',padding: '8px 16px','&:hover': {backgroundColor: '#8a9fff'}}}>
+                                Take Task
+                            </Button>
                         )}
                     </Box>
                 </CardContent>
