@@ -13,7 +13,6 @@ import ResponsiveDialog from "../Generic/ResponsiveDialog";
 import { useNavigate } from "react-router-dom";
 import { StatusDropdown } from "../Generic/StatusDropdown";
 import { toast } from "react-toastify";
-import { GenericButton } from "../Generic/Button";
 
 export default function TaskCard({id}: {id: number}) {
     const navigate = useNavigate(); 
