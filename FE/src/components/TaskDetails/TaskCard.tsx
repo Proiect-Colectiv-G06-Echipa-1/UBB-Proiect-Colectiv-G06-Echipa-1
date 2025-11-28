@@ -2,7 +2,7 @@ import { Card, CardContent, Typography, Box, IconButton, Button } from "@mui/mat
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import type { DeleteRequest, GetByIdRequest, TaskDTO, UpdateRequest } from "../../../typescript-client";
+import type { AssignTaskToUserRequest, DeleteRequest, GetByIdRequest, IsTaskAssignedToUserRequest, TaskDTO, UpdateRequest } from "../../../typescript-client";
 import { TaskDTOStatusEnum } from "../../../typescript-client";
 import { useEffect, useState } from "react";
 import { taskApi } from "../../api/api";
@@ -13,28 +13,14 @@ import ResponsiveDialog from "../Generic/ResponsiveDialog";
 import { useNavigate } from "react-router-dom";
 import { StatusDropdown } from "../Generic/StatusDropdown";
 import { toast } from "react-toastify";
+import { GenericButton } from "../Generic/Button";
 
 export default function TaskCard({id}: {id: number}) {
     const navigate = useNavigate(); 
 
     const [task, setTask] = useState<TaskDTO>();
-    const [open, setOpen] = useState(false);
-
-    const handleDeleteConfirm = async () => {
-        const deleteRequest : DeleteRequest = {
-            id: id
-        }
-
-        try{
-            await taskApi._delete(deleteRequest);
-            toast.success("Task deleted successfully.", { containerId: 'global-toast' });
-        } catch (error) {
-            toast.error("Failed to delete task.", { containerId: 'global-toast' });
-        }
-        setOpen(false);
-
-        navigate("/");
-    };
+    const [isTaskAssignedToUser, setIsTaskAssignedToUser] = useState<boolean>(false);
+    const [openDialog, setOpenDialog] = useState(false);
 
     useEffect(() => {
         const fetchTask = async () => {
@@ -58,6 +44,23 @@ export default function TaskCard({id}: {id: number}) {
         fetchTask();
     }, [id]);
 
+    useEffect(() => {
+        const getIsTaskAssignedToUser = async () => {
+            const request: IsTaskAssignedToUserRequest = {
+                taskId: id
+            }
+
+            try {
+                const assigned = taskApi.isTaskAssignedToUser(request);
+                setIsTaskAssignedToUser(await assigned);
+            } catch (error) {
+                console.error(error);
+                toast.error('Failed to check task assignment.', { containerId: 'global-toast' });
+            }
+        }
+        getIsTaskAssignedToUser();
+    }, [id]);
+
     const handleSelect = async (status: TaskDTOStatusEnum) => {
         const updatedTask: TaskDTO = {
             ...task,
@@ -72,14 +75,39 @@ export default function TaskCard({id}: {id: number}) {
         try{
             await taskApi.update(updateRequest);
             setTask(updatedTask);
-            toast.success("Task status updated successfully.", { containerId: 'global-toast' });
         } catch (error) {
             toast.error("Failed to update task status.", { containerId: 'global-toast' });
         }
     }
 
+    const handleDeleteConfirm = async () => {
+        const deleteRequest : DeleteRequest = {
+            id: id
+        }
+
+        try{
+            await taskApi._delete(deleteRequest);
+            toast.success("Task deleted successfully.", { containerId: 'global-toast' });
+        } catch (error) {
+            toast.error("Failed to delete task.", { containerId: 'global-toast' });
+        }
+        setOpenDialog(false);
+
+        navigate("/");
+    };
+
     const handleTakeTaskClick = async () => {
-        // TODO: Implement user-task assignment logic
+        const takeTaskRequest: AssignTaskToUserRequest = {
+            taskId: id
+        }
+
+        try {
+            await taskApi.assignTaskToUser(takeTaskRequest);
+            setIsTaskAssignedToUser(true);
+            toast.success("Task successfully assigned to you.", { containerId: 'global-toast' });
+        } catch (error) {
+            toast.error("Failed to assign task to you.", { containerId: 'global-toast' });
+        }
     } 
 
     // HELP: If anyone knows a better way to handle, please fix
@@ -100,7 +128,7 @@ export default function TaskCard({id}: {id: number}) {
                             <IconButton size="small" sx={{ padding: '4px' }} onClick={() => {navigate(`/manage-task/${task.id}`)}}>
                                 <EditIcon sx={{ fontSize: '18px' }} />
                             </IconButton>
-                            <IconButton size="small" sx={{ padding: '4px' }} onClick={() => setOpen(true)}>
+                            <IconButton size="small" sx={{ padding: '4px' }} onClick={() => setOpenDialog(true)}>
                                 <DeleteIcon sx={{ fontSize: '18px' }} />
                             </IconButton>
                         </Box>
@@ -111,16 +139,16 @@ export default function TaskCard({id}: {id: number}) {
                     <CaptionAndContent caption="Deadline:" content={task.deadline ? formatDate(task.deadline) : "N/A"} />
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
-                        <Button onClick={handleTakeTaskClick} startIcon={<AddIcon sx={{ color: '#FFFFFF' }} />} sx={{backgroundColor: '#9fafff', color: '#fff', borderRadius: '28px',
-                            width: 'auto', fontSize: '16px',fontWeight: 700,textTransform: 'none', padding: '8px 16px','&:hover': {backgroundColor: '#8a9fff'}}}>
-                            Take Task
-                        </Button>
-                        <StatusDropdown selected={task.status || TaskDTOStatusEnum.Backlog} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" keyColor="#FFFFFF" handleSelect={handleSelect} />
+                        {isTaskAssignedToUser ? (
+                            <StatusDropdown selected={task.status || TaskDTOStatusEnum.Backlog} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" keyColor="#FFFFFF" handleSelect={handleSelect} />
+                        ) : (
+                            <GenericButton text="Take Task" onClick={handleTakeTaskClick} startIcon={<AddIcon sx={{ color: '#FFFFFF' }} />} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" />
+                        )}
                     </Box>
                 </CardContent>
             </Card>
 
-            <ResponsiveDialog open={open} dialogTitle="Delete Task" dialogContent="Are you sure you want to delete this task?" cancelButtonText="Cancel" confirmButtonText="Delete" onCancel={() => setOpen(false)} onConfirm={handleDeleteConfirm} />
+            <ResponsiveDialog open={openDialog} dialogTitle="Delete Task" dialogContent="Are you sure you want to delete this task?" cancelButtonText="Cancel" confirmButtonText="Delete" onCancel={() => setOpenDialog(false)} onConfirm={handleDeleteConfirm} />
         </Box>
     );
 }
