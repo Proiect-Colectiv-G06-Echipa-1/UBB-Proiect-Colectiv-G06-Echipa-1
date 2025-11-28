@@ -2,6 +2,7 @@ package com.example.User.service;
 
 import com.example.User.User;
 import com.example.User.UserRepository;
+import com.example.User.UserRole;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,5 +16,10 @@ public class UserService {
         return userRepository
                 .findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
+    }
+
+    public UserRole getRoleById(Long id) {
+        User user = getById(id);
+        return user.getRole();
     }
 }

@@ -41,7 +41,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     
     setAuthenticated(true);
     setUsername(tokenData.username);
-    setIsAdmin(false);
+    
+    // Fetch user role to check if admin
+    try {
+      const response = await fetch('http://localhost:8080/api/auth/role', {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('jwt') || ''}`,
+        },
+      });
+      
+      if (response.ok) {
+        const role = await response.json();
+        setIsAdmin(role === 'ROLE_ADMIN');
+      } else {
+        setIsAdmin(false);
+      }
+    } catch (error) {
+      console.error('Failed to fetch user role:', error);
+      setIsAdmin(false);
+    }
     
     setLoading(false);
   };

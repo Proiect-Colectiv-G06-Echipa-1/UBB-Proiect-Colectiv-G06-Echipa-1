@@ -12,3 +12,5 @@ Thumbs.db
 .env
 BE/target/
 BE/openapi.yaml
+.gitattributes
+BE/docker/Dockerfile

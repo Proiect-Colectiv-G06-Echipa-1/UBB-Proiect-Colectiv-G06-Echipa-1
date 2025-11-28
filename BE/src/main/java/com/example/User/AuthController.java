@@ -6,6 +6,7 @@ import com.example.User.dto.LoginRequest;
 import com.example.User.dto.RegisterRequest;
 import com.example.User.dto.RegisterResponse;
 import com.example.User.service.JwtService;
+import com.example.User.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -18,6 +19,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,16 +34,19 @@ public class AuthController {
     private final JwtService jwtService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserService userService;
 
     public AuthController(
             AuthenticationManager authenticationManager,
             JwtService jwtService,
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @Operation(summary = "Authenticate user and return JWT token")
@@ -151,5 +156,24 @@ public class AuthController {
             ErrorResponse errorResponse = new ErrorResponse("Registration failed: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
+    }
+
+    @Operation(summary = "Get current authenticated user's role")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "User role retrieved successfully",
+                        content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = UserRole.class))
+                        }),
+                @ApiResponse(responseCode = "401", description = "Unauthorized")
+            })
+    @GetMapping("/role")
+    public ResponseEntity<UserRole> getCurrentUserRole(@AuthenticationPrincipal UserDetails userDetails) {
+        // UserDetails is actually a User instance (from UserDetailsServiceImpl)
+        User userDetailsObj = (User) userDetails;
+        UserRole role = userService.getRoleById(userDetailsObj.getId());
+        return ResponseEntity.ok(role);
     }
 }
