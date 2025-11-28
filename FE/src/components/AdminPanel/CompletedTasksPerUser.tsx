@@ -46,11 +46,25 @@ export const CompletedTasksPerUser = () => {
             if (completedTasksResponse.ok) {
               const completedTasks: TaskDTO[] = await completedTasksResponse.json();
               
-              // Try to get username from tasks (if available) or use userId
-              // For now, we'll use userId as identifier since we don't have a user API
+              // Get username from backend
+              let username = `User ${userId}`;
+              try {
+                const usernameResponse = await fetch(`http://localhost:8080/api/auth/user/${userId}/username`, {
+                  headers: {
+                    'Authorization': `Bearer ${localStorage.getItem('jwt') || ''}`,
+                  },
+                });
+                
+                if (usernameResponse.ok) {
+                  username = await usernameResponse.json();
+                }
+              } catch (error) {
+                console.error(`Failed to load username for user ${userId}:`, error);
+              }
+              
               userCompletedTasks.push({
                 userId: userId,
-                username: `User ${userId}`,
+                username: username,
                 completedCount: completedTasks.length,
               });
             }

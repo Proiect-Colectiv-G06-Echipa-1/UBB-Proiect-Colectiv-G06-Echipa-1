@@ -176,4 +176,21 @@ public class AuthController {
         UserRole role = userService.getRoleById(userDetailsObj.getId());
         return ResponseEntity.ok(role);
     }
+
+    @Operation(summary = "Get username by user ID")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Username retrieved successfully",
+                        content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
+                        }),
+                @ApiResponse(responseCode = "404", description = "User not found")
+            })
+    @GetMapping("/user/{userId}/username")
+    public ResponseEntity<String> getUsernameById(@PathVariable Long userId) {
+        User user = userService.getById(userId);
+        return ResponseEntity.ok(user.getUsername());
+    }
 }
