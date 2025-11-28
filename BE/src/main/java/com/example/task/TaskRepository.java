@@ -34,5 +34,6 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
         SELECT COUNT(DISTINCT task_id) FROM blocked_tasks
         """, nativeQuery = true)
     long countBlockedTasks();
+
     long countByStatus(TaskStatus status);
 }

@@ -63,23 +63,17 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Long getTaskCountByStatus(Optional<TaskStatus> status) {
-        if (status.isPresent()) {
-            return repository.countByStatus(status.get());
-        }
-        else {
-            return repository.count();
-        }
+        return status.map(repository::countByStatus).orElseGet(repository::count);
     }
 
     @Override
-    public List<TaskDTO> getTasksAssignedToUserByStatus(Long userID, TaskStatus status) {
-        Optional<TaskStatus> taskStatus = Optional.ofNullable(status);
-        if (taskStatus.isPresent()) {
-            return repository.findByStatusAndAssigneesId(status, userID).stream().map(mapper::toDTO).toList();
-        }
-        else {
-            return userService.getById(userID).getAssignedTasks().stream().map(mapper::toDTO).toList();
-        }
+    public List<TaskDTO> getTasksAssignedToUserByStatus(Long userID, Optional<TaskStatus> status) {
+        return status.map(taskStatus -> repository.findByStatusAndAssigneesId(taskStatus, userID).stream()
+                        .map(mapper::toDTO)
+                        .toList())
+                .orElseGet(() -> userService.getById(userID).getAssignedTasks().stream()
+                        .map(mapper::toDTO)
+                        .toList());
     }
 
     @Override

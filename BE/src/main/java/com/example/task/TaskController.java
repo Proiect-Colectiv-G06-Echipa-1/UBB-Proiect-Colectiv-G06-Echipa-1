@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,12 +59,12 @@ public class TaskController {
     @Operation(summary = "Get the number of tasks of certain status")
     @ApiResponses(
             value = {
-                    @ApiResponse(
-                            responseCode = "200",
-                            description = "Count retrieved successfully",
-                            content = {
-                                    @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))
-                            })
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Count retrieved successfully",
+                        content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = Long.class))
+                        })
             })
     @GetMapping("/count")
     public ResponseEntity<Long> getTotalCount(@RequestParam(required = false) Optional<TaskStatus> status) {
@@ -190,7 +189,8 @@ public class TaskController {
                 @ApiResponse(responseCode = "404", description = "User not found")
             })
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<TaskDTO>> getTasksAssignedToUser(@PathVariable Long userId, @RequestParam(required = false) TaskStatus status) {
+    public ResponseEntity<List<TaskDTO>> getTasksAssignedToUser(
+            @PathVariable Long userId, @RequestParam(required = false) Optional<TaskStatus> status) {
         return ResponseEntity.ok(service.getTasksAssignedToUserByStatus(userId, status));
     }
 
