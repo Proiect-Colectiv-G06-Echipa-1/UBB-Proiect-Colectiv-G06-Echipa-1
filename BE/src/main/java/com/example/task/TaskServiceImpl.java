@@ -204,4 +204,10 @@ public class TaskServiceImpl implements TaskService {
 
         return user.getAssignedTasks().stream().map(mapper::toDTO).toList();
     }
+
+    @Override
+    public boolean isTaskAssignedToUser(Integer taskId, Long userId) {
+        TaskDTO taskDTO = get(taskId);
+        return taskDTO.assignees().contains(userId);
+    }
 }
