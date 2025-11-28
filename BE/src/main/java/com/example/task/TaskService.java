@@ -1,6 +1,7 @@
 package com.example.task;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface TaskService {
     TaskDTO add(TaskDTO task);
@@ -15,9 +16,9 @@ public interface TaskService {
 
     List<TaskDTO> getByStatus(TaskStatus status);
 
-    Long getTotalNumberOfTasks();
+    Long getTaskCountByStatus(Optional<TaskStatus> status);
 
-    List<TaskDTO> getCompletedTasksFromUser(Long userID);
+    List<TaskDTO> getTasksAssignedToUserByStatus(Long userID, Optional<TaskStatus> status);
 
     Long getNumberOfDependentTasks();
     // User-Task assignment methods
