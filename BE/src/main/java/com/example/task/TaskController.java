@@ -7,7 +7,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -205,13 +204,7 @@ public class TaskController {
     @PostMapping("/{taskId}/assign")
     public ResponseEntity<Void> assignTaskToUser(
             @PathVariable Integer taskId, @AuthenticationPrincipal User currentUser) {
-        try {
-            service.assignTaskToUser(taskId, currentUser.getId());
-        } catch (EntityNotFoundException _) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        } catch (IllegalStateException _) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
+        service.assignTaskToUser(taskId, currentUser.getId());
         return ResponseEntity.ok().build();
     }
 

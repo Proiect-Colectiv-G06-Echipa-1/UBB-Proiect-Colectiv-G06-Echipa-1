@@ -30,6 +30,7 @@ pmd {
 // NOTE(DC): This is just for convenience
 tasks.named('pmdMain') {
     group = 'verification'
+    dependsOn(project(":pmd-additional-rules").tasks.named("jar"))
 }
 
 java {
@@ -61,6 +62,9 @@ dependencies {
     implementation 'org.mapstruct:mapstruct:1.6.3'
     annotationProcessor 'org.projectlombok:lombok:1.18.42'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
+    pmd 'net.sourceforge.pmd:pmd-ant:7.19.0'
+    pmd project(":pmd-additional-rules")
 }
 
 tasks.named('test') {
