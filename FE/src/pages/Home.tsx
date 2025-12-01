@@ -119,7 +119,7 @@ export const Home = () => {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
+            gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '16px',
             marginTop: '16px',
             width: '100%',
