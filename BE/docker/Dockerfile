@@ -8,6 +8,7 @@ WORKDIR /app
 # Copy gradle files and set permissions first
 COPY build.gradle settings.gradle ./
 COPY gradle ./gradle
+COPY pmd ./pmd
 
 # Copy gradlew scripts for cross-platform support
 COPY gradlew gradlew.bat ./
@@ -22,7 +23,7 @@ RUN ./gradlew dependencies --no-daemon
 COPY src ./src
 
 # Build the application (dependencies already downloaded)
-RUN ./gradlew build --no-daemon -x test
+RUN ./gradlew assemble --no-daemon
 
 # Runtime stage - multi-platform support (Java 24 EA)
 FROM eclipse-temurin:24-jre

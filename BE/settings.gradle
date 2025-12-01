@@ -1,1 +1,3 @@
 rootProject.name = 'BE'
+include 'pmd-additional-rules'
+project(':pmd-additional-rules').projectDir = file('pmd')
