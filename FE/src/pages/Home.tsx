@@ -17,8 +17,6 @@ export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [selected, setSelected] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Backlog);
 
-  const [energyLevel, setEnergyLevel] = useState(6);
-
   const handleSelect = (status: TaskDTOStatusEnum) => {
     setSelected(status);
   };
@@ -60,11 +58,6 @@ export const Home = () => {
         left: 0,
       }}
     >
-      <TopNav
-        energyLevel={energyLevel}
-        onDecrease={() => setEnergyLevel(prev => Math.max(0, prev - 1))}
-        onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
-      />
       <Box
         sx={{
           position: 'relative',

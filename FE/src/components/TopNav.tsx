@@ -10,14 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import { Typography, Box, Menu, MenuItem } from '@mui/material';
 import { fontFamilyStyle, fontSizeStyle } from '../lib/style';
 
-interface TopNavProps {
-  energyLevel: number; // 0-10 segments
-  onDecrease?: () => void;
-  onIncrease?: () => void;
-}
-
-export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => {
+export const TopNav = () => {
   const segments = 10;
+  const [energyLevel, setEnergyLevel] = useState(6);
   const atMin = energyLevel <= 0;
   const atMax = energyLevel >= segments;
   const { logout, isAdmin } = useAuth();
@@ -31,6 +26,14 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
 
   const handleUserMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleDecrease = () => {
+    setEnergyLevel(prev => Math.max(0, prev - 1));
+  };
+
+  const handleIncrease = () => {
+    setEnergyLevel(prev => Math.min(10, prev + 1));
   };
 
   const handleLogout = () => {
@@ -120,7 +123,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
         {/* Decrease Button */}
         <Box
           component="button"
-          onClick={onDecrease}
+          onClick={handleDecrease}
           disabled={atMin}
           aria-label="Decrease energy"
           sx={circleBtnStyle(atMin)}
@@ -166,7 +169,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
         {/* Increase Button */}
         <Box
           component="button"
-          onClick={onIncrease}
+          onClick={handleIncrease}
           disabled={atMax}
           aria-label="Increase energy"
           sx={circleBtnStyle(atMax)}
