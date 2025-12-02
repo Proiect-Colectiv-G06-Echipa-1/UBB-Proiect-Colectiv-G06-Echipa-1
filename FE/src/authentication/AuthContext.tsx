@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { createContext, useState, useContext } from "react";
-import { getTokenData } from "./DecodeToken";
+import { getUsernameFromToken, getRoleFromToken } from "./DecodeToken";
+import { UserDTORoleEnum } from "../../typescript-client";
 
 interface IAuthContext {
   authenticated: boolean;
@@ -29,9 +30,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const refreshAuth = async () => {
     setLoading(true);
     
-    const tokenData = getTokenData();
+    const username = getUsernameFromToken();
+    const role = getRoleFromToken();
     
-    if (!tokenData || !tokenData.username) {
+    if (!username || !role) {
       setAuthenticated(false);
       setIsAdmin(false);
       setUsername(null);
@@ -40,27 +42,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     
     setAuthenticated(true);
-    setUsername(tokenData.username);
-    
-    // Fetch user role to check if admin
-    try {
-      const response = await fetch('http://localhost:8080/api/auth/role', {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('jwt') || ''}`,
-        },
-      });
-      
-      if (response.ok) {
-        const role = await response.json();
-        setIsAdmin(role === 'ROLE_ADMIN');
-      } else {
-        setIsAdmin(false);
-      }
-    } catch (error) {
-      console.error('Failed to fetch user role:', error);
-      setIsAdmin(false);
-    }
-    
+    setUsername(username);
+    setIsAdmin(role === UserDTORoleEnum.RoleAdmin);
     setLoading(false);
   };
 

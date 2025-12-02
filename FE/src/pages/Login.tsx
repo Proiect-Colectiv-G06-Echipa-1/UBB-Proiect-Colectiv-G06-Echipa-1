@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
-import { authApi } from '../api/api.ts';
+import { userApi } from '../api/api.ts';
 import { useAuth } from '../authentication/AuthContext';
 import { toast } from 'react-toastify';
 
@@ -17,7 +17,7 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const response = await authApi.login({loginRequest: {username, password}});
+      const response = await userApi.login({loginRequest: {username, password}});
       if (response && response.token) {
         localStorage.setItem('jwt', response.token);
         await refreshAuth();

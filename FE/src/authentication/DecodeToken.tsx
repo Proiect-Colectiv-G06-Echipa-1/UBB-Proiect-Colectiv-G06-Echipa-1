@@ -1,19 +1,22 @@
 import { jwtDecode } from "jwt-decode";
+import { UserDTORoleEnum } from "../../typescript-client";
 
-interface IJwtPayload {
+interface JwtPayload {
   sub: string;
+  role: UserDTORoleEnum;
   exp?: number;
   iat?: number;
 }
 
-interface ITokenData {
+interface TokenData {
   username: string;
+  role: UserDTORoleEnum;
   expired: boolean;
 }
 
-function decodeToken(token: string): IJwtPayload | null {
+function decodeToken(token: string): JwtPayload | null {
   try {
-    return jwtDecode<IJwtPayload>(token);
+    return jwtDecode<JwtPayload>(token);
   } catch (err) {
     return null;
   }
@@ -25,12 +28,12 @@ function isTokenExpired(exp?: number): boolean {
   return exp < currentTime;
 }
 
-export function getTokenData(): ITokenData | null {
+export function getTokenData(): TokenData | null {
   const token = localStorage.getItem("jwt");
   if (!token) return null;
   
   const decoded = decodeToken(token);
-  if (!decoded || !decoded.sub) return null;
+  if (!decoded || !decoded.sub || !decoded.role) return null;
   
   const expired = isTokenExpired(decoded.exp);
   if (expired) {
@@ -40,11 +43,17 @@ export function getTokenData(): ITokenData | null {
   
   return {
     username: decoded.sub,
+    role: decoded.role,
     expired: false
   };
 }
 
-export function getSubFromToken(): string | null {
+export function getUsernameFromToken(): string | null {
   const tokenData = getTokenData();
   return tokenData ? tokenData.username : null;
+}
+
+export function getRoleFromToken(): UserDTORoleEnum | null {
+  const tokenData = getTokenData();
+  return tokenData ? tokenData.role : null;
 }

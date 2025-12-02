@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Box, Typography, Card } from '@mui/material';
+import { Box, Typography, Card, IconButton, CardMedia } from '@mui/material';
 
 interface QuestCardProps {
   id: number;
@@ -7,9 +7,11 @@ interface QuestCardProps {
   created: string;
   deadline: string;
   count: number;
+  image?: string;
+  onClick?: (id: number) => void;
 }
 
-export const QuestCard = ({ id, title, created, deadline, count }: QuestCardProps) => {
+export const QuestCard = ({ id, title, created, deadline, count, image, onClick }: QuestCardProps) => {
   return (
     <Link to={`/task/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
       <Card 
@@ -20,8 +22,8 @@ export const QuestCard = ({ id, title, created, deadline, count }: QuestCardProp
           padding: '14px 16px',
           display: 'flex',
           gap: '12px',
-          alignItems: 'flex-start',
-          width: '240px',
+          alignItems: 'center',
+          width: '250px',
           boxShadow: '0 2px 0 #cfc7d8',
           transition: 'transform 0.1s ease',
           '&:hover': {
@@ -31,8 +33,8 @@ export const QuestCard = ({ id, title, created, deadline, count }: QuestCardProp
       >
         <Box
           sx={{
-            width: 32,
-            height: 32,
+            width: 36,
+            height: 36,
             borderRadius: '50%',
             bgcolor: '#e9e3f2',
             color: '#4f378a',
@@ -75,6 +77,17 @@ export const QuestCard = ({ id, title, created, deadline, count }: QuestCardProp
             <Box>Deadline: {deadline}</Box>
           </Box>
         </Box>
+        {image && (
+          <IconButton 
+            onClick={(e) => {
+              e.preventDefault();
+              onClick?.(id);
+            }}
+            sx={{ flexShrink: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+          >
+            <CardMedia component="img" image={image} sx={{ width: 24, height: 24 }}/>
+          </IconButton>
+        )}
       </Card>
     </Link>
   );

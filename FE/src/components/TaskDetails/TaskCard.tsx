@@ -13,6 +13,7 @@ import ResponsiveDialog from "../Generic/ResponsiveDialog";
 import { useNavigate } from "react-router-dom";
 import { StatusDropdown } from "../Generic/StatusDropdown";
 import { toast } from "react-toastify";
+import { allCategories } from "../../lib/status";
 
 export default function TaskCard({id}: {id: number}) {
     const navigate = useNavigate(); 
@@ -139,7 +140,7 @@ export default function TaskCard({id}: {id: number}) {
 
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
                         {isTaskAssignedToUser ? (
-                            <StatusDropdown selected={task.status || TaskDTOStatusEnum.Backlog} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" keyColor="#FFFFFF" handleSelect={handleSelect} />
+                            <StatusDropdown categories={allCategories} selected={task.status || TaskDTOStatusEnum.Backlog} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" keyColor="#FFFFFF" handleSelect={handleSelect} />
                         ) : (
                             <Button onClick={handleTakeTaskClick} startIcon={<AddIcon sx={{ color: '#FFFFFF' }} />} sx={{backgroundColor: '#9fafff',
                                 color: '#fff', borderRadius: '28px', width: 'auto', fontSize: '16px',fontWeight: 700,textTransform: 'none',padding: '8px 16px','&:hover': {backgroundColor: '#8a9fff'}}}>

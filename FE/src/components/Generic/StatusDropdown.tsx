@@ -6,20 +6,14 @@ import { formatStatus } from '../../lib/status';
 
 interface Props {
   selected: TaskDTOStatusEnum;
+  categories: TaskDTOStatusEnum[];
   backgroundColor?: string;
   hoverBackgroundColor?: string;
   keyColor?: string;
   handleSelect: (status: TaskDTOStatusEnum) => void;
 }
 
-const categories = [
-  TaskDTOStatusEnum.Backlog, 
-  TaskDTOStatusEnum.InProgress, 
-  TaskDTOStatusEnum.OnHold, 
-  TaskDTOStatusEnum.Completed
-];
-
-export const StatusDropdown = ({selected, backgroundColor, hoverBackgroundColor, keyColor, handleSelect} : Props) => {
+export const StatusDropdown = ({selected, categories, backgroundColor, hoverBackgroundColor, keyColor, handleSelect} : Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 

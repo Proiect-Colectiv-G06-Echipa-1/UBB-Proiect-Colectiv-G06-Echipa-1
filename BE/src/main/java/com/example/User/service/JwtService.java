@@ -10,6 +10,7 @@ import javax.crypto.SecretKey;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
@@ -29,17 +30,16 @@ public class JwtService {
 
     public String generateJwtToken(Authentication authentication) {
         String username = authentication.getName();
-        return Jwts.builder()
-                .subject(username)
-                .issuedAt(new Date())
-                .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
-                .signWith(getSigningKey())
-                .compact();
-    }
 
-    public String generateTokenFromUsername(String username) {
+        GrantedAuthority authority = authentication.getAuthorities().stream()
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("User has no authorities"));
+
+        String role = authority.getAuthority();
+
         return Jwts.builder()
                 .subject(username)
+                .claim("role", role)
                 .issuedAt(new Date())
                 .expiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getSigningKey())

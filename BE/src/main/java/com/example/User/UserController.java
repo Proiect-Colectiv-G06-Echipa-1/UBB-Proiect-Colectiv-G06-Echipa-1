@@ -8,35 +8,36 @@ import com.example.User.dto.RegisterResponse;
 import com.example.User.service.JwtService;
 import com.example.User.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class AuthController {
+public class UserController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserService userService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final UserService userService;
 
-    public AuthController(
+    public UserController(
             AuthenticationManager authenticationManager,
             JwtService jwtService,
             UserRepository userRepository,
@@ -120,7 +121,7 @@ public class AuthController {
                                     schema = @Schema(implementation = ErrorResponse.class))
                         })
             })
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
             // Check if username already exists
@@ -158,39 +159,20 @@ public class AuthController {
         }
     }
 
-    @Operation(summary = "Get current authenticated user's role")
+    @Operation(summary = "Get all users")
     @ApiResponses(
             value = {
                 @ApiResponse(
                         responseCode = "200",
-                        description = "User role retrieved successfully",
+                        description = "Users retrieved successfully",
                         content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = UserRole.class))
-                        }),
-                @ApiResponse(responseCode = "401", description = "Unauthorized")
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
+                        })
             })
-    @GetMapping("/role")
-    public ResponseEntity<UserRole> getCurrentUserRole(@AuthenticationPrincipal UserDetails userDetails) {
-        // UserDetails is actually a User instance (from UserDetailsServiceImpl)
-        User userDetailsObj = (User) userDetails;
-        UserRole role = userService.getRoleById(userDetailsObj.getId());
-        return ResponseEntity.ok(role);
-    }
-
-    @Operation(summary = "Get username by user ID")
-    @ApiResponses(
-            value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "Username retrieved successfully",
-                        content = {
-                            @Content(mediaType = "application/json", schema = @Schema(implementation = String.class))
-                        }),
-                @ApiResponse(responseCode = "404", description = "User not found")
-            })
-    @GetMapping("/user/{userId}/username")
-    public ResponseEntity<String> getUsernameById(@PathVariable Long userId) {
-        User user = userService.getById(userId);
-        return ResponseEntity.ok(user.getUsername());
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAll() {
+        return ResponseEntity.ok(userService.getAll());
     }
 }
