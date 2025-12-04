@@ -1,6 +1,6 @@
 ### Authentication API Test File
 ### Base URL
-@baseUrl = http://localhost:8080/api/auth
+@baseUrl = http://localhost:8080/api/users
 
 ### Variables
 @token = 

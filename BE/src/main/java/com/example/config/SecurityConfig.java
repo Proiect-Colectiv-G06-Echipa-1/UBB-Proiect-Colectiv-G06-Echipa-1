@@ -69,7 +69,7 @@ public class SecurityConfig {
                 .cors(cors -> {})
                 .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.DELETE, "/tasks/**")
                         .hasRole("ADMIN")
-                        .requestMatchers("/api/auth/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
+                        .requestMatchers("/api/users/**", "/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html")
                         .permitAll()
                         .anyRequest()
                         .authenticated())

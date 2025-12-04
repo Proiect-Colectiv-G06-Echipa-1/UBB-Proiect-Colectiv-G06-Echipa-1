@@ -6,12 +6,15 @@ import com.example.User.dto.LoginRequest;
 import com.example.User.dto.RegisterRequest;
 import com.example.User.dto.RegisterResponse;
 import com.example.User.service.JwtService;
+import com.example.User.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,24 +27,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class AuthController {
+public class UserController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final UserService userService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public AuthController(
+    public UserController(
             AuthenticationManager authenticationManager,
             JwtService jwtService,
             UserRepository userRepository,
-            PasswordEncoder passwordEncoder) {
+            PasswordEncoder passwordEncoder,
+            UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.userService = userService;
     }
 
     @Operation(summary = "Authenticate user and return JWT token")
@@ -115,7 +121,7 @@ public class AuthController {
                                     schema = @Schema(implementation = ErrorResponse.class))
                         })
             })
-    @PostMapping("/register")
+    @PostMapping
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
             // Check if username already exists
@@ -151,5 +157,22 @@ public class AuthController {
             ErrorResponse errorResponse = new ErrorResponse("Registration failed: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
         }
+    }
+
+    @Operation(summary = "Get all users")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Users retrieved successfully",
+                        content = {
+                            @Content(
+                                    mediaType = "application/json",
+                                    array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
+                        })
+            })
+    @GetMapping
+    public ResponseEntity<List<UserDTO>> getAll() {
+        return ResponseEntity.ok(userService.getAll());
     }
 }

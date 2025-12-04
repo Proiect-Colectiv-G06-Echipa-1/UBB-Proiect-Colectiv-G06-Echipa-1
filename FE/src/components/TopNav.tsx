@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import logoSvg from '../assets/logo.svg';
 import minusSvg from '../assets/Minus circle.svg';
 import plusSvg from '../assets/Plus circle.svg';
@@ -6,7 +7,7 @@ import toolsSvg from '../assets/swords.svg';
 import userSvg from '../assets/User.svg';
 import { useAuth } from '../authentication/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { Typography, Box, Button } from '@mui/material';
+import { Typography, Box, Menu, MenuItem } from '@mui/material';
 
 interface TopNavProps {
   energyLevel: number; // 0-10 segments
@@ -18,12 +19,28 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
   const segments = 10;
   const atMin = energyLevel <= 0;
   const atMax = energyLevel >= segments;
-  const { logout } = useAuth();
+  const { logout, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleUserMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleUserMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLogout = () => {
+    handleUserMenuClose();
     logout();
     navigate('/login');
+  };
+
+  const handleAdminPanel = () => {
+    handleUserMenuClose();
+    navigate('/admin');
   };
 
   // Stiluri comune pentru a nu repeta codul în JSX
@@ -165,40 +182,74 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
           <Box component="img" src={toolsSvg} alt="tools" sx={imgStyle} />
         </Box>
 
-        <Box
-          sx={{
-            ...iconBtnStyle,
-            borderRadius: '50%',
-          }}
-          aria-label="User"
-        >
-          <Box component="img" src={userSvg} alt="user" sx={imgStyle} />
-        </Box>
+        {/* User Icon with Dropdown */}
+        <Box>
+          <Box
+            onClick={handleUserMenuClick}
+            sx={{
+              ...iconBtnStyle,
+              borderRadius: '50%',
+              cursor: 'pointer',
+            }}
+            aria-label="User"
+          >
+            <Box component="img" src={userSvg} alt="user" sx={imgStyle} />
+          </Box>
 
-        {/* Logout Button */}
-        <Button
-          onClick={handleLogout}
-          aria-label="Logout"
-          sx={{
-            border: 'none',
-            borderRadius: '6px',
-            bgcolor: '#fff',
-            width: 'auto',
-            padding: '8px 16px',
-            color: '#111',
-            fontWeight: 800,
-            fontSize: '14px',
-            textTransform: 'none',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease',
-            '&:hover': {
-              bgcolor: '#222',
-              color: '#fff',
-            },
-          }}
-        >
-          Logout
-        </Button>
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleUserMenuClose}
+            MenuListProps={{ sx: { padding: 0 } }}
+            PaperProps={{
+              sx: {
+                marginTop: '8px',
+                backgroundColor: '#6F6471',
+                color: '#fff',
+                borderRadius: '12px',
+                overflow: 'hidden',
+                minWidth: 'unset',
+                width: 'auto'
+              }
+            }}
+          >
+            {isAdmin && (
+              <MenuItem 
+                onClick={handleAdminPanel}
+                sx={{
+                  display: 'block',
+                  width: '100%',
+                  textAlign: 'left',
+                  padding: '12px 20px',
+                  fontSize: '16px',
+                  fontWeight: 700,
+                  borderBottom: '1px solid rgba(255,255,255,0.5)',
+                  '&:hover': {
+                    backgroundColor: 'rgba(255,255,255,0.08)'
+                  }
+                }}
+              >
+                Admin Panel
+              </MenuItem>
+            )}
+            <MenuItem 
+              onClick={handleLogout}
+              sx={{
+                display: 'block',
+                width: '100%',
+                textAlign: 'left',
+                padding: '12px 20px',
+                fontSize: '16px',
+                fontWeight: 700,
+                '&:hover': {
+                  backgroundColor: 'rgba(255,255,255,0.08)'
+                }
+              }}
+            >
+              Logout
+            </MenuItem>
+          </Menu>
+        </Box>
       </Box>
     </Box>
   );

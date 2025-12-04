@@ -14,3 +14,15 @@ export const formatStatus = (status: TaskDTOStatusEnum): string => {
       return status;
   }
 };
+
+export const allCategories: TaskDTOStatusEnum[] = [
+  TaskDTOStatusEnum.Backlog,
+  TaskDTOStatusEnum.InProgress,
+  TaskDTOStatusEnum.OnHold,
+  TaskDTOStatusEnum.Completed,
+];
+
+export const unAssignableCategories: TaskDTOStatusEnum[] = [
+  TaskDTOStatusEnum.InProgress,
+  TaskDTOStatusEnum.OnHold,
+];

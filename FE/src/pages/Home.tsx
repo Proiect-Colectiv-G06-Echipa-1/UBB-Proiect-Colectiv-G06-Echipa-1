@@ -10,10 +10,12 @@ import { taskApi } from '../api/api';
 import { TaskDTOStatusEnum, type TaskDTO } from '../../typescript-client';
 import { formatDate } from '../lib/date';
 import { toast } from 'react-toastify';
+import { allCategories } from '../lib/status';
 
 export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [selected, setSelected] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Backlog);
+
   const [energyLevel, setEnergyLevel] = useState(6);
 
   const handleSelect = (status: TaskDTOStatusEnum) => {
@@ -112,10 +114,11 @@ export const Home = () => {
               Quests
             </Typography>
           </Box>
-          <StatusDropdown selected={selected} handleSelect={handleSelect} />
+          <StatusDropdown categories={allCategories} selected={selected} handleSelect={handleSelect} />
         </Box>
 
         {/* Card Grid */}
+        {/* TODO: Fix the alignment of cards to be the same as in figma (the last column has a lot of space remaining on the right and is ugly, I modified this cause it CREATED A GOD DAMN V SHAPE TABLE) */}
         <Box
           sx={{
             display: 'grid',
@@ -124,12 +127,6 @@ export const Home = () => {
             marginTop: '16px',
             width: '100%',
             justifyItems: 'start',
-            '& > :nth-of-type(3n+2)': {
-              justifySelf: 'center',
-            },
-            '& > :nth-of-type(3n)': {
-              justifySelf: 'end',
-            },
           }}
         >
           {inSelected.map((item) => (
