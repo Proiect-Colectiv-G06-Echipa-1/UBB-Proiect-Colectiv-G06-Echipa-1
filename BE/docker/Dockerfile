@@ -5,24 +5,14 @@ FROM --platform=$BUILDPLATFORM eclipse-temurin:24-jdk AS build
 # Set working directory
 WORKDIR /app
 
-# Copy gradle files and set permissions first
-COPY build.gradle settings.gradle ./
-COPY gradle ./gradle
-COPY pmd ./pmd
-
-# Copy gradlew scripts for cross-platform support
-COPY gradlew gradlew.bat ./
+# Copy everything (subprojects like pmd must exist before Gradle runs)
+# .dockerignore handles exclusions; new modules are auto-included
+COPY . .
 
 # Fix line endings for gradlew script and make it executable
 RUN sed -i 's/\r$//' ./gradlew && chmod +x ./gradlew
 
-# Download dependencies first (better caching)
-RUN ./gradlew dependencies --no-daemon
-
-# Copy source code
-COPY src ./src
-
-# Build the application (dependencies already downloaded)
+# Build the application
 RUN ./gradlew assemble --no-daemon
 
 # Runtime stage - multi-platform support (Java 24 EA)

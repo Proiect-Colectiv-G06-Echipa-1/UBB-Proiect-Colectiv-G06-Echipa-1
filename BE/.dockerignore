@@ -1,9 +1,49 @@
-build
-.gradle
+# Build outputs (any subproject)
+**/build/
+**/bin/
+**/out/
+
+# Gradle caches
+**/.gradle/
+
+# Logs
 *.log
-.git
+**/*.log
+
+# Git
+.git/
 .gitignore
-README.md
-.env
+
+# IDE and editor files
+**/.idea/
+**/*.iml
+**/.vscode/
+**/.settings/
+**/.project
+**/.classpath
+
+# OS files
 .DS_Store
-bin
+**/.DS_Store
+Thumbs.db
+
+# Environment and secrets
+.env
+*.env
+**/*.env
+
+# Docker folder (Dockerfile lives here, not needed in context)
+docker/
+
+# Documentation (optional, remove if you want docs in container)
+README.md
+**/README.md
+
+# Test reports and caches (keep test source code)
+**/test-results/
+**/reports/
+
+# Temporary files
+**/*.tmp
+**/*.swp
+**/*~
