@@ -2,6 +2,7 @@ package com.example.User;
 
 import com.example.task.Task;
 import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -31,16 +32,28 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private Integer energy;
+
     @ManyToMany(mappedBy = "assignees")
     private Set<Task> assignedTasks = new HashSet<>();
 
-    public User() {}
+    public User() {
+    }
 
     public User(String username, String email, String password, UserRole role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
+    }
+
+    public Integer getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(Integer energy) {
+        this.energy = energy;
     }
 
     public Long getId() {

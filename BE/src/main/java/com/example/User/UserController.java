@@ -51,25 +51,14 @@ public class UserController {
     }
 
     @Operation(summary = "Authenticate user and return JWT token")
-    @ApiResponses(
-            value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "Login successful",
-                        content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = AuthResponse.class))
-                        }),
-                @ApiResponse(
-                        responseCode = "401",
-                        description = "Invalid username or password",
-                        content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class))
-                        })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successful", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = AuthResponse.class))
+            }),
+            @ApiResponse(responseCode = "401", description = "Invalid username or password", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
+    })
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest loginRequest) {
         try {
@@ -94,33 +83,17 @@ public class UserController {
     }
 
     @Operation(summary = "Register a new user account")
-    @ApiResponses(
-            value = {
-                @ApiResponse(
-                        responseCode = "201",
-                        description = "User registered successfully",
-                        content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = RegisterResponse.class))
-                        }),
-                @ApiResponse(
-                        responseCode = "400",
-                        description = "Username or email already exists",
-                        content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class))
-                        }),
-                @ApiResponse(
-                        responseCode = "500",
-                        description = "Internal server error during registration",
-                        content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    schema = @Schema(implementation = ErrorResponse.class))
-                        })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User registered successfully", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = RegisterResponse.class))
+            }),
+            @ApiResponse(responseCode = "400", description = "Username or email already exists", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
+            }),
+            @ApiResponse(responseCode = "500", description = "Internal server error during registration", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorResponse.class))
             })
+    })
     @PostMapping
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
@@ -143,13 +116,13 @@ public class UserController {
             user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
             // FIXME currently there is no way for admin users to be created
             user.setRole(UserRole.ROLE_USER);
-
+            user.setEnergy(5);
             // Save user to database
             userRepository.save(user);
 
             // Return success response
-            RegisterResponse response =
-                    new RegisterResponse("User registered successfully", user.getUsername(), user.getEmail());
+            RegisterResponse response = new RegisterResponse("User registered successfully", user.getUsername(),
+                    user.getEmail());
 
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
 
@@ -160,19 +133,35 @@ public class UserController {
     }
 
     @Operation(summary = "Get all users")
-    @ApiResponses(
-            value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "Users retrieved successfully",
-                        content = {
-                            @Content(
-                                    mediaType = "application/json",
-                                    array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
-                        })
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users retrieved successfully", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UserDTO.class)))
             })
+    })
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAll() {
         return ResponseEntity.ok(userService.getAll());
     }
+
+    @Operation(summary = "Get the energy level of a user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Energy retrieved successfully.", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class))
+            })
+    })
+    @GetMapping("/{id}/energy")
+    public ResponseEntity<Integer> getEnergy(@PathVariable long id) {
+        return ResponseEntity.ok(userService.getById(id).getEnergy());
+    }
+
+    @Operation(summary = "Set the energy level of a user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Energy set successfully.")
+    })
+    @PatchMapping("/{id}/energy")
+    public ResponseEntity<Integer> setEnergy(@PathVariable long id, @RequestBody EnergyUpdateRequest updateRequest) {
+        userService.setEnergy(id, updateRequest.getEnergy());
+        return ResponseEntity.ok().build();
+    }
+
 }

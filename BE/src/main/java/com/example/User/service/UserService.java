@@ -24,4 +24,10 @@ public class UserService {
     public List<UserDTO> getAll() {
         return userRepository.findAll().stream().map(mapper::toDTO).toList();
     }
+
+    public void setEnergy(Long userId, Integer energy) {
+        var user = this.getById(userId);
+        user.setEnergy(energy);
+        userRepository.save(user);
+    }
 }
