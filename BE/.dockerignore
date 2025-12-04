@@ -30,13 +30,17 @@ Thumbs.db
 # Environment and secrets
 .env
 *.env
+*.env.*
+**/.env
 **/*.env
+**/*.env.*
+**/env.*
+
 
 # Docker folder (Dockerfile lives here, not needed in context)
 docker/
 
 # Documentation (optional, remove if you want docs in container)
-README.md
 **/README.md
 
 # Test reports and caches (keep test source code)
