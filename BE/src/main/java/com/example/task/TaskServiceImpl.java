@@ -1,6 +1,7 @@
 package com.example.task;
 
 import com.example.User.User;
+import com.example.boss.BossService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.*;
 import lombok.RequiredArgsConstructor;
@@ -13,13 +14,16 @@ public class TaskServiceImpl implements TaskService {
     private final TaskMapper mapper;
     private final TaskValidator validator;
     private final com.example.User.service.UserService userService;
+    private final BossService bossService;
 
     @Override
     public TaskDTO add(TaskDTO taskDTO) {
         Task task = mapper.toEntity(taskDTO).setStatus(TaskStatus.BACKLOG);
         validator.validate(task);
         throwIfParentsDoNotExist(task);
-        return mapper.toDTO(repository.save(task));
+        TaskDTO result = mapper.toDTO(repository.save(task));
+        bossService.updateBoss();
+        return result;
     }
 
     @Override
@@ -36,12 +40,15 @@ public class TaskServiceImpl implements TaskService {
             throwIfParentsDoNotExist(newTask);
             throwIfUpdatingEntityWouldCreateCycles(newTask);
         }
-        return mapper.toDTO(repository.save(newTask));
+        TaskDTO result = mapper.toDTO(repository.save(newTask));
+        bossService.updateBoss();
+        return result;
     }
 
     @Override
     public void delete(Integer id) {
         repository.deleteById(id);
+        bossService.updateBoss();
     }
 
     @Override

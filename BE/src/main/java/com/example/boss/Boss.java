@@ -1,0 +1,36 @@
+package com.example.boss;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Accessors;
+import java.time.LocalDateTime;
+
+@Entity(name = "boss")
+@NoArgsConstructor
+@Getter
+@Setter
+@Accessors(chain = true)
+public class Boss {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @NotNull
+    @Column(length = 100)
+    private String name;
+
+    @NotNull
+    private Integer maxHealth;
+
+    @NotNull
+    private Integer currentHealth;
+
+    @NotNull
+    private LocalDateTime createdAt;
+
+    @NotNull
+    private Boolean defeated;
+}
