@@ -3,6 +3,7 @@ import {TextField, Box, Chip, Paper, List, ListItem, ListItemButton, ListItemTex
 import CancelIcon from "@mui/icons-material/Cancel";
 import ClearIcon from "@mui/icons-material/Clear";
 import type { TaskDTO } from "../../../typescript-client";
+import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
 
 export interface DependencyFormInputProps {
     label: string;
@@ -54,14 +55,19 @@ export default function DependencyFormInput({label, selectedTasksDependencies, s
                         <ClearIcon fontSize="small" />
                     </IconButton>
                     )}}
-                sx={{"& .MuiFilledInput-root": {bgcolor: "#ece6f0", border: 1, borderRadius: 4, borderColor: "black"}, "& .MuiInputLabel-root": {color: "black"}}} fullWidth/>
+                sx={{
+                    "& .MuiFilledInput-root": {...fontFamilyStyle, ...fontSizeStyle, bgcolor: "#ece6f0", border: 1, borderRadius: 4, borderColor: "black"}, 
+                    "& .MuiInputLabel-root": {...fontFamilyStyle, ...fontSizeStyle, color: "black"}
+                }} 
+                fullWidth
+            />
             {showSuggestions && availableTaskDependencies.length > 0 && (
                 <Paper sx={{position: "absolute", top: "100%", left: 0, right: 0, zIndex: 1000, maxHeight: "200px", overflowY: "auto", mt: 1, border: 1, borderColor: "black", borderRadius: 2}}>
                     <List disablePadding>
                         {availableTaskDependencies.map((item, index) => (
                             <ListItem key={index} disablePadding>
                                 <ListItemButton onClick={() => handleSelectTask(item)}>
-                                    <ListItemText primary={item.title} />
+                                    <ListItemText primary={item.title} slotProps={{primary: {sx: [fontFamilyStyle, fontSizeStyle]}}} />
                                 </ListItemButton>
                             </ListItem>
                         ))}
@@ -73,7 +79,7 @@ export default function DependencyFormInput({label, selectedTasksDependencies, s
                 <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1, mt: 2}}>
                     {selectedTasksDependencies.map((item, index) => (
                         <Chip key={index} label={item.title} onDelete={() => handleRemoveTask(item)} deleteIcon={<CancelIcon />}
-                            sx={{ bgcolor: "#7c3aed", color: "white", borderRadius: "20px", "& .MuiChip-deleteIcon": { color: "white", "&:hover": { color: "#f3f4f6"}}}}/>
+                            sx={[fontFamilyStyle, fontSizeStyle, { bgcolor: "#7c3aed", color: "white", borderRadius: "20px", "& .MuiChip-deleteIcon": { color: "white", "&:hover": { color: "#f3f4f6"}}}]}/>
                     ))}
                 </Box>
             )}

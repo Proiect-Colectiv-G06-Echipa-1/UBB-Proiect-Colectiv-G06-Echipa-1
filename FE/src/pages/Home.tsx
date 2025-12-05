@@ -11,6 +11,7 @@ import { TaskDTOStatusEnum, type TaskDTO } from '../../typescript-client';
 import { formatDate } from '../lib/date';
 import { toast } from 'react-toastify';
 import { allCategories } from '../lib/status';
+import { fontFamilyStyle } from '../lib/style';
 
 export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
@@ -103,13 +104,12 @@ export const Home = () => {
             />
             <Typography
               variant="h5"
-              sx={{
-                fontFamily: "'Nanum Pen Script', cursive",
+              sx={[fontFamilyStyle, {
                 fontWeight: 400,
                 fontSize: '36px',
                 color: '#111',
                 lineHeight: 1,
-              }}
+              }]}
             >
               Quests
             </Typography>
@@ -136,6 +136,7 @@ export const Home = () => {
               title={item?.title || ''}
               created={formatDate(item?.creationDate || new Date())}
               deadline={formatDate(item?.deadline || new Date())}
+              width='250px'
               count={item?.energyCost || 0}
             />
           ))}

@@ -3,6 +3,7 @@ import { Box, Button, Menu, MenuItem } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
 import { TaskDTOStatusEnum } from '../../../typescript-client';
 import { formatStatus } from '../../lib/status';
+import { fontFamilyStyle, fontSizeStyle } from '../../lib/style';
 
 interface Props {
   selected: TaskDTOStatusEnum;
@@ -27,8 +28,8 @@ export const StatusDropdown = ({selected, categories, backgroundColor, hoverBack
 
   return (
     <Box>
-      <Button onClick={handleClick} endIcon={<KeyboardArrowDown sx={{ color: keyColor || '#aa86ff' }} />} sx={{backgroundColor: backgroundColor || '#5A3D99',
-        color: '#fff', borderRadius: '28px', width: 'auto', fontSize: '16px',fontWeight: 700,textTransform: 'none',padding: '8px 16px','&:hover': {backgroundColor: hoverBackgroundColor || '#4A2D89'}}}>
+      <Button onClick={handleClick} endIcon={<KeyboardArrowDown sx={{ color: keyColor || '#aa86ff' }} />} sx={[fontFamilyStyle, fontSizeStyle, {backgroundColor: backgroundColor || '#5A3D99',
+        color: '#fff', borderRadius: '28px', width: 'auto', fontWeight: 700, textTransform: 'none', padding: '8px 16px', '&:hover': {backgroundColor: hoverBackgroundColor || '#4A2D89'}}]}>
         {formatStatus(selected)}
       </Button>
       
@@ -53,12 +54,11 @@ export const StatusDropdown = ({selected, categories, backgroundColor, hoverBack
           <MenuItem 
             key={category} 
             onClick={() => { handleSelect(category); handleClose(); }} 
-            sx={{
+            sx={[fontFamilyStyle, fontSizeStyle, {
               display: 'block',
               width: '100%',
               textAlign: 'left',
               padding: '12px 20px',
-              fontSize: '16px',
               fontWeight: 700,
               borderBottom: '1px solid rgba(255,255,255,0.5)',
               '&:last-child': {
@@ -67,7 +67,7 @@ export const StatusDropdown = ({selected, categories, backgroundColor, hoverBack
               '&:hover': {
                 backgroundColor: 'rgba(255,255,255,0.08)'
               }
-            }}
+            }]}
           >
             {formatStatus(category)}
           </MenuItem>

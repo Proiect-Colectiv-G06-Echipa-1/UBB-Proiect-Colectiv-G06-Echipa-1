@@ -7,6 +7,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
+import { fontFamilyStyle, fontSizeStyle } from '../../lib/style';
 
 export interface ResponsiveDialogProps {
   open: boolean,
@@ -25,20 +26,20 @@ export default function ResponsiveDialog({open, dialogTitle = "Confirmation Dial
   return (
     <React.Fragment>
       <Dialog fullScreen={fullScreen} open={open} onClose={onCancel} aria-labelledby="responsive-dialog-title">
-        <DialogTitle id="responsive-dialog-title">
+        <DialogTitle id="responsive-dialog-title" sx={[fontFamilyStyle, {fontSize: "32px"}]}>
           {dialogTitle}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText>
+          <DialogContentText sx={[fontFamilyStyle, fontSizeStyle]}>
             {dialogContent}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           {/* TODO: Modify after the Theme Related Task, they are kinda ugly*/}
-          <Button variant="contained" color="secondary" onClick={onCancel}>
+          <Button variant="contained" color="secondary" onClick={onCancel} sx={[fontFamilyStyle, fontSizeStyle]}>
             {cancelButtonText}
           </Button>
-          <Button variant="contained" color="error" onClick={onConfirm}>
+          <Button variant="contained" color="error" onClick={onConfirm} sx={[fontFamilyStyle, fontSizeStyle]}>
             {confirmButtonText}
           </Button>
         </DialogActions>

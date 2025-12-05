@@ -14,6 +14,7 @@ import { QuestCard } from '../components/QuestCard';
 import { formatDate } from '../lib/date';
 import { TasksChart } from '../components/AdminPanel/TasksChart';
 import { unAssignableCategories } from '../lib/status';
+import { fontFamilyStyle, fontSizeStyle } from '../lib/style';
 
 export const AdminPanel = () => {
   const [drawerItems, setDrawerItems] = useState<DrawerItem[]>([]);
@@ -187,7 +188,7 @@ export const AdminPanel = () => {
               <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3, gap: 4, flexShrink: 0}}>
                 <Box sx={{display: 'flex', alignItems: 'center', gap: '10px', margin: '8px 0 16px'}}>
                   <img src={UserManagementIcon} alt="User Management Icon" />
-                  <Typography variant="h5" sx={{fontFamily: "'Nanum Pen Script', cursive", fontWeight: 400, fontSize: '36px', color: '#111', lineHeight: 1}}>
+                  <Typography variant="h5" sx={[fontFamilyStyle, { fontWeight: 400, fontSize: '36px', color: '#111', lineHeight: 1 }]}>
                     Users Management
                   </Typography>
                 </Box>
@@ -197,12 +198,12 @@ export const AdminPanel = () => {
                 {/* Card Grid */}
                   <Box
                     sx={{
-                        display: 'grid',
-                        gridTemplateColumns: 'repeat(3, 1fr)',
-                        gap: '16px',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-between',
+                        rowGap: '16px',
                         marginTop: '16px',
                         width: '100%',
-                        justifyItems: 'start',
                       }}
                   >
                     {selectedUserTasks.map((item) => (
@@ -212,6 +213,7 @@ export const AdminPanel = () => {
                         title={item?.title || ''}
                         created={formatDate(item?.creationDate || new Date())}
                         deadline={formatDate(item?.deadline || new Date())}
+                        width='320px'
                         count={item?.energyCost || 0}
                         onClick={onUnassignTask}
                         image={UnAssignIcon}
@@ -226,7 +228,7 @@ export const AdminPanel = () => {
             <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, padding: '24px 24px 24px 24px' }}>
               <Box sx={{display: 'flex', alignItems: 'center', gap: '10px', margin: '8px 0 16px', mb: 3, flexShrink: 0}}>
                 <img src={StatisticsIcon} alt="Statistics Icon" />
-                <Typography variant="h5" sx={{fontFamily: "'Nanum Pen Script', cursive", fontWeight: 400, fontSize: '36px', color: '#111', lineHeight: 1}}>
+                <Typography variant="h5" sx={[fontFamilyStyle, { fontWeight: 400, fontSize: '36px', color: '#111', lineHeight: 1 }]}>
                   Statistics
                 </Typography>
                 </Box>

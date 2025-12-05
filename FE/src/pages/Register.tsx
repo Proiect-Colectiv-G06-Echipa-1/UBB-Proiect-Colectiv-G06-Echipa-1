@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { userApi } from '../api/api.ts';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
+import { fontFamilyStyle, fontSizeStyle } from '../lib/style.ts';
 
 const registerSchema = z.object({
   username: z.string()
@@ -99,11 +100,11 @@ export default function Register() {
           component="h1" 
           gutterBottom 
           align="center"
-          sx={{ 
+          sx={[fontFamilyStyle, { 
             fontWeight: 600,
             color: '#333',
             mb: 3 
-          }}
+          }]}
         >
           Register
         </Typography>
@@ -123,16 +124,9 @@ export default function Register() {
             disabled={loading}
             sx={{
               mb: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                backgroundColor: '#f8f9fa',
-                '&:hover': {
-                  backgroundColor: '#fff',
-                },
-                '&.Mui-focused': {
-                  backgroundColor: '#fff',
-                },
-              },
+              '& .MuiOutlinedInput-root': { ...fontFamilyStyle, ...fontSizeStyle, borderRadius: 2, backgroundColor: '#f8f9fa', '&:hover': { backgroundColor: '#fff' }, '&.Mui-focused': { backgroundColor: '#fff' }},
+              '& .MuiInputLabel-root': { ...fontFamilyStyle, ...fontSizeStyle },
+              '& .MuiFormHelperText-root': { ...fontFamilyStyle, ...fontSizeStyle }
             }}
           />
           
@@ -150,16 +144,9 @@ export default function Register() {
             disabled={loading}
             sx={{
               mb: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                backgroundColor: '#f8f9fa',
-                '&:hover': {
-                  backgroundColor: '#fff',
-                },
-                '&.Mui-focused': {
-                  backgroundColor: '#fff',
-                },
-              },
+              '& .MuiOutlinedInput-root': { ...fontFamilyStyle, ...fontSizeStyle, borderRadius: 2, backgroundColor: '#f8f9fa', '&:hover': { backgroundColor: '#fff' }, '&.Mui-focused': { backgroundColor: '#fff' }},
+              '& .MuiInputLabel-root': { ...fontFamilyStyle, ...fontSizeStyle },
+              '& .MuiFormHelperText-root': { ...fontFamilyStyle, ...fontSizeStyle }
             }}
           />
 
@@ -177,16 +164,9 @@ export default function Register() {
             disabled={loading}
             sx={{
               mb: 2,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                backgroundColor: '#f8f9fa',
-                '&:hover': {
-                  backgroundColor: '#fff',
-                },
-                '&.Mui-focused': {
-                  backgroundColor: '#fff',
-                },
-              },
+              '& .MuiOutlinedInput-root': { ...fontFamilyStyle, ...fontSizeStyle, borderRadius: 2, backgroundColor: '#f8f9fa', '&:hover': { backgroundColor: '#fff' }, '&.Mui-focused': { backgroundColor: '#fff' }},
+              '& .MuiInputLabel-root': { ...fontFamilyStyle, ...fontSizeStyle },
+              '& .MuiFormHelperText-root': { ...fontFamilyStyle, ...fontSizeStyle }
             }}
           />
 
@@ -204,16 +184,9 @@ export default function Register() {
             disabled={loading}
             sx={{
               mb: 3,
-              '& .MuiOutlinedInput-root': {
-                borderRadius: 2,
-                backgroundColor: '#f8f9fa',
-                '&:hover': {
-                  backgroundColor: '#fff',
-                },
-                '&.Mui-focused': {
-                  backgroundColor: '#fff',
-                },
-              },
+              '& .MuiOutlinedInput-root': { ...fontFamilyStyle, ...fontSizeStyle, borderRadius: 2, backgroundColor: '#f8f9fa', '&:hover': { backgroundColor: '#fff' }, '&.Mui-focused': { backgroundColor: '#fff' }},
+              '& .MuiInputLabel-root': { ...fontFamilyStyle, ...fontSizeStyle },
+              '& .MuiFormHelperText-root': { ...fontFamilyStyle, ...fontSizeStyle }
             }}
           />
 
@@ -223,14 +196,13 @@ export default function Register() {
               variant="contained"
               size="large"
               disabled={loading}
-              sx={{ 
+              sx={[fontFamilyStyle, fontSizeStyle, { 
                 mt: 2,
                 mb: 3,
                 py: 1.5,
                 px: 8,
                 borderRadius: 2,
                 textTransform: 'none',
-                fontSize: '1.1rem',
                 fontWeight: 600,
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
@@ -240,20 +212,20 @@ export default function Register() {
                   transform: 'translateY(-2px)',
                 },
                 transition: 'all 0.3s ease',
-              }}
+              }]}
             >
               {loading ? 'Registering...' : 'Register'}
             </Button>
           </Box>
 
           <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary" sx={[fontFamilyStyle, fontSizeStyle]}>
               Already have an account?{' '}
               <Button
                 variant="text"
                 onClick={() => navigate('/login')}
                 disabled={loading}
-                sx={{ 
+                sx={[fontFamilyStyle, fontSizeStyle, { 
                   textTransform: 'none',
                   p: 0,
                   minWidth: 'auto',
@@ -265,7 +237,7 @@ export default function Register() {
                     textDecoration: 'underline',
                     color: '#5568d3',
                   }
-                }}
+                }]}
               >
                 Login here
               </Button>
