@@ -3,14 +3,13 @@ package com.example.boss;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
-import java.time.LocalDateTime;
 
 @ExtendWith(MockitoExtension.class)
 class BossServiceImplTest {
@@ -40,14 +39,7 @@ class BossServiceImplTest {
                 .setCreatedAt(LocalDateTime.now())
                 .setDefeated(false);
 
-        bossDTO = new BossDTO(
-                1L,
-                "Project Boss",
-                100,
-                50,
-                LocalDateTime.now(),
-                false
-        );
+        bossDTO = new BossDTO(1L, "Project Boss", 100, 50, LocalDateTime.now(), false);
     }
 
     @Test
@@ -70,7 +62,8 @@ class BossServiceImplTest {
         // Given
         when(bossRepository.findById(1L)).thenReturn(java.util.Optional.of(boss));
         when(taskRepository.sumDamageByStatus(null)).thenReturn(100);
-        when(taskRepository.sumDamageByStatus(com.example.task.TaskStatus.COMPLETED)).thenReturn(50);
+        when(taskRepository.sumDamageByStatus(com.example.task.TaskStatus.COMPLETED))
+                .thenReturn(50);
         when(bossRepository.save(any(Boss.class))).thenReturn(boss);
         when(bossMapper.toDTO(boss)).thenReturn(bossDTO);
 

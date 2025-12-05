@@ -2,11 +2,11 @@ package com.example.boss;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import java.time.LocalDateTime;
 
 @Entity(name = "boss")
 @NoArgsConstructor

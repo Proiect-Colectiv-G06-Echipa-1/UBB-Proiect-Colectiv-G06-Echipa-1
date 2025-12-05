@@ -6,8 +6,6 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @RequiredArgsConstructor
 public class BossServiceImpl implements BossService {
@@ -17,15 +15,13 @@ public class BossServiceImpl implements BossService {
 
     @Override
     public BossDTO getBoss() {
-        Boss boss = bossRepository.findById(1L)
-                .orElseThrow(() -> new EntityNotFoundException("Boss not found"));
+        Boss boss = bossRepository.findById(1L).orElseThrow(() -> new EntityNotFoundException("Boss not found"));
         return bossMapper.toDTO(boss);
     }
 
     @Override
     public BossDTO updateBoss() {
-        Boss boss = bossRepository.findById(1L)
-                .orElseThrow(() -> new EntityNotFoundException("Boss not found"));
+        Boss boss = bossRepository.findById(1L).orElseThrow(() -> new EntityNotFoundException("Boss not found"));
 
         Integer maxHealth = taskRepository.sumDamageByStatus(null);
 

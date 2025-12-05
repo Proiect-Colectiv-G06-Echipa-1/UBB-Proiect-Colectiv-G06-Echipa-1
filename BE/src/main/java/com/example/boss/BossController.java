@@ -16,9 +16,7 @@ public class BossController {
     @Operation(summary = "Get the current boss status")
     @ApiResponses(
             value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "Boss status retrieved successfully"),
+                @ApiResponse(responseCode = "200", description = "Boss status retrieved successfully"),
                 @ApiResponse(responseCode = "404", description = "Boss not found")
             })
     @GetMapping
@@ -29,9 +27,7 @@ public class BossController {
     @Operation(summary = "Update the boss health based on current tasks")
     @ApiResponses(
             value = {
-                @ApiResponse(
-                        responseCode = "200",
-                        description = "Boss updated successfully"),
+                @ApiResponse(responseCode = "200", description = "Boss updated successfully"),
                 @ApiResponse(responseCode = "404", description = "Boss not found")
             })
     @PutMapping
