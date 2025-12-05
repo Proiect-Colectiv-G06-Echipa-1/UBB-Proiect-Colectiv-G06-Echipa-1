@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public void setEnergy(Long userId, Integer energy) {
-        var user = this.getById(userId);
+        User user = getById(userId);
         user.setEnergy(energy);
         userRepository.save(user);
     }
