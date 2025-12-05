@@ -1,5 +1,6 @@
 import { IconButton, TextField } from "@mui/material";
 import ClearIcon from "@mui/icons-material/Clear";
+import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
 
 export default function StringFormInput({ label, value, setValue }: { label: string; value: string; setValue: (value: string) => void }) {
     return (
@@ -17,12 +18,16 @@ export default function StringFormInput({ label, value, setValue }: { label: str
             }}
             sx={{
                 "& .MuiFilledInput-root": {
+                    ...fontFamilyStyle,
+                    ...fontSizeStyle,
                     bgcolor: "#ece6f0",
                     border: 1,
                     borderRadius: 4,
                     borderColor: "black"
                 },
                 "& .MuiInputLabel-root": {
+                    ...fontFamilyStyle,
+                    ...fontSizeStyle,
                     color: "black",
                 },
             }}

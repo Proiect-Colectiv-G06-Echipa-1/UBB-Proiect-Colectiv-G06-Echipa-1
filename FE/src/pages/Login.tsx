@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { userApi } from '../api/api.ts';
 import { useAuth } from '../authentication/AuthContext';
 import { toast } from 'react-toastify';
+import { fontFamilyStyle, fontSizeStyle } from '../lib/style.ts';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -61,11 +62,11 @@ export default function Login() {
           component="h1" 
           gutterBottom 
           align="center"
-          sx={{ 
+          sx={[fontFamilyStyle, { 
             fontWeight: 600,
             color: '#333',
             mb: 3 
-          }}
+          }]}
         >
           Login
         </Typography>
@@ -84,6 +85,7 @@ export default function Login() {
             sx={{
               mb: 2,
               '& .MuiOutlinedInput-root': {
+                ...fontFamilyStyle, ...fontSizeStyle,
                 borderRadius: 2,
                 backgroundColor: '#f8f9fa',
                 '&:hover': {
@@ -93,6 +95,7 @@ export default function Login() {
                   backgroundColor: '#fff',
                 },
               },
+              '& .MuiInputLabel-root': {...fontFamilyStyle, ...fontSizeStyle},
             }}
           />
           
@@ -109,6 +112,7 @@ export default function Login() {
             sx={{
               mb: 3,
               '& .MuiOutlinedInput-root': {
+                ...fontFamilyStyle, ...fontSizeStyle,
                 borderRadius: 2,
                 backgroundColor: '#f8f9fa',
                 '&:hover': {
@@ -118,6 +122,7 @@ export default function Login() {
                   backgroundColor: '#fff',
                 },
               },
+              '& .MuiInputLabel-root': {...fontFamilyStyle, ...fontSizeStyle},
             }}
           />
 
@@ -127,14 +132,13 @@ export default function Login() {
               variant="contained"
               size="large"
               disabled={loading}
-              sx={{ 
+              sx={[fontFamilyStyle, fontSizeStyle, { 
                 mt: 2,
                 mb: 3,
                 py: 1.5,
                 px: 8,
                 borderRadius: 2,
                 textTransform: 'none',
-                fontSize: '1.1rem',
                 fontWeight: 600,
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
@@ -144,20 +148,20 @@ export default function Login() {
                   transform: 'translateY(-2px)',
                 },
                 transition: 'all 0.3s ease',
-              }}
+              }]}
             >
               {loading ? 'Logging' : 'Login'}
             </Button>
           </Box>
 
           <Box sx={{ textAlign: 'center', mt: 2 }}>
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body2" color="text.secondary" sx={[fontFamilyStyle, fontSizeStyle]}>
               Don't have an account?{' '}
               <Button
                 variant="text"
                 onClick={() => navigate('/register')}
                 disabled={loading}
-                sx={{ 
+                sx={[fontFamilyStyle, fontSizeStyle, { 
                   textTransform: 'none',
                   p: 0,
                   minWidth: 'auto',
@@ -169,7 +173,7 @@ export default function Login() {
                     textDecoration: 'underline',
                     color: '#5568d3',
                   }
-                }}
+                }]}
               >
                 Register here
               </Button>

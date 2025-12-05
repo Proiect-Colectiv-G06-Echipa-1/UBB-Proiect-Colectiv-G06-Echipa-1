@@ -8,6 +8,7 @@ import userSvg from '../assets/User.svg';
 import { useAuth } from '../authentication/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Box, Menu, MenuItem } from '@mui/material';
+import { fontFamilyStyle, fontSizeStyle } from '../lib/style';
 
 interface TopNavProps {
   energyLevel: number; // 0-10 segments
@@ -101,13 +102,13 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
         <Box component="img" src={logoSvg} alt="TUDU Logo" sx={{ height: 28, display: 'block' }} />
         <Typography
           variant="h5"
-          sx={{
-            fontFamily: "'Nanum Pen Script', cursive",
+          sx={[fontFamilyStyle, 
+          {
             fontWeight: 400,
             fontSize: '36px',
             letterSpacing: '.06em',
             color: '#111',
-          }}
+          }]}
         >
           TUDU
         </Typography>
@@ -216,35 +217,34 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
             {isAdmin && (
               <MenuItem 
                 onClick={handleAdminPanel}
-                sx={{
+                sx={[fontFamilyStyle, fontSizeStyle, 
+                {
                   display: 'block',
                   width: '100%',
                   textAlign: 'left',
                   padding: '12px 20px',
-                  fontSize: '16px',
                   fontWeight: 700,
                   borderBottom: '1px solid rgba(255,255,255,0.5)',
                   '&:hover': {
                     backgroundColor: 'rgba(255,255,255,0.08)'
                   }
-                }}
+                }]}
               >
                 Admin Panel
               </MenuItem>
             )}
             <MenuItem 
               onClick={handleLogout}
-              sx={{
+              sx={[fontFamilyStyle, fontSizeStyle, {
                 display: 'block',
                 width: '100%',
                 textAlign: 'left',
                 padding: '12px 20px',
-                fontSize: '16px',
                 fontWeight: 700,
                 '&:hover': {
                   backgroundColor: 'rgba(255,255,255,0.08)'
                 }
-              }}
+              }]}
             >
               Logout
             </MenuItem>

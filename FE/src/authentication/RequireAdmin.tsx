@@ -3,6 +3,7 @@ import { useAuth } from "./AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
 import { CircularProgress, Box, Typography, Button } from "@mui/material";
 import { TopNav } from "../components/TopNav";
+import { fontFamilyStyle, fontSizeStyle } from "../lib/style";
 
 export function RequireAdmin({ children }: { children: JSX.Element }) {
   const { authenticated, isAdmin, loading } = useAuth();
@@ -65,40 +66,40 @@ export function RequireAdmin({ children }: { children: JSX.Element }) {
         >
           <Typography
             variant="h4"
-            sx={{
-              fontFamily: "'Nanum Pen Script', cursive",
+            sx={[fontFamilyStyle, 
+            {
               fontWeight: 400,
               fontSize: '48px',
               color: '#111',
               textAlign: 'center',
-            }}
+            }]}
           >
             Access Denied
           </Typography>
           <Typography
-            sx={{
-              fontSize: '18px',
+            sx={[fontFamilyStyle, fontSizeStyle,
+            {
               color: '#333',
               textAlign: 'center',
-              maxWidth: '500px',
-            }}
+              maxWidth: '600px',
+            }]}
           >
             You do not have administrator privileges to access this page.
           </Typography>
           <Button
             onClick={() => navigate('/home')}
-            sx={{
+            sx={[fontFamilyStyle, fontSizeStyle,
+            {
               bgcolor: '#6F6471',
               color: '#fff',
               borderRadius: '28px',
               padding: '12px 24px',
-              fontSize: '16px',
               fontWeight: 700,
               textTransform: 'none',
               '&:hover': {
                 bgcolor: '#5a4d5d',
               },
-            }}
+            }]}
           >
             Go to Home
           </Button>

@@ -9,6 +9,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import { Divider, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import { fontFamilyStyle, fontSizeStyle } from '../../lib/style';
 
 const drawerWidth = 240;
 
@@ -50,7 +51,7 @@ export default function PermanentDrawerLeft(props: PermanentDrawerLeftProps) {
                             inputProps={{ 'aria-label': 'search' }}
                             value={searchTerm}
                             onChange={(event) => setSearchTerm(event.target.value)}
-                            sx={{width: '100%','& .MuiInputBase-input': {padding: 0, fontSize: '14px', '&::placeholder': { color: '#999', opacity: 1}}}}
+                            sx={[fontFamilyStyle, {width: '100%','& .MuiInputBase-input': {padding: 0, fontSize: '18px', '&::placeholder': { color: '#999', opacity: 1}}}]}
                         />
                     </Box>
                 </Box>
@@ -69,7 +70,7 @@ export default function PermanentDrawerLeft(props: PermanentDrawerLeftProps) {
                             primary={item.text}
                             slotProps={{
                                 primary: {
-                                    sx: { fontFamily: "'Nanum Pen Script', cursive", fontSize: '1.5rem' }
+                                    sx: [fontFamilyStyle, fontSizeStyle]
                                 }
                             }}
                         />

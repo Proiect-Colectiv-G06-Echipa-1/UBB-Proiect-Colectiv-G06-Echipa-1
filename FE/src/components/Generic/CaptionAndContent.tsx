@@ -1,4 +1,5 @@
 import { Box, Typography } from "@mui/material";
+import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
 
 export interface CaptionAndContentProps {
     caption?: string;
@@ -8,10 +9,10 @@ export interface CaptionAndContentProps {
 export default function CaptionAndContent({ caption, content }: CaptionAndContentProps) {
     return (
         <Box sx={{ display: 'flex', mb: 1.5, gap: 1 }}>
-            <Typography variant="caption" sx={{ fontWeight: 700, lineHeight: 1 }}>
+            <Typography variant="caption" sx={[fontFamilyStyle, { fontSize: "28px", fontWeight: 500, lineHeight: 1.5 }]}>
                 {caption}
             </Typography>
-            <Typography variant="caption" sx={{ fontWeight: 500, wordBreak: 'break-word', lineHeight: 1.2 }}>
+            <Typography variant="caption" sx={[fontFamilyStyle, fontSizeStyle, { fontWeight: 500, wordBreak: 'break-word' }]}>
                 {content}
             </Typography>
         </Box>

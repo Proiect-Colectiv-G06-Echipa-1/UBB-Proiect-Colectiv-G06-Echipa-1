@@ -1,5 +1,6 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { Box, Typography } from '@mui/material';
+import { fontFamilyStyle } from '../../lib/style';
 
 interface ChartData {
   name: string;
@@ -31,23 +32,22 @@ export const TasksChart = (props: TasksChartProps) => {
         borderRadius: '12px',
         padding: '20px',
         boxShadow: '0 2px 0 #cfc7d8',
-        fontFamily: "'Nanum Pen Script', cursive",
       }}
     >
       <Typography
         variant="h6"
-        sx={{
-          fontFamily: "'Nanum Pen Script', cursive",
+        sx={[fontFamilyStyle, 
+        {
           fontSize: '36px',
           fontWeight: 700,
           color: '#111',
           mb: 2,
-        }}
+        }]}
       >
         {title} : {firstCount}
       </Typography>
       <ResponsiveContainer width="100%" height={245}>
-        <PieChart style={{ fontFamily: "'Nanum Pen Script', cursive" }}>
+        <PieChart style={fontFamilyStyle}>
           <Pie
             data={data}
             cx="50%"

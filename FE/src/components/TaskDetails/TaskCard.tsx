@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import { StatusDropdown } from "../Generic/StatusDropdown";
 import { toast } from "react-toastify";
 import { allCategories } from "../../lib/status";
+import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
 
 export default function TaskCard({id}: {id: number}) {
     const navigate = useNavigate(); 
@@ -110,7 +111,6 @@ export default function TaskCard({id}: {id: number}) {
         }
     } 
 
-    // HELP: If anyone knows a better way to handle, please fix
     if (task === undefined) {
         return null;
     }
@@ -119,17 +119,19 @@ export default function TaskCard({id}: {id: number}) {
         <Box sx={{ display: 'flex', justifyContent: 'center', padding: 0 }}>
             <Card sx={{ width: '100%', minWidth: 360, maxWidth: 360, borderRadius: 3, boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative'}}>
                 <CardContent sx={{ padding: 2, '&:last-child': { paddingBottom: 2 } }}>
-                    <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1.5, mb: 1.5 }}>
-                        <EnergyRoundedContainer energyCost={task.energyCost || 0} />
-                        <Typography variant="subtitle1" sx={{ fontWeight: 700, flex: 1, fontSize: '18px' }}>
-                            {task.title}
-                        </Typography>
-                        <Box sx={{ display: 'flex', gap: 0.5, ml: 'auto' }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                            <EnergyRoundedContainer energyCost={task.energyCost || 0} />
+                            <Typography variant="subtitle1" sx={[fontFamilyStyle, { fontSize: "32px", fontWeight: 700 }]}>
+                                {task.title}
+                            </Typography>
+                        </Box>
+                        <Box sx={{ display: 'flex', gap: 0.5 }}>
                             <IconButton size="small" sx={{ padding: '4px' }} onClick={() => {navigate(`/manage-task/${task.id}`)}}>
-                                <EditIcon sx={{ fontSize: '18px' }} />
+                                <EditIcon sx={[fontSizeStyle]} />
                             </IconButton>
                             <IconButton size="small" sx={{ padding: '4px' }} onClick={() => setOpenDialog(true)}>
-                                <DeleteIcon sx={{ fontSize: '18px' }} />
+                                <DeleteIcon sx={[fontSizeStyle]} />
                             </IconButton>
                         </Box>
                     </Box>
@@ -142,8 +144,8 @@ export default function TaskCard({id}: {id: number}) {
                         {isTaskAssignedToUser ? (
                             <StatusDropdown categories={allCategories} selected={task.status || TaskDTOStatusEnum.Backlog} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" keyColor="#FFFFFF" handleSelect={handleSelect} />
                         ) : (
-                            <Button onClick={handleTakeTaskClick} startIcon={<AddIcon sx={{ color: '#FFFFFF' }} />} sx={{backgroundColor: '#9fafff',
-                                color: '#fff', borderRadius: '28px', width: 'auto', fontSize: '16px',fontWeight: 700,textTransform: 'none',padding: '8px 16px','&:hover': {backgroundColor: '#8a9fff'}}}>
+                            <Button onClick={handleTakeTaskClick} startIcon={<AddIcon sx={{ color: '#FFFFFF' }} />} sx={[fontFamilyStyle, fontSizeStyle, {backgroundColor: '#9fafff',
+                                color: '#fff', borderRadius: '28px', width: 'auto',fontWeight: 700,textTransform: 'none',padding: '8px 16px','&:hover': {backgroundColor: '#8a9fff'}}]}>
                                 Take Task
                             </Button>
                         )}
