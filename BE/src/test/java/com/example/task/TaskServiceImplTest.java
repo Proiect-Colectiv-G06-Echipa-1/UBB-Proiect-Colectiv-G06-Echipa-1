@@ -24,7 +24,7 @@
 //    private TaskMapper mapper;
 //
 //    @Mock
-//    private TaskValidator validator;
+//    private TaskValidatorImpl validator;
 //
 //    @InjectMocks
 //    private TaskServiceImpl service;
