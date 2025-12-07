@@ -5,11 +5,12 @@ import { ToastContainer } from "react-toastify";
 import { BrowserRouter, useLocation } from "react-router-dom";
 import { AuthProvider } from "./authentication/AuthContext";
 import { TopNav } from "./components/TopNav";
+import { ROUTES } from "./routing/routes";
 import "react-toastify/dist/ReactToastify.css";
 
 function AppContent() {
   const location = useLocation();
-  const isLoginOrRegister = location.pathname === '/login' || location.pathname === '/register';
+  const isLoginOrRegister = [ROUTES.login, ROUTES.register].includes(location.pathname);
 
   return (
     <>

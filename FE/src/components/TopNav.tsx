@@ -9,6 +9,7 @@ import { useAuth } from '../authentication/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Box, Menu, MenuItem } from '@mui/material';
 import { fontFamilyStyle, fontSizeStyle } from '../lib/style';
+import { ROUTES } from '../routing/routes';
 
 export const TopNav = () => {
   const segments = 10;
@@ -39,7 +40,7 @@ export const TopNav = () => {
   const handleLogout = () => {
     handleUserMenuClose();
     logout();
-    navigate('/login');
+    navigate(ROUTES.login);
   };
 
   const handleAdminPanel = () => {
@@ -90,11 +91,16 @@ export const TopNav = () => {
         bgcolor: '#fff',
         borderBottom: '1px solid #e6e6e6',
         px: 2,
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
       }}
     >
       {/* BRAND SECTION */}
       <Box
-        onClick={() => navigate('/')}
+        onClick={() => navigate(ROUTES.root)}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -105,7 +111,7 @@ export const TopNav = () => {
         <Box component="img" src={logoSvg} alt="TUDU Logo" sx={{ height: 28, display: 'block' }} />
         <Typography
           variant="h5"
-          sx={[fontFamilyStyle, 
+          sx={[fontFamilyStyle,
           {
             fontWeight: 400,
             fontSize: '36px',
@@ -218,9 +224,9 @@ export const TopNav = () => {
             }}
           >
             {isAdmin && (
-              <MenuItem 
+              <MenuItem
                 onClick={handleAdminPanel}
-                sx={[fontFamilyStyle, fontSizeStyle, 
+                sx={[fontFamilyStyle, fontSizeStyle,
                 {
                   display: 'block',
                   width: '100%',
@@ -236,7 +242,7 @@ export const TopNav = () => {
                 Admin Panel
               </MenuItem>
             )}
-            <MenuItem 
+            <MenuItem
               onClick={handleLogout}
               sx={[fontFamilyStyle, fontSizeStyle, {
                 display: 'block',
