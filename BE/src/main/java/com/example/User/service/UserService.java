@@ -4,6 +4,8 @@ import com.example.User.User;
 import com.example.User.UserDTO;
 import com.example.User.UserMapper;
 import com.example.User.UserRepository;
+import com.example.User.UserValidator;
+
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +16,7 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
     private final UserMapper mapper;
+    private final UserValidator validator;
 
     public User getById(Long id) {
         return userRepository
@@ -28,6 +31,7 @@ public class UserService {
     public void setEnergy(Long userId, Integer energy) {
         User user = getById(userId);
         user.setEnergy(energy);
+        validator.validate(user);
         userRepository.save(user);
     }
 }

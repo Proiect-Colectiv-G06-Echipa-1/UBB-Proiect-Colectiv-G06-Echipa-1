@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +32,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 public class UserController {
 
         private final AuthenticationManager authenticationManager;
@@ -37,19 +40,6 @@ public class UserController {
         private final UserService userService;
         private final UserRepository userRepository;
         private final PasswordEncoder passwordEncoder;
-
-        public UserController(
-                        AuthenticationManager authenticationManager,
-                        JwtService jwtService,
-                        UserRepository userRepository,
-                        PasswordEncoder passwordEncoder,
-                        UserService userService) {
-                this.authenticationManager = authenticationManager;
-                this.jwtService = jwtService;
-                this.userRepository = userRepository;
-                this.passwordEncoder = passwordEncoder;
-                this.userService = userService;
-        }
 
         @Operation(summary = "Authenticate user and return JWT token")
         @ApiResponses(value = {
