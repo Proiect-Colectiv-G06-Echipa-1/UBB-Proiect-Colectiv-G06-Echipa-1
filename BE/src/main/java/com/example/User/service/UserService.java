@@ -1,11 +1,6 @@
 package com.example.User.service;
 
-import com.example.User.User;
-import com.example.User.UserDTO;
-import com.example.User.UserMapper;
-import com.example.User.UserRepository;
-import com.example.User.UserValidator;
-
+import com.example.User.*;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
