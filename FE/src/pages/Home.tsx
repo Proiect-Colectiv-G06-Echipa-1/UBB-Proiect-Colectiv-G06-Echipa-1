@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { TopNav } from '../components/TopNav';
 import { StatusDropdown } from '../components/Generic/StatusDropdown';
 import { QuestCard } from '../components/QuestCard';
 import { Fab } from '../components/Fab';
@@ -47,14 +46,14 @@ export const Home = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        height: 'calc(100vh - var(--navbar-height))',
         width: '100vw',
         bgcolor: '#fff',
         m: 0,
         p: 0,
         overflow: 'hidden',
         position: 'fixed',
-        top: 0,
+        top: 'var(--navbar-height)',
         left: 0,
       }}
     >
@@ -123,13 +122,13 @@ export const Home = () => {
           }}
         >
           {inSelected.map((item) => (
+            // TODO(MC): Replace this with TaskCard. Tweak TaskCard to be used here as well
             <QuestCard
               key={item.id}
               id={item.id || 0}
               title={item?.title || ''}
               created={formatDate(item?.creationDate || new Date())}
               deadline={formatDate(item?.deadline || new Date())}
-              width='250px'
               count={item?.energyCost || 0}
             />
           ))}

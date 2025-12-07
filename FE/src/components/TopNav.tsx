@@ -10,6 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { Typography, Box, Menu, MenuItem } from '@mui/material';
 import { fontFamilyStyle, fontSizeStyle } from '../lib/style';
 import { ROUTES } from '../routing/routes';
+import '../styles/global.css';
 
 export const TopNav = () => {
   const segments = 10;
@@ -86,15 +87,12 @@ export const TopNav = () => {
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        height: 64,
-        bgcolor: '#fff',
-        borderBottom: '1px solid #e6e6e6',
+        height: 'var(--navbar-height)',
+        width: 'auto',
+        inset: 0,
         px: 2,
+        bgcolor: '#ffffff',
         position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
         zIndex: 1000,
       }}
     >
