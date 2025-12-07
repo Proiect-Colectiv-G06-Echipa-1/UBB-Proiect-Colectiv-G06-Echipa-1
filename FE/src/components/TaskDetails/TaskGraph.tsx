@@ -202,17 +202,14 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
         const circleRadius = 18;
         const isCompleted = node.status === 'COMPLETED';
         
-        // Card position
         const x = node.x - cardWidth / 2;
         const y = node.y - cardHeight / 2;
         const radius = 12;
 
-        // Draw card background
         ctx.fillStyle = isCompleted ? '#D4EDDA' : '#FFFFFF';
         ctx.strokeStyle = node.isCurrent ? '#000000' : (isCompleted ? '#28A745' : 'transparent');
         ctx.lineWidth = 2;
 
-        // Draw rounded rectangle for card
         ctx.beginPath();
         ctx.moveTo(x + radius, y);
         ctx.lineTo(x + cardWidth - radius, y);
@@ -225,7 +222,7 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
         ctx.quadraticCurveTo(x, y, x + radius, y);
         ctx.closePath();
         
-        // Add shadow
+        
         ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
         ctx.shadowBlur = 5;
         ctx.shadowOffsetX = 0;
@@ -236,13 +233,13 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
             ctx.stroke();
         }
         
-        // Reset shadow
+        
         ctx.shadowColor = 'transparent';
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
 
-        // Draw ID circle
+        
         const circleX = x + padding + circleRadius;
         const circleY = y + cardHeight / 2;
         
@@ -251,19 +248,17 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
         ctx.arc(circleX, circleY, circleRadius, 0, 2 * Math.PI);
         ctx.fill();
 
-        // Draw ID number
+        
         ctx.fillStyle = '#FFFFFF';
         ctx.font = `bold ${fontSize}px 'Nanum Pen Script', cursive`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText(String(node.id), circleX, circleY);
 
-        // Draw text content
         const textX = x + padding * 2 + circleRadius * 2 + 8;
         const titleFontSize = 13;
         const dateFontSize = 10;
         
-        // Title
         ctx.fillStyle = '#000000';
         ctx.font = `bold ${titleFontSize}px 'Nanum Pen Script', cursive`;
         ctx.textAlign = 'left';
@@ -272,7 +267,6 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
         const title = node.title.length > 15 ? node.title.substring(0, 15) + '...' : node.title;
         ctx.fillText(title, textX, y + padding);
 
-        // Created date
         ctx.fillStyle = '#666666';
         ctx.font = `${dateFontSize}px 'Nanum Pen Script', cursive`;
         const createdText = node.createdDate 
@@ -280,13 +274,11 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
             : 'Created: N/A';
         ctx.fillText(createdText, textX, y + padding + titleFontSize + 4);
 
-        // Deadline
         const deadlineText = node.deadline 
             ? `Deadline: ${new Date(node.deadline).toLocaleDateString('en-GB')}`
             : 'Deadline: N/A';
         ctx.fillText(deadlineText, textX, y + padding + titleFontSize + dateFontSize + 8);
 
-        // Store node dimensions for interaction
         node.__width = cardWidth;
         node.__height = cardHeight;
     };
@@ -299,15 +291,12 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
 
         const cardWidth = 180;
         
-        // Start point: right edge of source card
         const startX = start.x + cardWidth / 2;
         const startY = start.y;
         
-        // End point: left edge of target card
         const endX = end.x - cardWidth / 2;
         const endY = end.y;
         
-        // Draw line
         ctx.beginPath();
         ctx.moveTo(startX, startY);
         ctx.lineTo(endX, endY);
@@ -315,7 +304,6 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
         ctx.lineWidth = 2;
         ctx.stroke();
         
-        // Draw arrow head
         const arrowLength = 10;
         const headAngle = Math.atan2(endY - startY, endX - startX);
         

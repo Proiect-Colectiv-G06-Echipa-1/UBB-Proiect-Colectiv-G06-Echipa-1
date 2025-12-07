@@ -46,7 +46,7 @@ export function TaskDetailPage() {
                 overflow: 'hidden',
                 flexDirection: { xs: 'column', md: 'row' }
             }}>
-                {/* Task Card Section */}
+                
                 <Box sx={{ 
                     width: { xs: '100%', md: '600px' }, 
                     height: { xs: '50%', md: 'auto' },
@@ -70,7 +70,6 @@ export function TaskDetailPage() {
                     </Box>
                 </Box>
 
-                {/* Divider */}
                 <Box sx={{
                     width: { xs: '100%', md: '2px' },
                     height: { xs: '2px', md: 'auto' },
@@ -78,7 +77,6 @@ export function TaskDetailPage() {
                     alignSelf: 'stretch'
                 }} />
 
-                {/* Task Graph Section */}
                 <Box sx={{ 
                     flex: 1, 
                     display: 'flex', 
