@@ -1,6 +1,7 @@
 package com.example.User;
 
 import com.example.User.dto.AuthResponse;
+import com.example.User.dto.EnergyUpdateRequest;
 import com.example.User.dto.ErrorResponse;
 import com.example.User.dto.LoginRequest;
 import com.example.User.dto.RegisterRequest;
@@ -15,6 +16,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +31,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/users")
 @CrossOrigin(origins = "*", maxAge = 3600)
+@RequiredArgsConstructor
 public class UserController {
 
     private final AuthenticationManager authenticationManager;
@@ -36,19 +39,6 @@ public class UserController {
     private final UserService userService;
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserController(
-            AuthenticationManager authenticationManager,
-            JwtService jwtService,
-            UserRepository userRepository,
-            PasswordEncoder passwordEncoder,
-            UserService userService) {
-        this.authenticationManager = authenticationManager;
-        this.jwtService = jwtService;
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
-    }
 
     @Operation(summary = "Authenticate user and return JWT token")
     @ApiResponses(
@@ -143,7 +133,7 @@ public class UserController {
             user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
             // FIXME currently there is no way for admin users to be created
             user.setRole(UserRole.ROLE_USER);
-
+            user.setEnergy(5);
             // Save user to database
             userRepository.save(user);
 
@@ -174,5 +164,28 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDTO>> getAll() {
         return ResponseEntity.ok(userService.getAll());
+    }
+
+    @Operation(summary = "Get the energy level of a user.")
+    @ApiResponses(
+            value = {
+                @ApiResponse(
+                        responseCode = "200",
+                        description = "Energy retrieved successfully.",
+                        content = {
+                            @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class))
+                        })
+            })
+    @GetMapping("/{id}/energy")
+    public ResponseEntity<Integer> getEnergy(@PathVariable long id) {
+        return ResponseEntity.ok(userService.getById(id).getEnergy());
+    }
+
+    @Operation(summary = "Set the energy level of a user.")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Energy set successfully.")})
+    @PatchMapping("/{id}/energy")
+    public ResponseEntity<Integer> setEnergy(@PathVariable long id, @RequestBody EnergyUpdateRequest updateRequest) {
+        userService.setEnergy(id, updateRequest.energy());
+        return ResponseEntity.ok().build();
     }
 }

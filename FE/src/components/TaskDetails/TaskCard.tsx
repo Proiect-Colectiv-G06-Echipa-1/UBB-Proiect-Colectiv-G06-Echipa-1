@@ -15,6 +15,7 @@ import { StatusDropdown } from "../Generic/StatusDropdown";
 import { toast } from "react-toastify";
 import { allCategories } from "../../lib/status";
 import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
+import { ROUTES } from "../../routing/routes";
 
 export default function TaskCard({id}: {id: number}) {
     const navigate = useNavigate(); 
@@ -94,7 +95,7 @@ export default function TaskCard({id}: {id: number}) {
         }
         setOpenDialog(false);
 
-        navigate("/");
+        navigate(ROUTES.root);
     };
 
     const handleTakeTaskClick = async () => {

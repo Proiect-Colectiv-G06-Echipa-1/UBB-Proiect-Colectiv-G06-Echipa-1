@@ -1,19 +1,15 @@
-import { useState } from "react";
-import { TopNav } from "../components/TopNav";
 import Box from "@mui/material/Box";
 import Form from "../components/ManageTask/Form";
 
 export default function TaskForm() {
-  const [energyLevel, setEnergyLevel] = useState(6);
-
   return (
     <Box
       sx={{
         position: "fixed",
-        top: 0,
+        top: 'var(--navbar-height)',
         left: 0,
         width: "100vw",
-        height: "100vh",
+        height: "calc(100vh - var(--navbar-height))",
         display: "flex",
         flexDirection: "column",
         bgcolor: "#9FAFFF",
@@ -22,11 +18,6 @@ export default function TaskForm() {
         overflow: "hidden",
       }}
     >
-      <TopNav
-        energyLevel={energyLevel}
-        onDecrease={() => setEnergyLevel((prev) => Math.max(0, prev - 1))}
-        onIncrease={() => setEnergyLevel((prev) => Math.min(10, prev + 1))}
-      />
       <Form />
     </Box>
   );

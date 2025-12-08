@@ -32,7 +32,7 @@
 //    private TaskMapper taskMapper;
 //
 //    @Mock
-//    private TaskValidator taskValidator;
+//    private TaskValidatorImpl taskValidator;
 //
 //    @InjectMocks
 //    private TaskServiceImpl taskService;

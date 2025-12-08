@@ -22,10 +22,10 @@ export function TaskDetailPage() {
     return (
         <Box sx={{
           position: 'fixed',
-          top: 0,
+          top: 'var(--navbar-height)',
           left: 0,
           width: '100vw',
-          height: '100vh',
+          height: 'calc(100vh - var(--navbar-height))',
           display: 'flex',
           flexDirection: 'column',
           bgcolor: '#9FAFFF',

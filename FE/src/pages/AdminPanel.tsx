@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { TopNav } from '../components/TopNav';
 import { StatusDropdown } from '../components/Generic/StatusDropdown';
 import { Typography, Box } from '@mui/material';
 import { taskApi, userApi } from '../api/api';
@@ -14,7 +13,7 @@ import { QuestCard } from '../components/QuestCard';
 import { formatDate } from '../lib/date';
 import { TasksChart } from '../components/AdminPanel/TasksChart';
 import { unAssignableCategories } from '../lib/status';
-import { fontFamilyStyle, fontSizeStyle } from '../lib/style';
+import { fontFamilyStyle } from '../lib/style';
 
 export const AdminPanel = () => {
   const [drawerItems, setDrawerItems] = useState<DrawerItem[]>([]);
@@ -29,8 +28,6 @@ export const AdminPanel = () => {
 
   const [userCompletedTasks, setUserCompletedTasks] = useState<number>(0);
   const [userTotalTasks, setUserTotalTasks] = useState<number>(0);
-
-  const [energyLevel, setEnergyLevel] = useState(6);
 
   const handleSelect = (status: TaskDTOStatusEnum) => {
     setSelected(status);
@@ -175,12 +172,7 @@ export const AdminPanel = () => {
   }, [userId]);
 
   return (
-    <Box sx={{display: 'flex', flexDirection: 'column', height: '100vh', width: '100vw', bgcolor: '#A8B1FF', m: 0, p: 0}}>
-      <TopNav
-        energyLevel={energyLevel}
-        onDecrease={() => setEnergyLevel(prev => Math.max(0, prev - 1))}
-        onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
-      />
+    <Box sx={{display: 'flex', flexDirection: 'column', position: 'fixed', top: 'var(--navbar-height)', height: 'calc(100vh - var(--navbar-height))', width: '100vw', bgcolor: '#A8B1FF', m: 0, p: 0}}>
       <Box sx={{ display: 'flex', flex: 1, overflow: 'hidden' }}>
         <PermanentDrawerLeft items={drawerItems} onItemClick={onItemClick} selectedItemId={userId}>
           <Box sx={{display: 'flex', bgcolor: '#A8B1FF', flex: 1, height: '100%'}}>

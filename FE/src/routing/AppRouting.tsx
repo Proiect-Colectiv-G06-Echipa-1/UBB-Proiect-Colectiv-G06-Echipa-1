@@ -9,6 +9,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import TaskForm from "../pages/TaskForm";
 import { TaskDetailPage } from "../pages/TaskDetailPage";
+import { ROUTES } from "./routes";
 import { AdminPanel } from "../pages/AdminPanel";
 
 const loadingPageSx = {
@@ -54,11 +55,11 @@ function AppRouting() {
   if (authenticated) {
     return (
       <Routes>
-        <Route path="/" element={<Navigate to="/home" replace />} />
-        <Route path="/login" element={<Navigate to="/home" replace />} />
-        <Route path="/register" element={<Navigate to="/home" replace />} />
+        <Route path={ROUTES.root} element={<Navigate to={ROUTES.home} replace />} />
+        <Route path={ROUTES.login} element={<Navigate to={ROUTES.home} replace />} />
+        <Route path={ROUTES.register} element={<Navigate to={ROUTES.home} replace />} />
         <Route
-          path="/home"
+          path={ROUTES.home}
           element={
             <RequireAuth>
               <Home />
@@ -66,7 +67,7 @@ function AppRouting() {
           }
         />
         <Route
-          path="/manage-task/:id?"
+          path={`${ROUTES.manageTask}/:id?`}
           element={
             <RequireAuth>
               <TaskForm />
@@ -75,7 +76,7 @@ function AppRouting() {
 
         </Route>
         <Route
-          path="/task/:id"
+          path={`${ROUTES.task}/:id`}
           element={
             <RequireAuth>
               <TaskDetailPage />
@@ -90,7 +91,7 @@ function AppRouting() {
             </RequireAdmin>
           }>
         </Route>
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to={ROUTES.root} replace />} />
       </Routes>
     );
   }
@@ -98,14 +99,14 @@ function AppRouting() {
   return (
     <Box sx={authPageSx}>
       <Routes>
-        <Route path="/" element={<Navigate to="/login" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Navigate to="/login" replace />} />
-        <Route path="/manage-task/:id?" element={<Navigate to="/login" replace />} />
-        <Route path="/task/:id" element={<Navigate to="/login" replace />} />
+        <Route path={ROUTES.root} element={<Navigate to={ROUTES.login} replace />} />
+        <Route path={ROUTES.login} element={<Login />} />
+        <Route path={ROUTES.register} element={<Register />} />
+        <Route path={ROUTES.home} element={<Navigate to={ROUTES.login} replace />} />
+        <Route path={`${ROUTES.manageTask}/:id?`} element={<Navigate to={ROUTES.login} replace />} />
+        <Route path={`${ROUTES.task}/:id`} element={<Navigate to={ROUTES.login} replace />} />
         <Route path="/admin" element={<Navigate to="/login" replace />} />
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to={ROUTES.root} replace />} />
 
       </Routes>
     </Box>

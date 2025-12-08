@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { userApi } from '../api/api.ts';
 import { toast } from 'react-toastify';
 import { z } from 'zod';
+import { ROUTES } from '../routing/routes';
 import { fontFamilyStyle, fontSizeStyle } from '../lib/style.ts';
 
 const registerSchema = z.object({
@@ -64,7 +65,7 @@ export default function Register() {
       await userApi.register({registerRequest: {username, password, email}});
       toast.success('Registration successful! Please login.', { containerId: 'global-toast' });
       setTimeout(() => {
-        navigate('/login');
+        navigate(ROUTES.login);
       }, 1000);
     } catch (err: any) {
       toast.error(err.message || 'Registration failed. Please try again.', { containerId: 'global-toast' });
@@ -100,7 +101,7 @@ export default function Register() {
           component="h1" 
           gutterBottom 
           align="center"
-          sx={[fontFamilyStyle, { 
+          sx={[fontFamilyStyle, {
             fontWeight: 600,
             color: '#333',
             mb: 3 
@@ -196,7 +197,7 @@ export default function Register() {
               variant="contained"
               size="large"
               disabled={loading}
-              sx={[fontFamilyStyle, fontSizeStyle, { 
+              sx={[fontFamilyStyle, fontSizeStyle, {
                 mt: 2,
                 mb: 3,
                 py: 1.5,
@@ -223,9 +224,9 @@ export default function Register() {
               Already have an account?{' '}
               <Button
                 variant="text"
-                onClick={() => navigate('/login')}
+                onClick={() => navigate(ROUTES.login)}
                 disabled={loading}
-                sx={[fontFamilyStyle, fontSizeStyle, { 
+                sx={[fontFamilyStyle, fontSizeStyle, {
                   textTransform: 'none',
                   p: 0,
                   minWidth: 'auto',

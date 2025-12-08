@@ -23,12 +23,22 @@ Accept: application/json
 {
   "title": "New Task",
   "description": "This is a test task",
-  "status": "PENDING",
-  "energyCost": 10,
-  "damage": 5,
+  "status": "BACKLOG",
+  "energyCost": 2,
+  "damage": 155,
   "procrastinationDamage": 2,
   "creationDate": "2025-11-13",
-  "parents": []
+  "deadline": "2025-12-13",
+  "parents": [],
+  "assignees": []
+}
+
+###
+PATCH http://localhost:8080/api/users/1/energy
+Content-Type: application/json
+
+{
+  "energy": -1
 }
 
 ### Create a new task (Fail: 422 Invalid Task)
