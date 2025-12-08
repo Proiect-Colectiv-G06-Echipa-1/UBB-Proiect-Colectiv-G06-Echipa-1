@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import notesIcon from "../assets/notes.png"
 import treeIcon from "../assets/tree.png"
 import TaskCard from "../components/TaskDetails/TaskCard";
@@ -7,7 +7,6 @@ import TaskGraph from "../components/TaskDetails/TaskGraph";
 import { useParams } from "react-router-dom";
 
 export function TaskDetailPage() {
-  const [energyLevel, setEnergyLevel] = useState(6);
   const graphRef = useRef<any>(null);
 
   const {id} = useParams<{id: string}>();
