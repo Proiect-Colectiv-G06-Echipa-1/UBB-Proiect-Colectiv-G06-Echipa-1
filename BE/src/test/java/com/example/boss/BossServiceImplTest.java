@@ -36,10 +36,9 @@ class BossServiceImplTest {
                 .setName("Project Boss")
                 .setMaxHealth(100)
                 .setCurrentHealth(50)
-                .setCreatedAt(LocalDateTime.now())
-                .setDefeated(false);
+                .setCreatedAt(LocalDateTime.now());
 
-        bossDTO = new BossDTO(1L, "Project Boss", 100, 50, LocalDateTime.now(), false);
+        bossDTO = new BossDTO(1L, "Project Boss", 100, 50, LocalDateTime.now());
     }
 
     @Test

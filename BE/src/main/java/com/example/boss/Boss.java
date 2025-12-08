@@ -1,6 +1,7 @@
 package com.example.boss;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import lombok.Getter;
@@ -23,6 +24,7 @@ public class Boss {
     private String name;
 
     @NotNull
+    @Max(100)
     private Integer maxHealth;
 
     @NotNull
@@ -30,7 +32,4 @@ public class Boss {
 
     @NotNull
     private LocalDateTime createdAt;
-
-    @NotNull
-    private Boolean defeated;
 }
