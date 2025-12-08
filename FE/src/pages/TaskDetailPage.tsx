@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import { TopNav } from "../components/TopNav";
 import { useState, useRef } from "react";
 import notesIcon from "../assets/notes.png"
 import treeIcon from "../assets/tree.png"
@@ -32,13 +31,7 @@ export function TaskDetailPage() {
           margin: 0,
           padding: 0,
           overflow: 'hidden'
-        }}>
-            <TopNav
-                energyLevel={energyLevel}
-                onDecrease={() => setEnergyLevel(prev => Math.max(0, prev - 1))}
-                onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
-            />
-            
+        }}> 
             <Box sx={{ 
                 display: 'flex', 
                 flex: 1, 
