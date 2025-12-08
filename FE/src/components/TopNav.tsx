@@ -9,15 +9,12 @@ import { useAuth } from '../authentication/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { Typography, Box, Menu, MenuItem } from '@mui/material';
 import { fontFamilyStyle, fontSizeStyle } from '../lib/style';
+import { ROUTES } from '../routing/routes';
+import '../styles/global.css';
 
-interface TopNavProps {
-  energyLevel: number; // 0-10 segments
-  onDecrease?: () => void;
-  onIncrease?: () => void;
-}
-
-export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => {
+export const TopNav = () => {
   const segments = 10;
+  const [energyLevel, setEnergyLevel] = useState(6);
   const atMin = energyLevel <= 0;
   const atMax = energyLevel >= segments;
   const { logout, isAdmin } = useAuth();
@@ -33,10 +30,18 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
     setAnchorEl(null);
   };
 
+  const handleDecrease = () => {
+    setEnergyLevel(prev => Math.max(0, prev - 1));
+  };
+
+  const handleIncrease = () => {
+    setEnergyLevel(prev => Math.min(10, prev + 1));
+  };
+
   const handleLogout = () => {
     handleUserMenuClose();
     logout();
-    navigate('/login');
+    navigate(ROUTES.login);
   };
 
   const handleAdminPanel = () => {
@@ -82,16 +87,18 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
       sx={{
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center',
-        height: 64,
-        bgcolor: '#fff',
-        borderBottom: '1px solid #e6e6e6',
+        height: 'var(--navbar-height)',
+        width: 'auto',
+        inset: 0,
         px: 2,
+        bgcolor: '#ffffff',
+        position: 'fixed',
+        zIndex: 1000,
       }}
     >
       {/* BRAND SECTION */}
       <Box
-        onClick={() => navigate('/')}
+        onClick={() => navigate(ROUTES.root)}
         sx={{
           display: 'flex',
           alignItems: 'center',
@@ -102,7 +109,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
         <Box component="img" src={logoSvg} alt="TUDU Logo" sx={{ height: 28, display: 'block' }} />
         <Typography
           variant="h5"
-          sx={[fontFamilyStyle, 
+          sx={[fontFamilyStyle,
           {
             fontWeight: 400,
             fontSize: '36px',
@@ -120,7 +127,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
         {/* Decrease Button */}
         <Box
           component="button"
-          onClick={onDecrease}
+          onClick={handleDecrease}
           disabled={atMin}
           aria-label="Decrease energy"
           sx={circleBtnStyle(atMin)}
@@ -166,7 +173,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
         {/* Increase Button */}
         <Box
           component="button"
-          onClick={onIncrease}
+          onClick={handleIncrease}
           disabled={atMax}
           aria-label="Increase energy"
           sx={circleBtnStyle(atMax)}
@@ -215,9 +222,9 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
             }}
           >
             {isAdmin && (
-              <MenuItem 
+              <MenuItem
                 onClick={handleAdminPanel}
-                sx={[fontFamilyStyle, fontSizeStyle, 
+                sx={[fontFamilyStyle, fontSizeStyle,
                 {
                   display: 'block',
                   width: '100%',
@@ -233,7 +240,7 @@ export const TopNav = ({ energyLevel, onDecrease, onIncrease }: TopNavProps) => 
                 Admin Panel
               </MenuItem>
             )}
-            <MenuItem 
+            <MenuItem
               onClick={handleLogout}
               sx={[fontFamilyStyle, fontSizeStyle, {
                 display: 'block',

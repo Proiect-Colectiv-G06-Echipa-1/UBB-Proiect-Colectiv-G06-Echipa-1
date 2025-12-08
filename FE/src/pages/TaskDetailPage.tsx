@@ -1,23 +1,19 @@
 import Box from "@mui/material/Box";
-import { TopNav } from "../components/TopNav";
-import { useState } from "react";
 import notesIcon from "../assets/notes.png"
 import treeIcon from "../assets/tree.png"
 import TaskCard from "../components/TaskDetails/TaskCard";
 import { useParams } from "react-router-dom";
 
 export function TaskDetailPage() {
-  const [energyLevel, setEnergyLevel] = useState(6);
-
   const {id} = useParams<{id: string}>();
 
     return (
         <Box sx={{
           position: 'fixed',
-          top: 0,
+          top: 'var(--navbar-height)',
           left: 0,
           width: '100vw',
-          height: '100vh',
+          height: 'calc(100vh - var(--navbar-height))',
           display: 'flex',
           flexDirection: 'column',
           bgcolor: '#9FAFFF',
@@ -25,12 +21,6 @@ export function TaskDetailPage() {
           padding: 0,
           overflow: 'hidden'
         }}>
-            <TopNav
-                energyLevel={energyLevel}
-                onDecrease={() => setEnergyLevel(prev => Math.max(0, prev - 1))}
-                onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
-            />
-            
             <Box sx={{ display: 'flex', flex: 1, position: 'relative', overflow: 'auto'}}>
                 <Box sx={{ width: '600px', display: 'flex', flexDirection: 'column', paddingTop: 2}}>
                     <Box sx={{ px: 3, pb: 2 }}>

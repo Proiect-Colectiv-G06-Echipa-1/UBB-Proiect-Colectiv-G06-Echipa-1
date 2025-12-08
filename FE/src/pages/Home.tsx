@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { TopNav } from '../components/TopNav';
 import { StatusDropdown } from '../components/Generic/StatusDropdown';
 import { QuestCard } from '../components/QuestCard';
 import { Fab } from '../components/Fab';
@@ -16,8 +15,6 @@ import { fontFamilyStyle } from '../lib/style';
 export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [selected, setSelected] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Backlog);
-
-  const [energyLevel, setEnergyLevel] = useState(6);
 
   const handleSelect = (status: TaskDTOStatusEnum) => {
     setSelected(status);
@@ -49,22 +46,17 @@ export const Home = () => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh',
+        height: 'calc(100vh - var(--navbar-height))',
         width: '100vw',
         bgcolor: '#fff',
         m: 0,
         p: 0,
         overflow: 'hidden',
         position: 'fixed',
-        top: 0,
+        top: 'var(--navbar-height)',
         left: 0,
       }}
     >
-      <TopNav
-        energyLevel={energyLevel}
-        onDecrease={() => setEnergyLevel(prev => Math.max(0, prev - 1))}
-        onIncrease={() => setEnergyLevel(prev => Math.min(10, prev + 1))}
-      />
       <Box
         sx={{
           position: 'relative',
@@ -130,13 +122,13 @@ export const Home = () => {
           }}
         >
           {inSelected.map((item) => (
+            // TODO(MC): Replace this with TaskCard. Tweak TaskCard to be used here as well
             <QuestCard
               key={item.id}
               id={item.id || 0}
               title={item?.title || ''}
               created={formatDate(item?.creationDate || new Date())}
               deadline={formatDate(item?.deadline || new Date())}
-              width='250px'
               count={item?.energyCost || 0}
             />
           ))}

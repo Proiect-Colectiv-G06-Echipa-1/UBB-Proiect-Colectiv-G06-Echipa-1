@@ -13,6 +13,7 @@ import { TaskFormSchema } from "../../lib/zod";
 import SaveIcon from "@mui/icons-material/Save";
 import DependencyFormInput from "./DependencyFormInput";
 import { toast } from "react-toastify";
+import { ROUTES } from "../../routing/routes";
 
 const maxDamage = 20;
 const maxProcrastinationDamage = 10;
@@ -127,7 +128,7 @@ export default function Form() {
             await taskApi.add(request);
         }
         
-        navigate("/home");
+        navigate(ROUTES.home);
     };
     
     return (

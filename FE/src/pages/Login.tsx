@@ -4,6 +4,7 @@ import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { userApi } from '../api/api.ts';
 import { useAuth } from '../authentication/AuthContext';
 import { toast } from 'react-toastify';
+import { ROUTES } from '../routing/routes';
 import { fontFamilyStyle, fontSizeStyle } from '../lib/style.ts';
 
 export default function Login() {
@@ -23,7 +24,7 @@ export default function Login() {
         localStorage.setItem('jwt', response.token);
         await refreshAuth();
         toast.success('Login successful!', { containerId: 'global-toast' });
-        navigate('/home');
+        navigate(ROUTES.home);
       } else {
         throw new Error('Invalid response from server - no token received');
       }
@@ -62,7 +63,7 @@ export default function Login() {
           component="h1" 
           gutterBottom 
           align="center"
-          sx={[fontFamilyStyle, { 
+          sx={[fontFamilyStyle, {
             fontWeight: 600,
             color: '#333',
             mb: 3 
@@ -132,7 +133,7 @@ export default function Login() {
               variant="contained"
               size="large"
               disabled={loading}
-              sx={[fontFamilyStyle, fontSizeStyle, { 
+              sx={[fontFamilyStyle, fontSizeStyle, {
                 mt: 2,
                 mb: 3,
                 py: 1.5,
@@ -159,9 +160,9 @@ export default function Login() {
               Don't have an account?{' '}
               <Button
                 variant="text"
-                onClick={() => navigate('/register')}
+                onClick={() => navigate(ROUTES.register)}
                 disabled={loading}
-                sx={[fontFamilyStyle, fontSizeStyle, { 
+                sx={[fontFamilyStyle, fontSizeStyle, {
                   textTransform: 'none',
                   p: 0,
                   minWidth: 'auto',
