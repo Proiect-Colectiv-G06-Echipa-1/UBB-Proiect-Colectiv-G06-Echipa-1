@@ -36,4 +36,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     long countBlockedTasks();
 
     long countByStatus(TaskStatus status);
+
+    @Query("SELECT COALESCE(SUM(t.damage), 0) FROM tasks t WHERE (:status IS NULL OR t.status = :status)")
+    Integer sumDamageByStatus(@Param("status") TaskStatus status);
 }
