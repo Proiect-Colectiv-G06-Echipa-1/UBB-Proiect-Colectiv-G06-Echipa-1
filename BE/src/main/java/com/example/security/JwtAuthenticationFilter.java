@@ -7,10 +7,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import org.springframework.lang.NonNull;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -54,15 +57,39 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
 
-            if (jwtService.isTokenValid(jwt, userDetails)) {
+            try {
+                UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+
+                if (!userDetails.isEnabled()) {
+                    throw new DisabledException("User account is disabled");
+                }
+
+                if (!jwtService.isTokenValid(jwt, userDetails)) {
+                    throw new BadCredentialsException("Invalid JWT token");
+                }
+
                 UsernamePasswordAuthenticationToken authToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+
+                filterChain.doFilter(request, response);
+
+            } catch (UsernameNotFoundException | DisabledException | BadCredentialsException e) {
+
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                response.setContentType("application/json");
+
+                String jsonResponse = String.format(
+                        "{\"status\": %d, \"error\": \"Unauthorized\", \"message\": \"%s\"}",
+                        HttpServletResponse.SC_UNAUTHORIZED,
+                        e.getMessage()
+                );
+                response.getWriter().write(jsonResponse);
             }
+        } else {
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
     }
 }
