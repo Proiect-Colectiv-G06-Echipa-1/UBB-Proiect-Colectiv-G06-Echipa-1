@@ -13,112 +13,144 @@ import ResponsiveDialog from "../Generic/ResponsiveDialog";
 import { useNavigate } from "react-router-dom";
 import { StatusDropdown } from "../Generic/StatusDropdown";
 import { toast } from "react-toastify";
-import { allCategories } from "../../lib/status";
 import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
 import { ROUTES } from "../../routing/routes";
 
-export default function TaskCard({id}: {id: number}) {
-    const navigate = useNavigate(); 
+const getNextAllowedStatuses = (currentStatus: TaskDTOStatusEnum, canComplete: boolean): TaskDTOStatusEnum[] => {
+    switch (currentStatus) {
+        case TaskDTOStatusEnum.Backlog:
+            return [TaskDTOStatusEnum.InProgress];
+        case TaskDTOStatusEnum.InProgress:
+            return canComplete
+                ? [TaskDTOStatusEnum.OnHold, TaskDTOStatusEnum.Completed]
+                : [TaskDTOStatusEnum.OnHold];
+        case TaskDTOStatusEnum.OnHold:
+            return canComplete
+                ? [TaskDTOStatusEnum.InProgress, TaskDTOStatusEnum.Completed]
+                : [TaskDTOStatusEnum.InProgress];
+        case TaskDTOStatusEnum.Completed:
+            return [];
+        default:
+            return [];
+    }
+};
+
+export default function TaskCard({ id }: { id: number }) {
+    const navigate = useNavigate();
 
     const [task, setTask] = useState<TaskDTO>();
     const [isTaskAssignedToUser, setIsTaskAssignedToUser] = useState<boolean>(false);
+    const [isTaskAssignedToAnotherUser, setIsTaskAssignedToAnotherUser] = useState<boolean>(false);
     const [openDialog, setOpenDialog] = useState(false);
+    const [canComplete, setCanComplete] = useState(false);
 
     useEffect(() => {
         const fetchTask = async () => {
-            const request : GetByIdRequest = {
-                id: id
-            }
+            const request: GetByIdRequest = { id: id };
+            const fetchedTask = await taskApi.getById(request);
 
-            try {
-                const fetchedTask = taskApi.getById(request);
-                
-                if (!fetchedTask) {
-                    toast.error('Failed to load task.', { containerId: 'global-toast' });
-                    return;
-                }
-                setTask(await fetchedTask);
-            } catch (error) {
+            if (!fetchedTask) {
                 toast.error('Failed to load task.', { containerId: 'global-toast' });
                 return;
             }
+
+            setTask(fetchedTask);
         };
         fetchTask();
     }, [id]);
 
     useEffect(() => {
-        const getIsTaskAssignedToUser = async () => {
-            const request: IsTaskAssignedToUserRequest = {
-                taskId: id
-            }
-
-            try {
-                const assigned = taskApi.isTaskAssignedToUser(request);
-                setIsTaskAssignedToUser(await assigned);
-            } catch (error) {
-                console.error(error);
-                toast.error('Failed to check task assignment.', { containerId: 'global-toast' });
-            }
+        const fetchIsTaskAssignedToUser = async () => {
+            const request: IsTaskAssignedToUserRequest = { taskId: id };
+            const assigned = await taskApi.isTaskAssignedToUser(request);
+            setIsTaskAssignedToUser(assigned);
+            
+            const hasAssignees = (task?.assignees?.size ?? 0) > 0;
+            setIsTaskAssignedToAnotherUser(hasAssignees && !assigned);
+        };
+        
+        if (task) {
+            fetchIsTaskAssignedToUser();
         }
-        getIsTaskAssignedToUser();
-    }, [id]);
+    }, [id, task]);
 
-    const handleSelect = async (status: TaskDTOStatusEnum) => {
-        const updatedTask: TaskDTO = {
-            ...task,
-            status: status
+    // TODO: This logic should be moved to a backend endpoint
+    // Currently fetching individual parent tasks; consider backend optimization for better performance
+    useEffect(() => {
+        const areDirectDependenciesComplete = async () => {
+            if (!task?.parents || task.parents.size === 0) {
+                setCanComplete(true);
+                return;
+            }
+
+            for (const parentId of task.parents) {
+                const parentTask = await taskApi.getById({ id: parentId });
+                if (parentTask && parentTask.status !== TaskDTOStatusEnum.Completed) {
+                    setCanComplete(false);
+                    return;
+                }
+            }
+            setCanComplete(true);
         };
 
-        const updateRequest : UpdateRequest = {
-            id: updatedTask.id!,
-            taskDTO: updatedTask
+        if (task) {
+            areDirectDependenciesComplete();
+        }
+    }, [task]);
+
+    const handleSelect = async (status: TaskDTOStatusEnum) => {
+        if (status === TaskDTOStatusEnum.Completed && !canComplete) {
+            toast.error("Cannot complete task: dependencies are not finished.", { containerId: 'global-toast' });
+            return;
         }
 
-        try{
+        const updatedTask: TaskDTO = { ...task, status: status };
+        const updateRequest: UpdateRequest = { id: updatedTask.id!, taskDTO: updatedTask };
+
+        try {
             await taskApi.update(updateRequest);
             setTask(updatedTask);
+            toast.success("Task status updated.", { containerId: 'global-toast' });
         } catch (error) {
             toast.error("Failed to update task status.", { containerId: 'global-toast' });
         }
-    }
+    };
 
     const handleDeleteConfirm = async () => {
-        const deleteRequest : DeleteRequest = {
-            id: id
-        }
+        const deleteRequest: DeleteRequest = { id: id };
 
-        try{
+        try {
             await taskApi._delete(deleteRequest);
             toast.success("Task deleted successfully.", { containerId: 'global-toast' });
+            navigate(ROUTES.root);
         } catch (error) {
             toast.error("Failed to delete task.", { containerId: 'global-toast' });
         }
         setOpenDialog(false);
-
-        navigate(ROUTES.root);
     };
 
     const handleTakeTaskClick = async () => {
-        const takeTaskRequest: AssignTaskToUserRequest = {
-            taskId: id
-        }
+        const takeTaskRequest: AssignTaskToUserRequest = { taskId: id };
 
         try {
             await taskApi.assignTaskToUser(takeTaskRequest);
+            const updatedTask = await taskApi.getById({ id: id });
+            setTask(updatedTask);
             setIsTaskAssignedToUser(true);
+            setIsTaskAssignedToAnotherUser(false);
             toast.success("Task successfully assigned to you.", { containerId: 'global-toast' });
         } catch (error) {
             toast.error("Failed to assign task to you.", { containerId: 'global-toast' });
         }
-    } 
+    };
 
-    if (task === undefined) {
+    if (!task) {
         return null;
     }
 
     return (
         <Box sx={{ display: 'flex', justifyContent: 'center', padding: 0 }}>
-            <Card sx={{ width: '100%', minWidth: 360, maxWidth: 360, borderRadius: 3, boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative'}}>
+            <Card sx={{ width: '100%', minWidth: 360, maxWidth: 360, borderRadius: 3, boxShadow: '0 2px 4px rgba(0,0,0,0.1)', position: 'relative' }}>
                 <CardContent sx={{ padding: 2, '&:last-child': { paddingBottom: 2 } }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
@@ -128,7 +160,7 @@ export default function TaskCard({id}: {id: number}) {
                             </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', gap: 0.5 }}>
-                            <IconButton size="small" sx={{ padding: '4px' }} onClick={() => {navigate(`/manage-task/${task.id}`)}}>
+                            <IconButton size="small" sx={{ padding: '4px' }} onClick={() => navigate(`/manage-task/${task.id}`)}>
                                 <EditIcon sx={[fontSizeStyle]} />
                             </IconButton>
                             <IconButton size="small" sx={{ padding: '4px' }} onClick={() => setOpenDialog(true)}>
@@ -141,12 +173,47 @@ export default function TaskCard({id}: {id: number}) {
                     <CaptionAndContent caption="Created:" content={task.creationDate ? formatDate(task.creationDate) : "N/A"} />
                     <CaptionAndContent caption="Deadline:" content={task.deadline ? formatDate(task.deadline) : "N/A"} />
 
+                    {!canComplete && (
+                        <CaptionAndContent content="Some dependencies are not yet completed." />
+                    )}
+
+                     {isTaskAssignedToAnotherUser && (
+                        <CaptionAndContent content="This task is already assigned to another user." />
+                    )}
+
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mt: 2 }}>
                         {isTaskAssignedToUser ? (
-                            <StatusDropdown categories={allCategories} selected={task.status || TaskDTOStatusEnum.Backlog} backgroundColor="#9fafff" hoverBackgroundColor="#8a9fff" keyColor="#FFFFFF" handleSelect={handleSelect} />
+                            getNextAllowedStatuses(task.status || TaskDTOStatusEnum.Backlog, canComplete).length > 0 ? (
+                                <StatusDropdown
+                                    categories={getNextAllowedStatuses(task.status || TaskDTOStatusEnum.Backlog, canComplete)}
+                                    selected={task.status || TaskDTOStatusEnum.Backlog}
+                                    backgroundColor="#9fafff"
+                                    hoverBackgroundColor="#8a9fff"
+                                    keyColor="#FFFFFF"
+                                    handleSelect={handleSelect}
+                                />
+                            ) : (
+                                <Typography sx={[fontFamilyStyle, { color: '#666' }]}>
+                                    Task completed
+                                </Typography>
+                            )
                         ) : (
-                            <Button onClick={handleTakeTaskClick} startIcon={<AddIcon sx={{ color: '#FFFFFF' }} />} sx={[fontFamilyStyle, fontSizeStyle, {backgroundColor: '#9fafff',
-                                color: '#fff', borderRadius: '28px', width: 'auto',fontWeight: 700,textTransform: 'none',padding: '8px 16px','&:hover': {backgroundColor: '#8a9fff'}}]}>
+                            <Button
+                                onClick={handleTakeTaskClick}
+                                disabled={isTaskAssignedToAnotherUser}
+                                startIcon={<AddIcon sx={{ color: isTaskAssignedToAnotherUser ? '#999' : '#FFFFFF' }} />}
+                                sx={[fontFamilyStyle, fontSizeStyle, {
+                                    backgroundColor: isTaskAssignedToAnotherUser ? '#e0e0e0' : '#9fafff',
+                                    color: isTaskAssignedToAnotherUser ? '#999' : '#fff',
+                                    borderRadius: '28px',
+                                    width: 'auto',
+                                    fontWeight: 700,
+                                    textTransform: 'none',
+                                    padding: '8px 16px',
+                                    '&:hover': { backgroundColor: isTaskAssignedToAnotherUser ? '#e0e0e0' : '#8a9fff' },
+                                    '&.Mui-disabled': { backgroundColor: '#e0e0e0', color: '#999' }
+                                }]}
+                            >
                                 Take Task
                             </Button>
                         )}

@@ -3,6 +3,7 @@ import { UserDTORoleEnum } from "../../typescript-client";
 
 interface JwtPayload {
   sub: string;
+  userId: number;
   role: UserDTORoleEnum;
   exp?: number;
   iat?: number;
@@ -10,6 +11,7 @@ interface JwtPayload {
 
 interface TokenData {
   username: string;
+  userId: number;
   role: UserDTORoleEnum;
   expired: boolean;
 }
@@ -43,6 +45,7 @@ export function getTokenData(): TokenData | null {
   
   return {
     username: decoded.sub,
+    userId: decoded.userId,
     role: decoded.role,
     expired: false
   };
@@ -51,6 +54,11 @@ export function getTokenData(): TokenData | null {
 export function getUsernameFromToken(): string | null {
   const tokenData = getTokenData();
   return tokenData ? tokenData.username : null;
+}
+
+export function getUserIdFromToken(): number | null { 
+  const tokenData = getTokenData();
+  return tokenData ? tokenData.userId : null;
 }
 
 export function getRoleFromToken(): UserDTORoleEnum | null {
