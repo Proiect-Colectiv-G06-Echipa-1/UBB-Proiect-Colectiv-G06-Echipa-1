@@ -2,6 +2,30 @@
 ### TASK CONTROLLER TESTS
 ### ========================
 
+### Update an existing task (Success)
+PUT http://localhost:8080/tasks/201
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "New Task",
+  "description": "This is a test task",
+  "status": "COMPLETED",
+  "energyCost": 2,
+  "damage": 50,
+  "procrastinationDamage": 23,
+  "creationDate": "2025-11-13",
+  "deadline": "2025-12-13",
+  "parents": [200],
+  "assignees": []
+}
+
+### Assign Task
+POST http://localhost:8080/tasks/200/assign/223
+
+### Get all users
+GET http://localhost:8080/api/users
+
 ### Get all tasks (Success)
 GET http://localhost:8080/tasks
 Accept: application/json
@@ -53,22 +77,6 @@ Accept: application/json
   "damage": -5,
   "procrastinationDamage": 0,
   "creationDate": "2025-11-13"
-}
-
-### Update an existing task (Success)
-PUT http://localhost:8080/tasks/1
-Content-Type: application/json
-Accept: application/json
-
-{
-  "title": "Updated Task",
-  "description": "Updated description",
-  "status": "IN_PROGRESS",
-  "energyCost": 12,
-  "damage": 6,
-  "procrastinationDamage": 3,
-  "creationDate": "2025-11-13",
-  "parents": [3]
 }
 
 ### Update task (Fail: 404 Not Found)

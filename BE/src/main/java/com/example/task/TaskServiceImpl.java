@@ -146,7 +146,7 @@ public class TaskServiceImpl implements TaskService {
 
     private boolean hasIncompleteDependencies(Task task) {
         Set<Integer> visited = new HashSet<>();
-        Deque<Task> stack = new ArrayDeque<>(task.getParents());
+        Deque<Task> stack = new ArrayDeque<>(repository.getParentsOf(task.getId()));
 
         while (!stack.isEmpty()) {
             Task current = stack.pop();
