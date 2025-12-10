@@ -60,3 +60,6 @@ N.B. The generated client has the same methods as the controllers, including mat
 ### How to use it for applying / checking code style manually
 - Run task `spotlessCheck` under `verification` to check the current code style against the desired format
 - Run task `spotlessApply` under `verification` to apply the desired format to your code
+
+## Generating Fake DB Entries
+- Run task `populateDB` under `database` to generate DB entities based on the provided configuration (based on `env.test.yaml` under `BE/test/resources`)

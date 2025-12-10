@@ -65,6 +65,7 @@ dependencies {
     testImplementation 'com.tngtech.archunit:archunit-junit5:1.4.1'
     pmd 'net.sourceforge.pmd:pmd-ant:7.19.0'
     pmd project(":pmd-additional-rules")
+    testImplementation 'net.datafaker:datafaker:2.5.3'
 }
 
 tasks.named('test') {
@@ -111,4 +112,28 @@ tasks.register('openApiExport', Test) {
 
 tasks.named('openApiGenerate') {
     dependsOn tasks.named('openApiExport')
+}
+
+tasks.register('populateDB', Test) {
+    group = 'database'
+    dependsOn testClasses
+    useJUnitPlatform()
+
+    testClassesDirs = sourceSets.test.output.classesDirs
+    classpath = sourceSets.test.runtimeClasspath
+
+    filter {
+        includeTestsMatching 'com.example.DBPopulationTest'
+    }
+
+    outputs.upToDateWhen { false }
+
+    doFirst {
+        println "======================================================"
+        println "---------- GENERATING FAKE DATABASE ENTRIES ----------"
+        println "======================================================"
+    }
+    doLast {
+        println "Database entries generated!"
+    }
 }
