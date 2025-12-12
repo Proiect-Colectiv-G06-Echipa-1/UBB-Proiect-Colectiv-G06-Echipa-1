@@ -27,6 +27,4 @@ public interface TaskService {
     void unassignTaskFromUser(Integer taskId, Long userId);
 
     List<TaskDTO> getTasksAssignedToUser(Long userId);
-
-    boolean isTaskAssignedToUser(Integer taskId, Long userId);
 }
