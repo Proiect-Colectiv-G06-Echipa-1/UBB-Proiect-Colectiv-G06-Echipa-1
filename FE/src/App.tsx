@@ -7,15 +7,29 @@ import { AuthProvider } from "./authentication/AuthContext";
 import { TopNav } from "./components/TopNav";
 import { ROUTES } from "./routing/routes";
 import "react-toastify/dist/ReactToastify.css";
+import { useState } from 'react';
 
 function AppContent() {
   const location = useLocation();
   const isLoginOrRegister = [ROUTES.login, ROUTES.register].includes(location.pathname);
+  const [energyLevel, setEnergyLevel] = useState<number | undefined>(undefined);
+
+  const consumeEnergy = (ammount: number) => {
+    if (energyLevel === undefined) {
+      return;
+    }
+
+    // FIXME: very bad for multiple reasons but i am running out of time
+    const clamp = (n: number) => Math.max(0, Math.min(10, Math.round(n)));
+
+    const newEnergyValue = energyLevel - ammount;
+    setEnergyLevel(clamp(newEnergyValue));
+  }
 
   return (
     <>
-      {!isLoginOrRegister && <TopNav />}
-      <AppRouting />
+      {!isLoginOrRegister && <TopNav energyLevel={energyLevel} setEnergyLevel={setEnergyLevel} />}
+      <AppRouting consumeEnergy={consumeEnergy} />
     </>
   );
 }
@@ -27,7 +41,7 @@ function App() {
         <BrowserRouter>
           <AppContent />
         </BrowserRouter>
-        <ToastContainer 
+        <ToastContainer
           containerId="global-toast"
           position="bottom-left"
           autoClose={2000}
