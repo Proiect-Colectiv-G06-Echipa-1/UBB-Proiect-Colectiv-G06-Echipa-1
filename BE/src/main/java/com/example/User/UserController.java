@@ -23,6 +23,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -176,16 +177,26 @@ public class UserController {
                             @Content(mediaType = "application/json", schema = @Schema(implementation = Integer.class))
                         })
             })
-    @GetMapping("/{id}/energy")
-    public ResponseEntity<Integer> getEnergy(@PathVariable long id) {
-        return ResponseEntity.ok(userService.getById(id).getEnergy());
+    @GetMapping("/me/energy")
+    public ResponseEntity<Integer> getEnergy(@AuthenticationPrincipal User currentUser) {
+        return ResponseEntity.ok(userService.getById(currentUser.getId()).getEnergy());
     }
 
     @Operation(summary = "Set the energy level of a user.")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Energy set successfully.")})
-    @PatchMapping("/{id}/energy")
-    public ResponseEntity<Integer> setEnergy(@PathVariable long id, @RequestBody EnergyUpdateRequest updateRequest) {
-        userService.setEnergy(id, updateRequest.energy());
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Energy set successfully."),
+            @ApiResponse(
+                    responseCode = "422",
+                    description = "Energy cannot be set to the received data"
+            )
+    })
+    @PatchMapping("me/energy")
+    public ResponseEntity<Integer> setEnergy(
+            @AuthenticationPrincipal User currentUser,
+            @RequestBody EnergyUpdateRequest updateRequest) {
+        userService.setEnergy(currentUser.getId(), updateRequest.energy());
         return ResponseEntity.ok().build();
     }
 }

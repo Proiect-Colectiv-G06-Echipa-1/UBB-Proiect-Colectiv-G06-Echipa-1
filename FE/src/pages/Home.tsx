@@ -116,16 +116,16 @@ export const Home = () => {
             display: 'grid',
             gridTemplateColumns: 'repeat(4, 1fr)',
             gap: '16px',
-            marginTop: '16px',
             width: '100%',
-            justifyItems: 'start',
+            justifyItems: 'center',
           }}
         >
           {inSelected.map((item) => (
-            // TODO(MC): Replace this with TaskCard. Tweak TaskCard to be used here as well
+            // TODO(DC): Replace this with TaskCard. Tweak TaskCard to be used here as well
             <QuestCard
               key={item.id}
               id={item.id || 0}
+              width={"100%"}
               title={item?.title || ''}
               created={formatDate(item?.creationDate || new Date())}
               deadline={formatDate(item?.deadline || new Date())}
