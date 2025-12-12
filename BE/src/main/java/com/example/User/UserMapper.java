@@ -2,7 +2,9 @@ package com.example.User;
 
 import org.mapstruct.Mapper;
 
-@Mapper(componentModel = "spring")
+import com.example.task.TaskMapper;
+
+@Mapper(componentModel = "spring", uses = TaskMapper.class)
 public interface UserMapper {
     UserDTO toDTO(User user);
 

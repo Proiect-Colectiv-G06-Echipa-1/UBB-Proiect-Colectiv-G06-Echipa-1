@@ -1,20 +1,22 @@
-import { Card, CardContent, Typography, Box, IconButton, Button } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
 import type { AssignTaskToUserRequest, DeleteRequest, GetByIdRequest, IsTaskAssignedToUserRequest, TaskDTO, UpdateRequest } from "../../../typescript-client";
-import { TaskDTOStatusEnum } from "../../../typescript-client";
-import { useEffect, useState } from "react";
-import { taskApi } from "../../api/api";
-import { formatDate } from "../../lib/date";
-import EnergyRoundedContainer from "../Generic/EnergyRoundedContainer";
-import CaptionAndContent from "../Generic/CaptionAndContent";
-import ResponsiveDialog from "../Generic/ResponsiveDialog";
-import { useNavigate } from "react-router-dom";
-import { StatusDropdown } from "../Generic/StatusDropdown";
-import { toast } from "react-toastify";
+import { Box, Button, Card, CardContent, IconButton, Typography } from "@mui/material";
 import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
+import { useEffect, useState } from "react";
+
+import AddIcon from '@mui/icons-material/Add';
+import CaptionAndContent from "../Generic/CaptionAndContent";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import EnergyRoundedContainer from "../Generic/EnergyRoundedContainer";
 import { ROUTES } from "../../routing/routes";
+import ResponsiveDialog from "../Generic/ResponsiveDialog";
+import { StatusDropdown } from "../Generic/StatusDropdown";
+import { TaskDTOStatusEnum } from "../../../typescript-client";
+import { formatDate } from "../../lib/date";
+import { taskApi } from "../../api/api";
+import { toast } from "react-toastify";
+import { useAuth } from "../../authentication/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const getNextAllowedStatuses = (currentStatus: TaskDTOStatusEnum, canComplete: boolean): TaskDTOStatusEnum[] => {
     switch (currentStatus) {
@@ -35,7 +37,9 @@ const getNextAllowedStatuses = (currentStatus: TaskDTOStatusEnum, canComplete: b
     }
 };
 
-export default function TaskCard({ id, consumeEnergy }: { id: number, consumeEnergy: (ammount: number) => void }) {
+export default function TaskCard({ id }: { id: number, consumeEnergy: (ammount: number) => void  }) {
+    const { userId } = useAuth();
+
     const navigate = useNavigate();
 
     const [task, setTask] = useState<TaskDTO>();
@@ -46,33 +50,30 @@ export default function TaskCard({ id, consumeEnergy }: { id: number, consumeEne
 
     useEffect(() => {
         const fetchTask = async () => {
-            const request: GetByIdRequest = { id: id };
-            const fetchedTask = await taskApi.getById(request);
+            try {
+                const request: GetByIdRequest = { id };
 
-            if (!fetchedTask) {
+                const fetchedTask = await taskApi.getById(request);
+
+                setTask(fetchedTask);
+            } catch (error) {
                 toast.error('Failed to load task.', { containerId: 'global-toast' });
-                return;
             }
-
-            setTask(fetchedTask);
         };
         fetchTask();
     }, [id]);
 
     useEffect(() => {
-        const fetchIsTaskAssignedToUser = async () => {
-            const request: IsTaskAssignedToUserRequest = { taskId: id };
-            const assigned = await taskApi.isTaskAssignedToUser(request);
-            setIsTaskAssignedToUser(assigned);
-
-            const hasAssignees = (task?.assignees?.size ?? 0) > 0;
-            setIsTaskAssignedToAnotherUser(hasAssignees && !assigned);
-        };
-
-        if (task) {
-            fetchIsTaskAssignedToUser();
+        if (!userId || !task) {
+            return;
         }
-    }, [id, task]);
+
+        const isCurrentUserAnAssignee = task.assignees?.has(userId) ?? false;
+        setIsTaskAssignedToUser(isCurrentUserAnAssignee);
+
+        const hasAssignees = (task.assignees?.size ?? 0) > 0;
+        setIsTaskAssignedToAnotherUser(hasAssignees && !isCurrentUserAnAssignee);
+    }, [task, userId]);
 
     // TODO: This logic should be moved to a backend endpoint
     // Currently fetching individual parent tasks; consider backend optimization for better performance

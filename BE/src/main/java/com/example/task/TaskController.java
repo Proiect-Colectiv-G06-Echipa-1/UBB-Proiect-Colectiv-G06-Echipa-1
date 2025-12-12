@@ -222,18 +222,4 @@ public class TaskController {
         service.unassignTaskFromUser(taskId, currentUser.getId());
         return ResponseEntity.ok().build();
     }
-
-    @Operation(summary = "Check if a task was assigned to a user and return the value")
-    @ApiResponses(
-            value = {
-                @ApiResponse(responseCode = "200`", description = "Task assignment status retrieved successfully"),
-                @ApiResponse(responseCode = "401", description = "Unauthorized"),
-                @ApiResponse(responseCode = "404", description = "Task or user not found")
-            })
-    @GetMapping("/{taskId}/isAssigned/")
-    public ResponseEntity<Boolean> isTaskAssignedToUser(
-            @PathVariable Integer taskId, @AuthenticationPrincipal User currentUser) {
-        boolean isAssigned = service.isTaskAssignedToUser(taskId, currentUser.getId());
-        return ResponseEntity.ok(isAssigned);
-    }
 }
