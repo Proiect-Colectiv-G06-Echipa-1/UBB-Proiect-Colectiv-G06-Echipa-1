@@ -1,38 +1,43 @@
-import {useState, useEffect, useRef} from 'react';
+import { useState, useEffect, useRef } from 'react';
 import logoSvg from '../assets/logo.svg';
 import minusSvg from '../assets/Minus circle.svg';
 import plusSvg from '../assets/Plus circle.svg';
 import energySvg from '../assets/green-energy.svg';
 import toolsSvg from '../assets/swords.svg';
 import userSvg from '../assets/User.svg';
-import {useAuth} from '../authentication/AuthContext';
-import {useNavigate} from 'react-router-dom';
-import {Typography, Box, Menu, MenuItem} from '@mui/material';
-import {fontFamilyStyle, fontSizeStyle} from '../lib/style';
-import {ROUTES} from '../routing/routes';
-import {userApi} from '../api/api.ts';
-import {toast} from 'react-toastify';
+import { useAuth } from '../authentication/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import { Typography, Box, Menu, MenuItem } from '@mui/material';
+import { fontFamilyStyle, fontSizeStyle } from '../lib/style';
+import { ROUTES } from '../routing/routes';
+import { userApi } from '../api/api.ts';
+import { toast } from 'react-toastify';
 import '../styles/global.css';
 
-export const TopNav = () => {
-    // TODO(DC): Fetch these from BE
-    const minEnergy = 0;
-    const maxEnergy = 10;
+const minEnergy = 0;
+const maxEnergy = 10;
 
+const clamp = (n: number) => Math.max(minEnergy, Math.min(maxEnergy, Math.round(n)));
+
+interface TopNavProps {
+    energyLevel: number | undefined;
+    setEnergyLevel: React.Dispatch<React.SetStateAction<number | undefined>>;
+}
+
+export const TopNav = ({ energyLevel, setEnergyLevel }: TopNavProps) => {
+    // TODO(DC): Fetch these from BE
     const UPDATE_REQUEST_DELAY_IN_SECONDS = 1;
     const lastEnergyValueSent = useRef<number | undefined>(undefined);
     const updateRequestTimeoutEventHandle = useRef<number>(-1);
-    const [energyLevel, setEnergyLevel] = useState<number | undefined>(undefined);
     const [isLoadingEnergy, setIsLoadingEnergy] = useState(false);
 
-    const {logout, isAdmin} = useAuth();
+    const { logout, isAdmin } = useAuth();
     const navigate = useNavigate();
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
     // Effect for fetching initial energy from BE
     useEffect(() => {
-        const clamp = (n: number) => Math.max(minEnergy, Math.min(maxEnergy, Math.round(n)));
 
         const fetchEnergy = async () => {
             try {
@@ -62,11 +67,11 @@ export const TopNav = () => {
         }
         updateRequestTimeoutEventHandle.current = window.setTimeout(async () => {
             try {
-                await userApi.setEnergy({energyUpdateRequest: {energy: energyLevel}});
+                await userApi.setEnergy({ energyUpdateRequest: { energy: energyLevel } });
                 lastEnergyValueSent.current = energyLevel;
             } catch (err) {
                 console.error('Failed to persist energy: ', err);
-                toast.error('Failed to persist energy.', {containerId: 'global-toast'});
+                toast.error('Failed to persist energy.', { containerId: 'global-toast' });
             }
             updateRequestTimeoutEventHandle.current = -1;
         }, UPDATE_REQUEST_DELAY_IN_SECONDS * 1000);
@@ -163,7 +168,7 @@ export const TopNav = () => {
                     cursor: 'pointer',
                 }}
             >
-                <Box component="img" src={logoSvg} alt="TUDU Logo" sx={{height: 28, display: 'block'}}/>
+                <Box component="img" src={logoSvg} alt="TUDU Logo" sx={{ height: 28, display: 'block' }} />
                 <Typography
                     variant="h5"
                     sx={[fontFamilyStyle,
@@ -179,7 +184,7 @@ export const TopNav = () => {
             </Box>
 
             {/* ACTIONS SECTION */}
-            <Box sx={{display: 'flex', alignItems: 'center', gap: '14px'}}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
 
                 {/* Decrease Button */}
                 <Box
@@ -189,7 +194,7 @@ export const TopNav = () => {
                     aria-label="Decrease energy"
                     sx={circleBtnStyle(energyLevel == minEnergy || isLoadingEnergy)}
                 >
-                    <Box component="img" src={minusSvg} alt="-" sx={imgStyle}/>
+                    <Box component="img" src={minusSvg} alt="-" sx={imgStyle} />
                 </Box>
 
                 {/* maxEnergy Bar */}
@@ -213,7 +218,7 @@ export const TopNav = () => {
                         position: 'relative',
                     }}
                 >
-                    {Array.from({length: maxEnergy}).map((_, i) => (
+                    {Array.from({ length: maxEnergy }).map((_, i) => (
                         <Box
                             component="span"
                             key={i}
@@ -256,16 +261,16 @@ export const TopNav = () => {
                     aria-label="Increase energy"
                     sx={circleBtnStyle(energyLevel == maxEnergy || isLoadingEnergy)}
                 >
-                    <Box component="img" src={plusSvg} alt="+" sx={imgStyle}/>
+                    <Box component="img" src={plusSvg} alt="+" sx={imgStyle} />
                 </Box>
 
                 {/* Static Icons */}
                 <Box sx={iconBtnStyle} aria-label="Energy">
-                    <Box component="img" src={energySvg} alt="energy" sx={imgStyle}/>
+                    <Box component="img" src={energySvg} alt="energy" sx={imgStyle} />
                 </Box>
 
                 <Box sx={iconBtnStyle} aria-label="Tools">
-                    <Box component="img" src={toolsSvg} alt="tools" sx={imgStyle}/>
+                    <Box component="img" src={toolsSvg} alt="tools" sx={imgStyle} />
                 </Box>
 
                 {/* User Icon with Dropdown */}
@@ -279,14 +284,14 @@ export const TopNav = () => {
                         }}
                         aria-label="User"
                     >
-                        <Box component="img" src={userSvg} alt="user" sx={imgStyle}/>
+                        <Box component="img" src={userSvg} alt="user" sx={imgStyle} />
                     </Box>
 
                     <Menu
                         anchorEl={anchorEl}
                         open={open}
                         onClose={handleUserMenuClose}
-                        MenuListProps={{sx: {padding: 0}}}
+                        MenuListProps={{ sx: { padding: 0 } }}
                         PaperProps={{
                             sx: {
                                 marginTop: '8px',

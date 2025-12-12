@@ -41,7 +41,11 @@ const authPageSx = {
   overflow: 'auto',
 };
 
-function AppRouting() {
+interface AppRoutingProps {
+  consumeEnergy: (ammount: number) => void;
+}
+
+function AppRouting({ consumeEnergy }: AppRoutingProps) {
   const { authenticated, loading } = useAuth();
 
   if (loading) {
@@ -79,7 +83,7 @@ function AppRouting() {
           path={`${ROUTES.task}/:id`}
           element={
             <RequireAuth>
-              <TaskDetailPage />
+              <TaskDetailPage consumeEnergy={consumeEnergy} />
             </RequireAuth>
           }>
         </Route>

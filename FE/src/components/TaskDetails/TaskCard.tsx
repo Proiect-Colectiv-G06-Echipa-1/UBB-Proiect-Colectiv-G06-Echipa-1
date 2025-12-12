@@ -35,7 +35,7 @@ const getNextAllowedStatuses = (currentStatus: TaskDTOStatusEnum, canComplete: b
     }
 };
 
-export default function TaskCard({ id }: { id: number }) {
+export default function TaskCard({ id, consumeEnergy }: { id: number, consumeEnergy: (ammount: number) => void }) {
     const navigate = useNavigate();
 
     const [task, setTask] = useState<TaskDTO>();
@@ -64,11 +64,11 @@ export default function TaskCard({ id }: { id: number }) {
             const request: IsTaskAssignedToUserRequest = { taskId: id };
             const assigned = await taskApi.isTaskAssignedToUser(request);
             setIsTaskAssignedToUser(assigned);
-            
+
             const hasAssignees = (task?.assignees?.size ?? 0) > 0;
             setIsTaskAssignedToAnotherUser(hasAssignees && !assigned);
         };
-        
+
         if (task) {
             fetchIsTaskAssignedToUser();
         }
@@ -111,6 +111,9 @@ export default function TaskCard({ id }: { id: number }) {
             await taskApi.update(updateRequest);
             setTask(updatedTask);
             toast.success("Task status updated.", { containerId: 'global-toast' });
+            if (status === TaskDTOStatusEnum.Completed && task?.energyCost) {
+                consumeEnergy(task.energyCost);
+            }
         } catch (error) {
             toast.error("Failed to update task status.", { containerId: 'global-toast' });
         }
@@ -177,7 +180,7 @@ export default function TaskCard({ id }: { id: number }) {
                         <CaptionAndContent content="Some dependencies are not yet completed." />
                     )}
 
-                     {isTaskAssignedToAnotherUser && (
+                    {isTaskAssignedToAnotherUser && (
                         <CaptionAndContent content="This task is already assigned to another user." />
                     )}
 
