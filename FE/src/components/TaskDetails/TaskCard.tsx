@@ -1,4 +1,4 @@
-import type { AssignTaskToUserRequest, DeleteRequest, GetByIdRequest, IsTaskAssignedToUserRequest, TaskDTO, UpdateRequest } from "../../../typescript-client";
+import type { AssignTaskToUserRequest, DeleteRequest, GetByIdRequest, TaskDTO, UpdateRequest } from "../../../typescript-client";
 import { Box, Button, Card, CardContent, IconButton, Typography } from "@mui/material";
 import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
 import { useEffect, useState } from "react";
@@ -37,7 +37,7 @@ const getNextAllowedStatuses = (currentStatus: TaskDTOStatusEnum, canComplete: b
     }
 };
 
-export default function TaskCard({ id }: { id: number, consumeEnergy: (ammount: number) => void  }) {
+export default function TaskCard({ id, consumeEnergy }: { id: number, consumeEnergy: (ammount: number) => void  }) {
     const { userId } = useAuth();
 
     const navigate = useNavigate();
