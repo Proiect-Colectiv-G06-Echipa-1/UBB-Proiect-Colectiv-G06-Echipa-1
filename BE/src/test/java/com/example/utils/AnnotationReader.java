@@ -2,9 +2,8 @@ package com.example.utils;
 
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-import org.hibernate.validator.constraints.Length;
-
 import java.lang.reflect.Field;
+import org.hibernate.validator.constraints.Length;
 
 public class AnnotationReader {
     public static int tryGetMinValue(Field field, int defaultMin) {

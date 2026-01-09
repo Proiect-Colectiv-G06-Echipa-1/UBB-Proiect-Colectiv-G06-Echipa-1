@@ -43,7 +43,8 @@ public class JwtService {
 
         String role = authority.getAuthority();
 
-        User user = userRepository.findByUsername(username)
+        User user = userRepository
+                .findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
 
         return Jwts.builder()
