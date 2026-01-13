@@ -23,7 +23,7 @@ public class TaskServiceImpl implements TaskService {
         validator.validate(task);
         throwIfParentsDoNotExist(task);
         throwIfIndirectDependencies(task);
-        throwIfCyclesInParents(task);
+        throwIfParentsContainCycles(task);
         TaskDTO result = mapper.toDTO(repository.save(task));
         bossService.updateBoss();
         return result;
@@ -228,10 +228,10 @@ public class TaskServiceImpl implements TaskService {
         while (!stack.isEmpty()) {
             Integer current = stack.pop();
             Set<Task> parents = repository.getParentsOf(current);
-            for (Task p : parents) {
-                if (!visited.contains(p.getId())) {
-                    visited.add(p.getId());
-                    stack.push(p.getId());
+            for (Task parent : parents) {
+                if (!visited.contains(parent.getId())) {
+                    visited.add(parent.getId());
+                    stack.push(parent.getId());
                 }
             }
         }
@@ -254,32 +254,32 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    private void throwIfCyclesInParents(Task task) {
+    private void throwIfParentsContainCycles(Task task) {
         Set<Integer> visited = new HashSet<>();
-        Set<Integer> recStack = new HashSet<>();
+        Set<Integer> recursiveStack = new HashSet<>();
         for (Task parent : task.getParents()) {
-            if (hasCycle(parent.getId(), visited, recStack)) {
+            if (hasCycle(parent.getId(), visited, recursiveStack)) {
                 throw new IllegalArgumentException("Dependencies contain cycles");
             }
         }
     }
 
-    private boolean hasCycle(Integer taskId, Set<Integer> visited, Set<Integer> recStack) {
-        if (recStack.contains(taskId)) {
+    private boolean hasCycle(Integer taskId, Set<Integer> visited, Set<Integer> recursiveStack) {
+        if (recursiveStack.contains(taskId)) {
             return true;
         }
         if (visited.contains(taskId)) {
             return false;
         }
         visited.add(taskId);
-        recStack.add(taskId);
+        recursiveStack.add(taskId);
         Set<Task> parents = repository.getParentsOf(taskId);
-        for (Task p : parents) {
-            if (hasCycle(p.getId(), visited, recStack)) {
+        for (Task parent : parents) {
+            if (hasCycle(parent.getId(), visited, recursiveStack)) {
                 return true;
             }
         }
-        recStack.remove(taskId);
+        recursiveStack.remove(taskId);
         return false;
     }
 }
