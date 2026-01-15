@@ -4,6 +4,7 @@ export const ROUTES = {
   register: '/register',
   manageTask: '/manage-task',
   task: '/task',
+  fight: '/fight',
   root: '/',
 } as const;
 

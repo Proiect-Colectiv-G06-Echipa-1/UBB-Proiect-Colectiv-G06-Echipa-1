@@ -9,6 +9,7 @@ import Login from "../pages/Login";
 import Register from "../pages/Register";
 import TaskForm from "../pages/TaskForm";
 import { TaskDetailPage } from "../pages/TaskDetailPage";
+import Fight from "../pages/Fight";
 import { ROUTES } from "./routes";
 import { AdminPanel } from "../pages/AdminPanel";
 
@@ -95,6 +96,14 @@ function AppRouting({ consumeEnergy }: AppRoutingProps) {
             </RequireAdmin>
           }>
         </Route>
+        <Route
+          path={ROUTES.fight}
+          element={
+            <RequireAuth>
+              <Fight />
+            </RequireAuth>
+          }>
+        </Route>
         <Route path="*" element={<Navigate to={ROUTES.root} replace />} />
       </Routes>
     );
@@ -110,6 +119,7 @@ function AppRouting({ consumeEnergy }: AppRoutingProps) {
         <Route path={`${ROUTES.manageTask}/:id?`} element={<Navigate to={ROUTES.login} replace />} />
         <Route path={`${ROUTES.task}/:id`} element={<Navigate to={ROUTES.login} replace />} />
         <Route path="/admin" element={<Navigate to="/login" replace />} />
+        <Route path={ROUTES.fight} element={<Navigate to={ROUTES.login} replace />} />
         <Route path="*" element={<Navigate to={ROUTES.root} replace />} />
 
       </Routes>
