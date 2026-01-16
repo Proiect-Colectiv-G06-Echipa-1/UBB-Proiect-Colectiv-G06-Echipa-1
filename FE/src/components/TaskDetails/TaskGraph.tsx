@@ -244,14 +244,21 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
         loadGraph();
     }, [loadGraph]);
 
-    // Auto-zoom to fit graph on mount
+    // Auto-zoom to fit graph on mount and center on current task
     useEffect(() => {
         if (graphRef.current && graphData.nodes.length > 0) {
             setTimeout(() => {
-                graphRef.current?.zoomToFit(400, 50);
+                const currentNode = graphData.nodes.find(n => n.id === currentTaskId);
+                if (currentNode) {
+                    // Center on current task with appropriate zoom
+                    graphRef.current?.centerAt(currentNode.fx || 0, currentNode.fy || 0, 500);
+                    graphRef.current?.zoom(1.5, 500);
+                } else {
+                    graphRef.current?.zoomToFit(400, 80);
+                }
             }, 100);
         }
-    }, [graphData]);
+    }, [graphData, currentTaskId]);
 
     // Canvas drawing constants
     const CARD_WIDTH = 180;
@@ -568,6 +575,8 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
                 enableNodeDrag={true}
                 enableZoomInteraction={true}
                 enablePanInteraction={true}
+                minZoom={0.5}
+                maxZoom={4}
                 onNodeClick={handleNodeClick}
                 onNodeHover={node => setHoveredNode(node)}
                 d3VelocityDecay={0.3}
