@@ -53,6 +53,7 @@ Link Figma: https://www.figma.com/design/zOSuTj3yuZmgXZnAM1XeV2/Untitled?node-id
 ### Running with Docker
 
 ```bash
+cd BE & ./gradlew openApiGenerate --no-daemon & cd ..
 # Start all services
 docker compose up --build
 
