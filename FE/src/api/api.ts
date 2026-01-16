@@ -1,4 +1,4 @@
-import {Configuration, TaskControllerApi, UserControllerApi} from "../../typescript-client";
+import {Configuration, TaskControllerApi, UserControllerApi, BossControllerApi} from "../../typescript-client";
 
 function getToken() {
     return localStorage.getItem("jwt") || '';
@@ -11,5 +11,6 @@ const config = new Configuration({
 
 const taskApi = new TaskControllerApi(config);
 const userApi = new UserControllerApi(config);
+const bossApi = new BossControllerApi(config);
 
-export { taskApi, userApi };
+export { taskApi, userApi, bossApi };

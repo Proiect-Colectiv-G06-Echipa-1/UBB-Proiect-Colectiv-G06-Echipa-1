@@ -269,8 +269,17 @@ export const TopNav = ({ energyLevel, setEnergyLevel }: TopNavProps) => {
                     <Box component="img" src={energySvg} alt="energy" sx={imgStyle} />
                 </Box>
 
-                <Box sx={iconBtnStyle} aria-label="Tools">
-                    <Box component="img" src={toolsSvg} alt="tools" sx={imgStyle} />
+                {/* Fight Button */}
+                <Box
+                    component="button"
+                    onClick={() => navigate(ROUTES.fight)}
+                    sx={{
+                        ...iconBtnStyle,
+                        cursor: 'pointer',
+                    }}
+                    aria-label="Fight Boss"
+                >
+                    <Box component="img" src={toolsSvg} alt="fight" sx={imgStyle} />
                 </Box>
 
                 {/* User Icon with Dropdown */}
