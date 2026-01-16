@@ -9,6 +9,8 @@ import { getBossImage, getBossBackground } from '../lib/bossImages';
 export default function Fight() {
   const [boss, setBoss] = useState<BossDTO | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isDamaged, setIsDamaged] = useState(false);
+  const [isDead, setIsDead] = useState(false);
 
   useEffect(() => {
     const fetchBoss = async () => {
@@ -19,6 +21,15 @@ export default function Fight() {
         // Then fetch the updated boss
         const bossData = await bossApi.getBoss();
         setBoss(bossData);
+        
+        // Trigger damage animation on load
+        setIsDamaged(true);
+        setTimeout(() => setIsDamaged(false), 500);
+        
+        // Check if boss is dead
+        if (bossData.currentHealth === 0) {
+          setTimeout(() => setIsDead(true), 500);
+        }
       } catch (error) {
         console.error('Failed to fetch boss:', error);
         toast.error('Failed to load boss data', { containerId: 'global-toast' });
@@ -141,7 +152,7 @@ export default function Fight() {
       </Box>
 
       {/* Boss Image - Positioned on the right, on the grass platform (exact Figma position) */}
-      {bossImage && (
+      {bossImage && !isDead && (
         <Box
           component="img"
           src={bossImage}
@@ -164,8 +175,179 @@ export default function Fight() {
             objectFit: 'contain',
             imageRendering: 'pixelated',
             zIndex: 5,
+            animation: isDamaged ? 'pokemonDamage 0.6s' : 'none',
+            '@keyframes pokemonDamage': {
+              '0%, 100%': { 
+                transform: 'translateX(0)',
+                filter: 'brightness(1)',
+              },
+              '10%': { 
+                transform: 'translateX(-15px)',
+                filter: 'brightness(2) saturate(0)',
+              },
+              '20%': { 
+                transform: 'translateX(15px)',
+                filter: 'brightness(1)',
+              },
+              '30%': { 
+                transform: 'translateX(-15px)',
+                filter: 'brightness(2) saturate(0)',
+              },
+              '40%': { 
+                transform: 'translateX(15px)',
+                filter: 'brightness(1)',
+              },
+              '50%': { 
+                transform: 'translateX(-10px)',
+                filter: 'brightness(2) saturate(0)',
+              },
+              '60%': { 
+                transform: 'translateX(10px)',
+                filter: 'brightness(1)',
+              },
+              '70%': { 
+                transform: 'translateX(-5px)',
+                filter: 'brightness(2) saturate(0)',
+              },
+              '80%': { 
+                transform: 'translateX(5px)',
+                filter: 'brightness(1)',
+              },
+            },
           }}
         />
+      )}
+
+      {isDead && (
+        <Box
+          sx={{
+            position: 'absolute',
+            right: '15%',
+            bottom: '38%',
+            width: 'auto',
+            height: '50vh',
+            maxHeight: '500px',
+            maxWidth: '400px',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 5,
+            animation: 'pokemonFaint 2s forwards',
+            '@keyframes pokemonFaint': {
+              '0%': { 
+                opacity: 1, 
+                transform: 'translateY(0) scale(1)',
+                filter: 'brightness(1)',
+              },
+              '20%': { 
+                opacity: 0.8,
+                transform: 'translateY(-20px) scale(1.05)',
+                filter: 'brightness(1.5)',
+              },
+              '40%': { 
+                opacity: 0.6,
+                transform: 'translateY(0) scale(1)',
+                filter: 'brightness(1)',
+              },
+              '60%': { 
+                opacity: 0.4,
+                transform: 'translateY(20px) scale(0.95) rotateZ(-10deg)',
+                filter: 'brightness(0.8)',
+              },
+              '80%': { 
+                opacity: 0.2,
+                transform: 'translateY(100px) scale(0.5) rotateZ(-20deg)',
+                filter: 'brightness(0.5)',
+              },
+              '100%': { 
+                opacity: 0,
+                transform: 'translateY(150px) scale(0.3) rotateZ(-30deg)',
+                filter: 'brightness(0)',
+              },
+            },
+          }}
+        >
+          <Box
+            component="img"
+            src={bossImage}
+            alt={bossName}
+            sx={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'contain',
+              imageRendering: 'pixelated',
+            }}
+          />
+        </Box>
+      )}
+
+      {isDead && (
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '40%',
+            left: '50%',
+            transform: 'translate(-50%, -50%)',
+            zIndex: 20,
+            animation: 'victoryAppear 0.5s ease-out forwards',
+            '@keyframes victoryAppear': {
+              '0%': { 
+                opacity: 0,
+                transform: 'translate(-50%, -50%) scale(0.5)',
+              },
+              '100%': { 
+                opacity: 1,
+                transform: 'translate(-50%, -50%) scale(1)',
+              },
+            },
+          }}
+        >
+          <Box
+            sx={{
+              textAlign: 'center',
+              animation: 'victoryShine 1.5s ease-in-out infinite',
+              '@keyframes victoryShine': {
+                '0%, 100%': { 
+                  filter: 'brightness(1) drop-shadow(0 0 10px rgba(255, 215, 0, 0.5))',
+                },
+                '50%': { 
+                  filter: 'brightness(1.3) drop-shadow(0 0 20px rgba(255, 215, 0, 0.8))',
+                },
+              },
+            }}
+          >
+            <Typography
+              sx={{
+                ...fontFamilyStyle,
+                fontSize: '80px',
+                fontWeight: 700,
+                color: '#FFD700',
+                textShadow: '6px 6px 0px #000, -2px -2px 0px #000, 2px -2px 0px #000, -2px 2px 0px #000',
+                letterSpacing: '4px',
+                mb: 2,
+              }}
+            >
+              VICTORY!
+            </Typography>
+            <Typography
+              sx={{
+                ...fontFamilyStyle,
+                fontSize: '24px',
+                fontWeight: 500,
+                color: '#FFF',
+                textShadow: '2px 2px 4px rgba(0,0,0,0.8)',
+                animation: 'blink 1s step-end infinite',
+                '@keyframes blink': {
+                  '0%, 50%': { opacity: 1 },
+                  '51%, 100%': { opacity: 0 },
+                },
+              }}
+            >
+              You defeated {bossName}!
+            </Typography>
+          </Box>
+        </Box>
       )}
 
       {/* HP Bar Visual - Bottom center */}

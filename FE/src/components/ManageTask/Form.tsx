@@ -76,59 +76,67 @@ export default function Form() {
         const taskDependencies = tasks.filter((task) => dependency.has(task.id || -1));
         setSelectedTasks(taskDependencies);
         console.log(taskDependencies);
-    }, [dependency]);
+    }, [dependency, tasks]);
 
     const navigate = useNavigate();
 
     const handleSubmit = async () => {
-        const damage = (energy * 2) % maxDamage + 1;
-        const procrastinationDamage = energy % maxProcrastinationDamage + 1;
-        const creationDate = new Date();
-        const dependencyIds : Set<number> = new Set();
-        selectedTasks.forEach((task) => {
-            if (task.id) dependencyIds.add(task.id);
-        });
+        try {
+            const damage = (energy * 2) % maxDamage + 1;
+            const procrastinationDamage = energy % maxProcrastinationDamage + 1;
+            const creationDate = new Date();
+            const dependencyIds : Set<number> = new Set();
+            selectedTasks.forEach((task) => {
+                if (task.id) dependencyIds.add(task.id);
+            });
+            
+            const newTask : TaskDTO = {
+                title: title,
+                description: description,
+                status: status,
+                energyCost: energy,
+                damage: damage,
+                procrastinationDamage: procrastinationDamage,
+                creationDate: creationDate,
+                deadline: deadline,
+                parents: dependencyIds,
+            }
+
+            const result = TaskFormSchema.safeParse(newTask);
+
+            if (!result.success) {
+                setError(result.error.issues[0].message);
+                toast.error(result.error.issues[0].message, { containerId: 'global-toast' });
+                return;
+            }
+
+            setError("");
+
+            if (id) {
+                newTask.id = Number(id);
+
+                const request: UpdateRequest = {
+                    id: Number(id),
+                    taskDTO: newTask,
+                }
+                
+                await taskApi.update(request);
+                toast.success('Task updated successfully!', { containerId: 'global-toast' });
+            }
+            else{
+                const request : AddRequest = {
+                    taskDTO: newTask,
+                }
         
-        const newTask : TaskDTO = {
-            title: title,
-            description: description,
-            status: status,
-            energyCost: energy,
-            damage: damage,
-            procrastinationDamage: procrastinationDamage,
-            creationDate: creationDate,
-            deadline: deadline,
-            parents: dependencyIds,
-        }
-
-        const result = TaskFormSchema.safeParse(newTask);
-
-        if (!result.success) {
-            setError(result.error.issues[0].message);
-            return;
-        }
-
-        setError("");
-
-        if (id) {
-            newTask.id = Number(id);
-
-            const request: UpdateRequest = {
-                id: Number(id),
-                taskDTO: newTask,
+                await taskApi.add(request);
+                toast.success('Task created successfully!', { containerId: 'global-toast' });
             }
             
-            await taskApi.update(request);
+            navigate(ROUTES.home);
+        } catch (error) {
+            console.error('Failed to submit task:', error);
+            toast.error('Failed to save task. Please try again.', { containerId: 'global-toast' });
         }
-        else{
-            const request : AddRequest = {
-                taskDTO: newTask,
-            }
-    
-            await taskApi.add(request);
-        }
-        
-        navigate(ROUTES.home);
     };
     
     return (

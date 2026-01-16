@@ -41,7 +41,10 @@ export const Home = () => {
     load();
   }, []);
 
-  const inSelected = tasks.filter(i => i.status === selected);
+  const inSelected = tasks.filter(i => 
+    i.status === selected && 
+    i.title?.toLowerCase().includes(search.trim().toLowerCase())
+  );
 
   return (
     <Box
@@ -130,7 +133,7 @@ export const Home = () => {
             <QuestCard
               key={item.id}
               id={item.id || 0}
-              width={"100%"}
+              width={"280px"}
               title={item?.title || ''}
               created={formatDate(item?.creationDate || new Date())}
               deadline={formatDate(item?.deadline || new Date())}
@@ -138,15 +141,18 @@ export const Home = () => {
             />
           ))}
         </Box>
-
+      </Box>
+      
+      <Box
+        sx={{
+          position: 'fixed',
+          bottom: '16px',
+          right: '16px',
+          zIndex: 1000,
+        }}
+      >
         <Fab 
           onClick={() => { navigator('/manage-task') }} 
-          sx={{
-            position: 'fixed',
-            bottom: '16px',
-            right: '16px',
-            zIndex: 1000,
-          }}
         />
       </Box>
     </Box>

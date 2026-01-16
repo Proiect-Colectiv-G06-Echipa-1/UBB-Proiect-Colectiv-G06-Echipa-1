@@ -15,6 +15,8 @@ interface QuestCardProps {
 }
 
 export const QuestCard = ({ id, title, created, deadline, width, count, image, onClick }: QuestCardProps) => {
+  const truncatedTitle = title.length > 20 ? title.substring(0, 20) + '…' : title;
+  
   return (
     <Link to={`/task/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
       <Card 
@@ -27,6 +29,8 @@ export const QuestCard = ({ id, title, created, deadline, width, count, image, o
           gap: '12px',
           alignItems: 'center',
           width: width,
+          minWidth: width,
+          maxWidth: width,
           boxShadow: '0 2px 0 #cfc7d8',
           transition: 'transform 0.1s ease',
           '&:hover': {
@@ -36,7 +40,7 @@ export const QuestCard = ({ id, title, created, deadline, width, count, image, o
       >
         <EnergyRoundedContainer energyCost={count} /> 
         
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, minWidth: 0 }}>
           <Typography 
             variant="h6" 
             component="h4" 
@@ -45,9 +49,12 @@ export const QuestCard = ({ id, title, created, deadline, width, count, image, o
               fontWeight: 700,
               lineHeight: 1.1,
               mb: '4px',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              whiteSpace: 'nowrap',
             }]}
           >
-            {title}
+            {truncatedTitle}
           </Typography>
           
           <Box 
