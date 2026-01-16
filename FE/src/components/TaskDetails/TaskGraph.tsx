@@ -36,6 +36,7 @@ export interface TaskGraphRef {
 const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, ref) => {
     const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
     const [loading, setLoading] = useState(true);
+    const [hoveredNode, setHoveredNode] = useState<any>(null);
     const graphRef = useRef<any>(null);
 
     const loadGraph = useCallback(async () => {
@@ -215,7 +216,7 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
         const tasksMap = new Map<number, TaskDTO>();
         const taskLevels = new Map<number, number>();
         const links: GraphLink[] = [];
-        const queue: { taskId: number; level: number }[] = [{ taskId: rootTaskId, level: 0 }];
+        const queue: { taskId: number, level: number }[] = [{ taskId: rootTaskId, level: 0 }];
 
         // Breadth-first search to traverse dependency graph
         while (queue.length > 0) {
@@ -536,14 +537,14 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
     }
 
     return (
-        <Box 
-            sx={{ 
-                width: '100%', 
+        <Box
+            sx={{
+                width: '100%',
                 height: '100%',
                 position: 'relative',
                 '& canvas': {
-                    cursor: 'default !important'
-                }
+                    cursor: hoveredNode ? 'pointer' : 'default',
+                },
             }}
         >
             <ForceGraph2D
@@ -568,6 +569,7 @@ const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, r
                 enableZoomInteraction={true}
                 enablePanInteraction={true}
                 onNodeClick={handleNodeClick}
+                onNodeHover={node => setHoveredNode(node)}
                 d3VelocityDecay={0.3}
                 cooldownTicks={0}
                 dagMode="lr"
