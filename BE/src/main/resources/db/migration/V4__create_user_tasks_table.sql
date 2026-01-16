@@ -1,0 +1,6 @@
+CREATE TABLE user_tasks (
+    user_id BIGINT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    task_id INT NOT NULL REFERENCES tasks(id) ON DELETE CASCADE,
+    assigned_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (user_id, task_id)
+);

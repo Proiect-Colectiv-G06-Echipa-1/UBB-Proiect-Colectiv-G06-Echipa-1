@@ -1,0 +1,32 @@
+spring:
+  config:
+    import: classpath:env.test.yaml
+
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO}
+    show-sql: ${SHOW_SQL}
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+springdoc:
+  api-docs:
+    version: openapi_3_0
+  swagger-ui:
+    path: /swagger-ui.html
+
+faker:
+  users:
+    reset: false
+    count: 1
+  tasks:
+    reset: false
+    count: 1

@@ -1,0 +1,170 @@
+<?xml version="1.0"?>
+<ruleset name="StyleCop"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0
+  http://pmd.sourceforge.net/ruleset_2_0_0.xsd">
+    <description>
+        Ruleset that ensures the code is that of god gamers in terms of quality
+    </description>
+    <!-- Best Practices -->
+    <rule ref="category/java/bestpractices.xml/AbstractClassWithoutAbstractMethod" />
+    <rule ref="category/java/bestpractices.xml/ArrayIsStoredDirectly" />
+    <rule ref="category/java/bestpractices.xml/AvoidPrintStackTrace" />
+    <rule ref="category/java/bestpractices.xml/AvoidReassigningCatchVariables" />
+    <rule ref="category/java/bestpractices.xml/AvoidReassigningLoopVariables" />
+    <rule ref="category/java/bestpractices.xml/AvoidReassigningParameters" />
+    <rule ref="category/java/bestpractices.xml/DefaultLabelNotLastInSwitch" />
+    <rule ref="category/java/bestpractices.xml/ConstantsInInterface" />
+    <rule ref="category/java/bestpractices.xml/ExhaustiveSwitchHasDefault" />
+    <rule ref="category/java/bestpractices.xml/NonExhaustiveSwitch" />
+    <rule ref="category/java/bestpractices.xml/ForLoopCanBeForeach" />
+    <rule ref="category/java/bestpractices.xml/ForLoopVariableCount">
+        <properties>
+            <property name="maximumVariables" value="2" />
+        </properties>
+    </rule>
+    <rule ref="category/java/bestpractices.xml/LooseCoupling" />
+    <rule ref="category/java/bestpractices.xml/MethodReturnsInternalArray" />
+    <rule ref="category/java/bestpractices.xml/MissingOverride" />
+    <rule ref="category/java/bestpractices.xml/OneDeclarationPerLine" />
+    <rule ref="category/java/bestpractices.xml/PreserveStackTrace" />
+    <rule ref="category/java/bestpractices.xml/PrimitiveWrapperInstantiation" />
+    <rule ref="category/java/bestpractices.xml/ReplaceEnumerationWithIterator" />
+    <rule ref="category/java/bestpractices.xml/ReplaceHashtableWithMap" />
+    <rule ref="category/java/bestpractices.xml/ReplaceVectorWithList" />
+    <rule ref="category/java/bestpractices.xml/SimplifiableTestAssertion" />
+    <rule ref="category/java/bestpractices.xml/UnusedAssignment">
+        <properties>
+            <property name="checkUnusedPrefixIncrement" value="true" />
+            <property name="reportUnusedVariables" value="true" />
+        </properties>
+    </rule>
+    <rule ref="category/java/bestpractices.xml/UnusedFormalParameter">
+        <properties>
+            <property name="checkAll" value="true" />
+        </properties>
+    </rule>
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateField" />
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod" />
+    <rule ref="category/java/bestpractices.xml/UseCollectionIsEmpty" />
+    <rule ref="category/java/bestpractices.xml/UseEnumCollections" />
+    <rule ref="category/java/bestpractices.xml/UseStandardCharsets" />
+    <rule ref="category/java/bestpractices.xml/UseTryWithResources" />
+    <rule ref="category/java/bestpractices.xml/UseVarargs" />
+
+    <!-- Code Style -->
+    <rule ref="category/java/codestyle.xml/AvoidDollarSigns" />
+    <rule ref="category/java/codestyle.xml/AvoidProtectedFieldInFinalClass" />
+    <rule ref="category/java/codestyle.xml/AtLeastOneConstructor" />
+    <rule ref="category/java/codestyle.xml/BooleanGetMethodName">
+        <properties>
+            <property name="checkParameterizedMethods" value="true" />
+        </properties>
+    </rule>
+    <rule ref="category/java/codestyle.xml/CallSuperInConstructor" />
+    <rule ref="category/java/codestyle.xml/ConfusingTernary" />
+    <rule ref="category/java/codestyle.xml/ControlStatementBraces">
+        <properties>
+            <property name="checkCaseStmt" value="true" />
+        </properties>
+    </rule>
+    <rule ref="category/java/codestyle.xml/EmptyMethodInAbstractClassShouldBeAbstract" />
+    <rule ref="category/java/codestyle.xml/FieldDeclarationsShouldBeAtStartOfClass">
+        <properties>
+            <property name="ignoreEnumDeclarations" value="false" />
+        </properties>
+    </rule>
+    <!-- Begin naming conventions -->
+    <rule ref="category/java/codestyle.xml/FieldNamingConventions">
+        <properties>
+            <property name="publicConstantPattern" value="[A-Z][A-Z_]*" />
+            <property name="constantPattern" value="[A-Z][A-Z_]*" />
+            <property name="enumConstantPattern" value="[A-Z][A-Z_]*" />
+            <property name="finalFieldPattern" value="[a-z][a-zA-Z]*" />
+            <property name="staticFieldPattern" value="[a-z][a-zA-Z]*" />
+            <property name="defaultFieldPattern" value="[a-z][a-zA-Z]*" />
+        </properties>
+    </rule>
+    <rule ref="category/java/codestyle.xml/FormalParameterNamingConventions">
+        <properties>
+            <property name="methodParameterPattern" value="[a-z][a-zA-Z]*" />
+            <property name="finalMethodParameterPattern" value="[a-z][a-zA-Z]*" />
+            <property name="lambdaParameterPattern" value="[a-z][a-zA-Z]*" />
+            <property name="explicitLambdaParameterPattern" value="[a-z][a-zA-Z]*" />
+        </properties>
+    </rule>
+    <rule ref="category/java/codestyle.xml/LocalVariableNamingConventions">
+        <properties>
+            <property name="localVarPattern" value="[a-z][a-zA-Z]*" />
+            <property name="finalVarPattern" value="[a-z][a-zA-Z]*" />
+            <property name="catchParameterPattern" value="[a-z][a-zA-Z]*" />
+        </properties>
+    </rule>
+    <rule ref="category/java/codestyle.xml/MethodNamingConventions">
+        <properties>
+            <property name="methodPattern" value="[a-z][a-zA-Z]*" />
+            <property name="staticPattern" value="[a-z][a-zA-Z]*" />
+        </properties>
+    </rule>
+    <!-- End naming conventions -->
+    <rule ref="category/java/codestyle.xml/FinalParameterInAbstractMethod" />
+    <rule ref="category/java/codestyle.xml/ForLoopShouldBeWhileLoop" />
+    <rule ref="category/java/codestyle.xml/IdenticalCatchBranches" />
+    <rule ref="category/java/codestyle.xml/LambdaCanBeMethodReference" />
+    <rule ref="category/java/codestyle.xml/UnnecessaryBoxing" />
+    <rule ref="category/java/codestyle.xml/UnnecessaryCast" />
+    <rule ref="category/java/codestyle.xml/UnnecessaryModifier" />
+    <rule ref="category/java/codestyle.xml/UseDiamondOperator" />
+    <rule ref="category/java/codestyle.xml/UselessQualifiedThis" />
+    <rule ref="category/java/codestyle.xml/UseShortArrayInitializer" />
+    <rule ref="category/java/codestyle.xml/UseUnderscoresInNumericLiterals" />
+
+    <!-- Design -->
+    <rule ref="category/java/design.xml/AvoidDeeplyNestedIfStmts">
+        <properties>
+            <property name="problemDepth" value="3" />
+        </properties>
+    </rule>
+    <!-- For all my ISS homies out there -->
+    <rule ref="category/java/design.xml/AvoidThrowingNullPointerException" />
+    <rule ref="category/java/design.xml/ClassWithOnlyPrivateConstructorsShouldBeFinal" />
+    <!-- Maybe use Cyclomatic Complexity here? -->
+    <rule ref="category/java/design.xml/CognitiveComplexity">
+        <properties>
+            <property name="reportLevel" value="15" />
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/ExcessiveParameterList">
+        <properties>
+            <property name="minimum" value="10" />
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/LawOfDemeter">
+        <properties>
+            <property name="trustRadius" value="2" />
+        </properties>
+    </rule>
+    <rule ref="category/java/design.xml/SimplifiedTernary" />
+    <rule ref="category/java/design.xml/SimplifyBooleanExpressions" />
+    <rule ref="category/java/design.xml/SimplifyConditional" />
+    <rule ref="category/java/design.xml/SwitchDensity">
+        <properties>
+            <property name="minimum" value="10" />
+        </properties>
+    </rule>
+
+    <!-- Error Prone -->
+    <rule ref="category/java/errorprone.xml/UseEqualsToCompareStrings" />
+    <rule ref="category/java/errorprone.xml/NullAssignment" />
+    <rule ref="category/java/errorprone.xml/MisplacedNullCheck" />
+
+    <!-- Security -->
+    <rule ref="category/java/security.xml/HardCodedCryptoKey" />
+
+    <!-- Additional -->
+    <rule name="NoTryCatchStatementsInControllers"
+          language="java"
+          class="com.example.rules.NoTryCatchStatementInControllers"
+          message="Avoid using try / catch inside controller methods. GlobalExceptionHandler's supposed to catch and handle them" />
+</ruleset>

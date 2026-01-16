@@ -1,0 +1,115 @@
+### ========================
+### TASK CONTROLLER TESTS
+### ========================
+
+### Update an existing task (Success)
+PUT http://localhost:8080/tasks/201
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "New Task",
+  "description": "This is a test task",
+  "status": "COMPLETED",
+  "energyCost": 2,
+  "damage": 50,
+  "procrastinationDamage": 23,
+  "creationDate": "2025-11-13",
+  "deadline": "2025-12-13",
+  "parents": [200],
+  "assignees": []
+}
+
+### Assign Task
+POST http://localhost:8080/tasks/200/assign/223
+
+### Get all users
+GET http://localhost:8080/api/users
+
+### Get all tasks (Success)
+GET http://localhost:8080/tasks
+Accept: application/json
+
+### Get task by ID (Success)
+GET http://localhost:8080/tasks/1
+Accept: application/json
+
+### Get task by ID (Fail: 404 Not Found)
+# Trying to get a non-existing task
+GET http://localhost:8080/tasks/9999
+Accept: application/json
+
+### Create a new task (Success)
+POST http://localhost:8080/tasks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "New Task",
+  "description": "This is a test task",
+  "status": "BACKLOG",
+  "energyCost": 2,
+  "damage": 155,
+  "procrastinationDamage": 2,
+  "creationDate": "2025-11-13",
+  "deadline": "2025-12-13",
+  "parents": [],
+  "assignees": []
+}
+
+###
+PATCH http://localhost:8080/api/users/1/energy
+Content-Type: application/json
+
+{
+  "energy": -1
+}
+
+### Create a new task (Fail: 422 Invalid Task)
+# Missing required fields
+POST http://localhost:8080/tasks
+Content-Type: application/json
+Accept: application/json
+
+{
+  "description": "Missing title and status",
+  "energyCost": 0,
+  "damage": -5,
+  "procrastinationDamage": 0,
+  "creationDate": "2025-11-13"
+}
+
+### Update task (Fail: 404 Not Found)
+# Updating non-existing task
+PUT http://localhost:8080/tasks/9999
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Updated Task",
+  "description": "Non-existing",
+  "status": "IN_PROGRESS",
+  "energyCost": 12,
+  "damage": 6,
+  "procrastinationDamage": 3,
+  "creationDate": "2025-11-13",
+  "parents": []
+}
+
+### Update task (Fail: 422 Invalid Task)
+# Invalid fields
+PUT http://localhost:8080/tasks/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "",
+  "status": "PENDING",
+  "energyCost": 0,
+  "damage": -1,
+  "procrastinationDamage": 200,
+  "creationDate": "2025-11-13"
+}
+
+### Delete a task (Success)
+DELETE http://localhost:8080/tasks/3

@@ -1,0 +1,52 @@
+### Authentication API Test File
+### Base URL
+@baseUrl = http://localhost:8080/api/users
+
+### Variables
+@token = 
+
+### 1. Login with valid credentials
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123"
+}
+
+### 2. Login with invalid password (should fail with 401)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "wrongpassword"
+}
+
+### 3. Login with non-existent user (should fail with 401)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "nonexistent",
+  "password": "password123"
+}
+
+### 4. Login with empty username (should fail with 400)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "",
+  "password": "password123"
+}
+
+### 5. Login with empty password (should fail with 400)
+POST {{baseUrl}}/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": ""
+}
+

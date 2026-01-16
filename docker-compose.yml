@@ -1,0 +1,72 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: pc-postgres
+    env_file:
+      - "env.prod.yaml"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - pc-network
+    healthcheck:
+      test: [ "CMD-SHELL", "sh -c 'pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}'" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "5401:5432"
+
+  # Backend Service (Spring Boot)
+  backend:
+    build:
+      context: ./BE
+      dockerfile: docker/Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+    container_name: pc-backend
+    env_file:
+      - "env.prod.yaml"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - pc-network
+    ports:
+      - "8080:8080"
+    restart: unless-stopped
+
+  # Frontend Service (React + Vite)
+  frontend:
+    build:
+      context: ./FE
+      dockerfile: docker/Dockerfile
+      platforms:
+        - linux/amd64
+        - linux/arm64
+      args:
+        VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080/api}
+    container_name: pc-frontend
+    ports:
+      - "5173:5173"
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:8080}
+      VITE_API_BASE_URL: ${VITE_API_BASE_URL:-http://localhost:8080/api}
+    volumes:
+      - ./FE/src:/app/src:ro
+      - ./FE/public:/app/public:ro
+      - ./FE/index.html:/app/index.html:ro
+    depends_on:
+      - backend
+    networks:
+      - pc-network
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  pc-network:
+    driver: bridge

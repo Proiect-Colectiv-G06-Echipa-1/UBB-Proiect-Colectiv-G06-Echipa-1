@@ -1,1 +1,16 @@
 .vscode/
+/.idea/
+
+# Docker & Environment
+env.prod.yaml
+docker-compose.override.yml
+
+# OS specific
+.DS_Store
+Thumbs.db
+
+.env
+BE/target/
+BE/openapi.yaml
+BE/bin
+BE/pmd/bin
