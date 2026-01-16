@@ -13,7 +13,7 @@ COPY . .
 RUN sed -i 's/\r$//' ./gradlew && chmod +x ./gradlew
 
 # Generate OpenAPI client for frontend
-RUN ./gradlew openApiGenerate --no-daemon
+#RUN ./gradlew openApiGenerate --no-daemon
 
 # Build the application
 RUN ./gradlew assemble --no-daemon
