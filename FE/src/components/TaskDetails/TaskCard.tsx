@@ -114,6 +114,8 @@ export default function TaskCard({ id, consumeEnergy }: { id: number, consumeEne
             toast.success("Task status updated.", { containerId: 'global-toast' });
             if (status === TaskDTOStatusEnum.Completed && task?.energyCost) {
                 consumeEnergy(task.energyCost);
+                // Navigate to boss view to trigger damage animation
+                navigate('/fight');
             }
         } catch (error) {
             toast.error("Failed to update task status.", { containerId: 'global-toast' });
