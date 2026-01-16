@@ -41,7 +41,11 @@ export const Home = () => {
     load();
   }, []);
 
-  const inSelected = tasks.filter(i => i.status === selected);
+  // Filter by status and search term (trimmed, case-insensitive)
+  const inSelected = tasks.filter(i =>
+    i.status === selected &&
+    i.title?.toLowerCase().includes(search.trim().toLowerCase())
+  );
 
   return (
     <Box
