@@ -19,6 +19,12 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found"));
     }
 
+    public UserDTO getByIdAsDTO(Long id) {
+        return mapper.toDTO(userRepository
+                .findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User with id " + id + " not found")));
+    }
+
     public List<UserDTO> getAll() {
         return userRepository.findAll().stream().map(mapper::toDTO).toList();
     }
