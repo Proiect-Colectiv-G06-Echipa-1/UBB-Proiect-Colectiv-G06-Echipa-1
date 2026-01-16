@@ -183,19 +183,14 @@ public class UserController {
     }
 
     @Operation(summary = "Set the energy level of a user.")
-    @ApiResponses(value = {
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "Energy set successfully."),
-            @ApiResponse(
-                    responseCode = "422",
-                    description = "Energy cannot be set to the received data"
-            )
-    })
+    @ApiResponses(
+            value = {
+                @ApiResponse(responseCode = "200", description = "Energy set successfully."),
+                @ApiResponse(responseCode = "422", description = "Energy cannot be set to the received data")
+            })
     @PatchMapping("me/energy")
     public ResponseEntity<Integer> setEnergy(
-            @AuthenticationPrincipal User currentUser,
-            @RequestBody EnergyUpdateRequest updateRequest) {
+            @AuthenticationPrincipal User currentUser, @RequestBody EnergyUpdateRequest updateRequest) {
         userService.setEnergy(currentUser.getId(), updateRequest.energy());
         return ResponseEntity.ok().build();
     }

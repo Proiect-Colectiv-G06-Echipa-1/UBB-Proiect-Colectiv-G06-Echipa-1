@@ -4,6 +4,7 @@ import com.example.User.User;
 import com.example.boss.BossService;
 import jakarta.persistence.EntityNotFoundException;
 import java.util.*;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,8 @@ public class TaskServiceImpl implements TaskService {
         Task task = mapper.toEntity(taskDTO).setStatus(TaskStatus.BACKLOG);
         validator.validate(task);
         throwIfParentsDoNotExist(task);
+        throwIfIndirectDependencies(task);
+        throwIfParentsContainCycles(task);
         TaskDTO result = mapper.toDTO(repository.save(task));
         bossService.updateBoss();
         return result;
@@ -39,6 +42,7 @@ public class TaskServiceImpl implements TaskService {
         if (!currentTask.getParents().equals(newTask.getParents())) {
             throwIfParentsDoNotExist(newTask);
             throwIfUpdatingEntityWouldCreateCycles(newTask);
+            throwIfIndirectDependencies(newTask);
         }
         TaskDTO result = mapper.toDTO(repository.save(newTask));
         bossService.updateBoss();
@@ -213,5 +217,69 @@ public class TaskServiceImpl implements TaskService {
         User user = userService.getById(userId);
 
         return user.getAssignedTasks().stream().map(mapper::toDTO).toList();
+    }
+
+    private Set<Integer> getAllTransitiveDependencies(Integer taskId) {
+        Set<Integer> visited = new HashSet<>();
+        Deque<Integer> stack = new ArrayDeque<>();
+        stack.push(taskId);
+        visited.add(taskId); // include self? No, for transitive, usually exclude self
+
+        while (!stack.isEmpty()) {
+            Integer current = stack.pop();
+            Set<Task> parents = repository.getParentsOf(current);
+            for (Task parent : parents) {
+                if (!visited.contains(parent.getId())) {
+                    visited.add(parent.getId());
+                    stack.push(parent.getId());
+                }
+            }
+        }
+        visited.remove(taskId); // exclude self
+        return visited;
+    }
+
+    private void throwIfIndirectDependencies(Task task) {
+        Set<Integer> directParents = task.getParents().stream().map(Task::getId).collect(Collectors.toSet());
+        Set<Integer> allTransitive = new HashSet<>();
+        for (Task parent : task.getParents()) {
+            allTransitive.addAll(getAllTransitiveDependencies(parent.getId()));
+        }
+        // Check if any direct parent is in the transitive dependencies of other parents
+        for (Integer parentId : directParents) {
+            if (allTransitive.contains(parentId)) {
+                throw new IllegalArgumentException(
+                        "Cannot add task as dependency because it is an indirect dependency of another parent");
+            }
+        }
+    }
+
+    private void throwIfParentsContainCycles(Task task) {
+        Set<Integer> visited = new HashSet<>();
+        Set<Integer> recursiveStack = new HashSet<>();
+        for (Task parent : task.getParents()) {
+            if (hasCycle(parent.getId(), visited, recursiveStack)) {
+                throw new IllegalArgumentException("Dependencies contain cycles");
+            }
+        }
+    }
+
+    private boolean hasCycle(Integer taskId, Set<Integer> visited, Set<Integer> recursiveStack) {
+        if (recursiveStack.contains(taskId)) {
+            return true;
+        }
+        if (visited.contains(taskId)) {
+            return false;
+        }
+        visited.add(taskId);
+        recursiveStack.add(taskId);
+        Set<Task> parents = repository.getParentsOf(taskId);
+        for (Task parent : parents) {
+            if (hasCycle(parent.getId(), visited, recursiveStack)) {
+                return true;
+            }
+        }
+        recursiveStack.remove(taskId);
+        return false;
     }
 }

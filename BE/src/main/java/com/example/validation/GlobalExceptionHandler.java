@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<String> handleAuthError(UsernameNotFoundException ex) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed" +  ex.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Authentication Failed" + ex.getMessage());
     }
 
     @ExceptionHandler(BadCredentialsException.class)
@@ -48,5 +48,4 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> handleDisabled(DisabledException ex) {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
     }
-
 }
