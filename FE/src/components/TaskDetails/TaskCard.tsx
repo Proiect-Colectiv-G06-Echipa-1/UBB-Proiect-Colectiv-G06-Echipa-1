@@ -164,7 +164,7 @@ export default function TaskCard({ id, consumeEnergy }: { id: number, consumeEne
                             </Typography>
                         </Box>
                         <Box sx={{ display: 'flex', gap: 0.5 }}>
-                            <IconButton size="small" sx={{ padding: '4px' }} onClick={() => navigate(`/manage-task/${task.id}`)}>
+                            <IconButton size="small" sx={{ padding: '4px' }} onClick={() => navigate(`/manage-task/${task.id}`, { state: { fromTaskDescription: true } })}>
                                 <EditIcon sx={[fontSizeStyle]} />
                             </IconButton>
                             <IconButton size="small" sx={{ padding: '4px' }} onClick={() => setOpenDialog(true)}>
