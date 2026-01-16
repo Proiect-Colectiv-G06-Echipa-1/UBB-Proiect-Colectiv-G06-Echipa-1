@@ -182,13 +182,33 @@ public class UserController {
         return ResponseEntity.ok(userService.getById(currentUser.getId()).getEnergy());
     }
 
+    @Operation(summary = "Get relevant user data by their id (no credentials)")
+    @ApiResponses(
+            value = {
+                    @ApiResponse(
+                            responseCode = "200",
+                            description = "Data retrieved successfully.",
+                            content = {
+                                    @Content(mediaType = "application/json", schema = @Schema(implementation = UserDTO.class))
+                            }),
+                    @ApiResponse(
+                            responseCode = "404",
+                            description = "No user found with the given id."
+                    )
+            })
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserData(@PathVariable(name = "id") Long userId) {
+        return ResponseEntity.ok(userService.getByIdAsDTO(userId));
+    }
+
+
     @Operation(summary = "Set the energy level of a user.")
     @ApiResponses(
             value = {
                 @ApiResponse(responseCode = "200", description = "Energy set successfully."),
                 @ApiResponse(responseCode = "422", description = "Energy cannot be set to the received data")
             })
-    @PatchMapping("me/energy")
+    @PatchMapping("/me/energy")
     public ResponseEntity<Integer> setEnergy(
             @AuthenticationPrincipal User currentUser, @RequestBody EnergyUpdateRequest updateRequest) {
         userService.setEnergy(currentUser.getId(), updateRequest.energy());
