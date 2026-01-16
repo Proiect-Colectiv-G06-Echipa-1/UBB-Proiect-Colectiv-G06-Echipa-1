@@ -1,3 +1,7 @@
+/**
+ * @file AdminPanel.tsx
+ * @brief Admin panel page for user and task management and statistics.
+ */
 import { useEffect, useState } from 'react';
 import { StatusDropdown } from '../components/Generic/StatusDropdown';
 import { Typography, Box } from '@mui/material';
@@ -15,6 +19,10 @@ import { TasksChart } from '../components/AdminPanel/TasksChart';
 import { unAssignableCategories } from '../lib/status';
 import { fontFamilyStyle } from '../lib/style';
 
+/**
+ * @brief AdminPanel component for administrators to manage users and view statistics.
+ * @return The rendered AdminPanel page.
+ */
 export const AdminPanel = () => {
   const [drawerItems, setDrawerItems] = useState<DrawerItem[]>([]);
   const [userId, setUserId] = useState<number | null>(null);

@@ -1,3 +1,7 @@
+/**
+ * @file ResponsiveDialog.tsx
+ * @brief Generic responsive dialog component for confirmations.
+ */
 import * as React from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -9,16 +13,24 @@ import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { fontFamilyStyle, fontSizeStyle } from '../../lib/style';
 
+/**
+ * @interface ResponsiveDialogProps
+ * @brief Props for the ResponsiveDialog component.
+ */
 export interface ResponsiveDialogProps {
-  open: boolean,
-  dialogTitle?: string,
-  dialogContent: string,
-  cancelButtonText?: string,
-  confirmButtonText?: string,
-  onCancel?: () => void,
-  onConfirm: () => void,
+  open: boolean; ///< Whether the dialog is open.
+  dialogTitle?: string; ///< Title of the dialog.
+  dialogContent: string; ///< Content message of the dialog.
+  cancelButtonText?: string; ///< Text for the cancel button.
+  confirmButtonText?: string; ///< Text for the confirm button.
+  onCancel?: () => void; ///< Callback when cancel is clicked.
+  onConfirm: () => void; ///< Callback when confirm is clicked.
 }
 
+/**
+ * @brief A dialog that adjusts its size based on the screen width.
+ * @return The rendered ResponsiveDialog component.
+ */
 export default function ResponsiveDialog({open, dialogTitle = "Confirmation Dialog", dialogContent, cancelButtonText = "Cancel", confirmButtonText = "Confirm", onCancel, onConfirm }: ResponsiveDialogProps) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));

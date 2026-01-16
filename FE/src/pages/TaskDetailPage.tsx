@@ -1,3 +1,7 @@
+/**
+ * @file TaskDetailPage.tsx
+ * @brief Page component displaying details and dependency graph of a specific task.
+ */
 import Box from "@mui/material/Box";
 import { useRef } from "react";
 import notesIcon from "../assets/notes.png"
@@ -6,10 +10,18 @@ import TaskCard from "../components/TaskDetails/TaskCard";
 import TaskGraph from "../components/TaskDetails/TaskGraph";
 import { useParams } from "react-router-dom";
 
+/**
+ * @interface TaskDetailProps
+ * @brief Props for the TaskDetailPage component.
+ */
 interface TaskDetailProps {
-    consumeEnergy: (ammount: number) => void;
+    consumeEnergy: (ammount: number) => void; ///< Function to consume energy.
 }
 
+/**
+ * @brief Component that shows task details and its dependency visualization.
+ * @param consumeEnergy Function to handle energy consumption.
+ */
 export function TaskDetailPage({ consumeEnergy }: TaskDetailProps) {
     const graphRef = useRef<any>(null);
 

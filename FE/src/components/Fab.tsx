@@ -1,8 +1,22 @@
+/**
+ * @file Fab.tsx
+ * @brief Floating Action Button component for creating new tasks.
+ */
 import { Box, Button } from '@mui/material';
 import createIcon from '../assets/create.svg';
 
-interface Props { onClick: () => void }
+/**
+ * @interface Props
+ * @brief Props for the Fab component.
+ */
+interface Props { 
+    onClick: () => void; ///< Click handler for the button.
+}
 
+/**
+ * @brief Floating action button with a create icon.
+ * @return The rendered Fab component.
+ */
 export const Fab = ({ onClick }: Props) => (
   <Button
     onClick={onClick}

@@ -1,3 +1,7 @@
+/**
+ * @file TopNav.tsx
+ * @brief Top navigation bar component with energy management and user menu.
+ */
 import { useState, useEffect, useRef } from 'react';
 import logoSvg from '../assets/logo.svg';
 import minusSvg from '../assets/Minus circle.svg';
@@ -17,13 +21,26 @@ import '../styles/global.css';
 const minEnergy = 0;
 const maxEnergy = 10;
 
+/**
+ * @brief Clamps a number between minEnergy and maxEnergy.
+ * @param n The number to clamp.
+ * @return The clamped number.
+ */
 const clamp = (n: number) => Math.max(minEnergy, Math.min(maxEnergy, Math.round(n)));
 
+/**
+ * @interface TopNavProps
+ * @brief Props for the TopNav component.
+ */
 interface TopNavProps {
-    energyLevel: number | undefined;
-    setEnergyLevel: React.Dispatch<React.SetStateAction<number | undefined>>;
+    energyLevel: number | undefined; ///< Current energy level.
+    setEnergyLevel: React.Dispatch<React.SetStateAction<number | undefined>>; ///< State setter for energy level.
 }
 
+/**
+ * @brief TopNav component providing brand display, energy tracking, and user actions.
+ * @return The rendered TopNav.
+ */
 export const TopNav = ({ energyLevel, setEnergyLevel }: TopNavProps) => {
     // TODO(DC): Fetch these from BE
     const UPDATE_REQUEST_DELAY_IN_SECONDS = 1;

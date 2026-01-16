@@ -1,3 +1,7 @@
+/**
+ * @file AppRouting.tsx
+ * @brief Main routing component for the application.
+ */
 import { Route, Routes } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import { Box, CircularProgress } from "@mui/material";
@@ -41,10 +45,18 @@ const authPageSx = {
   overflow: 'auto',
 };
 
+/**
+ * @interface AppRoutingProps
+ * @brief Props for the AppRouting component.
+ */
 interface AppRoutingProps {
-  consumeEnergy: (ammount: number) => void;
+  consumeEnergy: (ammount: number) => void; ///< Function to consume energy.
 }
 
+/**
+ * @brief Component that defines the application routes and handles authentication redirects.
+ * @param consumeEnergy Function to handle energy consumption.
+ */
 function AppRouting({ consumeEnergy }: AppRoutingProps) {
   const { authenticated, loading } = useAuth();
 

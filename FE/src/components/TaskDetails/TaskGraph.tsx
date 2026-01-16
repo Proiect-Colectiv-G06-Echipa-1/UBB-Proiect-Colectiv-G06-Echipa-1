@@ -1,3 +1,7 @@
+/**
+ * @file TaskGraph.tsx
+ * @brief Component for visualizing task dependencies in a 2D force-directed graph.
+ */
 import { useEffect, useRef, useState, useCallback, forwardRef, useImperativeHandle } from 'react';
 import ForceGraph2D from 'react-force-graph-2d';
 import { Box, CircularProgress, Typography } from '@mui/material';
@@ -5,34 +9,56 @@ import type { TaskDTO } from '../../../typescript-client';
 import { taskApi } from '../../api/api';
 import { toast } from 'react-toastify';
 
-// Graph node that combines TaskDTO with graph-specific properties
+/**
+ * @interface GraphNode
+ * @brief Graph node structure combining task data with graph properties.
+ */
 interface GraphNode {
     id: number;
-    task: TaskDTO; // Embedded task data - single source of truth
-    isCurrent: boolean; // Whether this is the task currently being viewed
-    level: number; // Hierarchical level for graph layout (0 = root task)
-    fx?: number; // Fixed x position for force graph
-    fy?: number; // Fixed y position for force graph
+    task: TaskDTO; ///< Embedded task data.
+    isCurrent: boolean; ///< Whether this is the task currently being viewed.
+    level: number; ///< Hierarchical level for graph layout.
+    fx?: number; ///< Fixed x position.
+    fy?: number; ///< Fixed y position.
 }
 
+/**
+ * @interface GraphLink
+ * @brief Represents a directed link between two nodes in the graph.
+ */
 interface GraphLink {
     source: number;
     target: number;
 }
 
+/**
+ * @interface GraphData
+ * @brief Structure of the data used by the force graph.
+ */
 interface GraphData {
     nodes: GraphNode[];
     links: GraphLink[];
 }
 
+/**
+ * @interface TaskGraphProps
+ * @brief Props for the TaskGraph component.
+ */
 interface TaskGraphProps {
     currentTaskId: number;
 }
 
+/**
+ * @interface TaskGraphRef
+ * @brief Imperative handle for the TaskGraph component.
+ */
 export interface TaskGraphRef {
     regenerateGraph: () => void;
 }
 
+/**
+ * @brief TaskGraph component that renders a dependency graph using react-force-graph-2d.
+ */
 const TaskGraph = forwardRef<TaskGraphRef, TaskGraphProps>(({ currentTaskId }, ref) => {
     const [graphData, setGraphData] = useState<GraphData>({ nodes: [], links: [] });
     const [loading, setLoading] = useState(true);

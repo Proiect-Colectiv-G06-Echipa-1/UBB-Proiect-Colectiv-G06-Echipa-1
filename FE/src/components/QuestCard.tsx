@@ -1,19 +1,31 @@
+/**
+ * @file QuestCard.tsx
+ * @brief Component that displays a summary of a task in a card format.
+ */
 import { Link } from 'react-router-dom';
 import { Box, Typography, Card, IconButton, CardMedia } from '@mui/material';
 import EnergyRoundedContainer from './Generic/EnergyRoundedContainer';
 import { fontFamilyStyle, fontSizeStyle } from '../lib/style';
 
+/**
+ * @interface QuestCardProps
+ * @brief Props for the QuestCard component.
+ */
 interface QuestCardProps {
-  id: number;
-  title: string;
-  created: string;
-  deadline: string;
-  width: string,
-  count: number;
-  image?: string;
-  onClick?: (id: number) => void;
+  id: number; ///< The task ID.
+  title: string; ///< The task title.
+  created: string; ///< Formatted creation date.
+  deadline: string; ///< Formatted deadline date.
+  width: string, ///< Width of the card.
+  count: number; ///< Energy cost.
+  image?: string; ///< Optional icon image URL.
+  onClick?: (id: number) => void; ///< Optional click handler for the icon.
 }
 
+/**
+ * @brief QuestCard component used in the Home page and Admin Panel.
+ * @return The rendered QuestCard.
+ */
 export const QuestCard = ({ id, title, created, deadline, width, count, image, onClick }: QuestCardProps) => {
   return (
     <Link to={`/task/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>

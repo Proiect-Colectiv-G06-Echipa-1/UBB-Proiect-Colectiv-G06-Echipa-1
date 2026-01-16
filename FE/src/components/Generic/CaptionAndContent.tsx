@@ -1,11 +1,23 @@
+/**
+ * @file CaptionAndContent.tsx
+ * @brief Generic component for displaying a label and its corresponding value.
+ */
 import { Box, Typography } from "@mui/material";
 import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
 
+/**
+ * @interface CaptionAndContentProps
+ * @brief Props for the CaptionAndContent component.
+ */
 export interface CaptionAndContentProps {
-    caption?: string;
-    content?: string;
+    caption?: string; ///< Optional label/caption.
+    content?: string; ///< Optional content/value.
 }
 
+/**
+ * @brief Displays a caption and content side-by-side.
+ * @return The rendered CaptionAndContent component.
+ */
 export default function CaptionAndContent({ caption, content }: CaptionAndContentProps) {
     return (
         <Box sx={{ display: 'flex', mb: 1.5, gap: 1 }}>

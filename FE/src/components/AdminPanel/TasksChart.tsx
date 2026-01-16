@@ -1,22 +1,38 @@
+/**
+ * @file TasksChart.tsx
+ * @brief Component for displaying task statistics using a pie chart.
+ */
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from 'recharts';
 import { Box, Typography } from '@mui/material';
 import { fontFamilyStyle } from '../../lib/style';
 
+/**
+ * @interface ChartData
+ * @brief Structure of data for each slice of the pie chart.
+ */
 interface ChartData {
   name: string;
   value: number;
 }
 
+/**
+ * @interface TasksChartProps
+ * @brief Props for the TasksChart component.
+ */
 interface TasksChartProps {
-  title: string;
-  mainStatistic: number;
-  comparedStatistic: number;
-  mainLabel: string;
-  comparedLabel: string;
+  title: string; ///< Title of the chart.
+  mainStatistic: number; ///< Value for the main category.
+  comparedStatistic: number; ///< Value for the comparison category.
+  mainLabel: string; ///< Label for the main category.
+  comparedLabel: string; ///< Label for the comparison category.
 }
 
 const COLORS = ['#FFD46A', '#5A6BFF'];
 
+/**
+ * @brief Renders a pie chart showing statistics for tasks.
+ * @return The rendered TasksChart component.
+ */
 export const TasksChart = (props: TasksChartProps) => {
   const { mainStatistic: firstCount, comparedStatistic: secondCount, mainLabel: firstLabel, comparedLabel: secondLabel, title } = props;
 

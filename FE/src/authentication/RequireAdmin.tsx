@@ -1,3 +1,7 @@
+/**
+ * @file RequireAdmin.tsx
+ * @brief Component that restricts access to administrative routes.
+ */
 import type { JSX } from "react";
 import { useAuth } from "./AuthContext";
 import { Navigate, useNavigate } from "react-router-dom";
@@ -5,6 +9,12 @@ import { CircularProgress, Box, Typography, Button } from "@mui/material";
 import { TopNav } from "../components/TopNav";
 import { fontFamilyStyle, fontSizeStyle } from "../lib/style";
 
+/**
+ * @brief Wrapper component that checks if the authenticated user is an admin.
+ * @param children The components to render if the user is an admin.
+ * @return Returns a loading spinner if checking, an "Access Denied" page 
+ *         if not an admin, or the children components.
+ */
 export function RequireAdmin({ children }: { children: JSX.Element }) {
   const { authenticated, isAdmin, loading } = useAuth();
   const navigate = useNavigate();

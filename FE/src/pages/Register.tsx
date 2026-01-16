@@ -1,4 +1,8 @@
-﻿import { useState } from 'react';
+﻿/**
+ * @file Register.tsx
+ * @brief Registration page component for new users.
+ */
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
 import { userApi } from '../api/api.ts';
@@ -7,6 +11,9 @@ import { z } from 'zod';
 import { ROUTES } from '../routing/routes';
 import { fontFamilyStyle, fontSizeStyle } from '../lib/style.ts';
 
+/**
+ * @brief Schema for registration form validation.
+ */
 const registerSchema = z.object({
   username: z.string()
     .min(3, 'Username must be at least 3 characters')
@@ -23,8 +30,16 @@ const registerSchema = z.object({
   path: ["confirmPassword"],
 });
 
+/**
+ * @type RegisterFormData
+ * @brief Type inferred from the registration schema.
+ */
 type RegisterFormData = z.infer<typeof registerSchema>;
 
+/**
+ * @brief Register component that handles user registration functionality.
+ * @return The rendered Register page.
+ */
 export default function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');

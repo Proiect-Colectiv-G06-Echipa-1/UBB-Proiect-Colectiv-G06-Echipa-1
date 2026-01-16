@@ -1,3 +1,7 @@
+/**
+ * @file Home.tsx
+ * @brief Home page component that displays the list of tasks (Quests).
+ */
 import { useEffect, useState } from 'react';
 import { StatusDropdown } from '../components/Generic/StatusDropdown';
 import { QuestCard } from '../components/QuestCard';
@@ -12,6 +16,10 @@ import { toast } from 'react-toastify';
 import { allCategories } from '../lib/status';
 import { fontFamilyStyle } from '../lib/style';
 
+/**
+ * @brief Home component that fetches and displays tasks filtered by status.
+ * @return The rendered Home page.
+ */
 export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [selected, setSelected] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Backlog);

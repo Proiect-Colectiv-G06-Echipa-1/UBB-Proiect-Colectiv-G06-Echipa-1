@@ -1,3 +1,7 @@
+/**
+ * @file Login.tsx
+ * @brief Login page component for user authentication.
+ */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Paper } from '@mui/material';
@@ -7,6 +11,10 @@ import { toast } from 'react-toastify';
 import { ROUTES } from '../routing/routes';
 import { fontFamilyStyle, fontSizeStyle } from '../lib/style.ts';
 
+/**
+ * @brief Login component that handles user login functionality.
+ * @return The rendered Login page.
+ */
 export default function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');

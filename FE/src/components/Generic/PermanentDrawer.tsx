@@ -1,3 +1,7 @@
+/**
+ * @file PermanentDrawer.tsx
+ * @brief Permanent drawer component with search functionality for user management.
+ */
 import { useState } from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -11,22 +15,34 @@ import { Divider, InputBase } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { fontFamilyStyle, fontSizeStyle } from '../../lib/style';
 
+/**
+ * @interface DrawerItem
+ * @brief Represents an item in the drawer.
+ */
+export interface DrawerItem {
+    id: number; ///< Unique ID for the item.
+    text: string; ///< Display text.
+    icon: React.ReactNode; ///< Icon to display.
+}
+
+/**
+ * @interface PermanentDrawerLeftProps
+ * @brief Props for the PermanentDrawerLeft component.
+ */
+export interface PermanentDrawerLeftProps {
+    width?: number; ///< Width of the drawer.
+    items: DrawerItem[]; ///< List of items to display.
+    onItemClick?: (item: DrawerItem) => void; ///< Click handler for items.
+    selectedItemId?: number | null; ///< Currently selected item ID.
+    children?: React.ReactNode; ///< Content to display next to the drawer.
+}
+
 const drawerWidth = 240;
 
-export interface DrawerItem {
-    id: number;
-    text: string;
-    icon: React.ReactNode;
-}
-
-export interface PermanentDrawerLeftProps {
-    width?: number;
-    items: DrawerItem[];
-    onItemClick?: (item: DrawerItem) => void;
-    selectedItemId?: number | null;
-    children?: React.ReactNode;
-}
-
+/**
+ * @brief A permanent side drawer that includes a search bar and a list of items.
+ * @return The rendered PermanentDrawerLeft component.
+ */
 export default function PermanentDrawerLeft(props: PermanentDrawerLeftProps) {
     const { width = drawerWidth, items, onItemClick, selectedItemId, children } = props;
     const [searchTerm, setSearchTerm] = useState("");

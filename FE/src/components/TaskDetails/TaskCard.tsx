@@ -1,3 +1,7 @@
+/**
+ * @file TaskCard.tsx
+ * @brief Component that displays detailed information and actions for a single task.
+ */
 import type { AssignTaskToUserRequest, DeleteRequest, GetByIdRequest, TaskDTO, UpdateRequest } from "../../../typescript-client";
 import { Box, Button, Card, CardContent, IconButton, Typography } from "@mui/material";
 import { fontFamilyStyle, fontSizeStyle } from "../../lib/style";
@@ -18,6 +22,12 @@ import { toast } from "react-toastify";
 import { useAuth } from "../../authentication/AuthContext";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * @brief Determines the allowed status transitions for a task.
+ * @param currentStatus The current status of the task.
+ * @param canComplete Whether all dependencies are completed.
+ * @return List of allowed next statuses.
+ */
 const getNextAllowedStatuses = (currentStatus: TaskDTOStatusEnum, canComplete: boolean): TaskDTOStatusEnum[] => {
     switch (currentStatus) {
         case TaskDTOStatusEnum.Backlog:
@@ -37,6 +47,12 @@ const getNextAllowedStatuses = (currentStatus: TaskDTOStatusEnum, canComplete: b
     }
 };
 
+/**
+ * @brief TaskCard component for showing task details, managing status, and assignment.
+ * @param id The ID of the task to display.
+ * @param consumeEnergy Callback to update energy level when task is completed.
+ * @return The rendered TaskCard.
+ */
 export default function TaskCard({ id, consumeEnergy }: { id: number, consumeEnergy: (ammount: number) => void  }) {
     const { userId } = useAuth();
 

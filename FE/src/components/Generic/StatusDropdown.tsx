@@ -1,3 +1,7 @@
+/**
+ * @file StatusDropdown.tsx
+ * @brief Dropdown component for selecting task statuses.
+ */
 import { useState } from 'react';
 import { Box, Button, Menu, MenuItem } from '@mui/material';
 import { KeyboardArrowDown } from '@mui/icons-material';
@@ -5,15 +9,23 @@ import { TaskDTOStatusEnum } from '../../../typescript-client';
 import { formatStatus } from '../../lib/status';
 import { fontFamilyStyle, fontSizeStyle } from '../../lib/style';
 
+/**
+ * @interface Props
+ * @brief Props for the StatusDropdown component.
+ */
 interface Props {
-  selected: TaskDTOStatusEnum;
-  categories: TaskDTOStatusEnum[];
-  backgroundColor?: string;
-  hoverBackgroundColor?: string;
-  keyColor?: string;
-  handleSelect: (status: TaskDTOStatusEnum) => void;
+  selected: TaskDTOStatusEnum; ///< The currently selected status.
+  categories: TaskDTOStatusEnum[]; ///< List of statuses to display in the dropdown.
+  backgroundColor?: string; ///< Optional background color for the button.
+  hoverBackgroundColor?: string; ///< Optional hover background color for the button.
+  keyColor?: string; ///< Optional color for the arrow icon.
+  handleSelect: (status: TaskDTOStatusEnum) => void; ///< Callback when a status is selected.
 }
 
+/**
+ * @brief A button that opens a menu to select a task status.
+ * @return The rendered StatusDropdown component.
+ */
 export const StatusDropdown = ({selected, categories, backgroundColor, hoverBackgroundColor, keyColor, handleSelect} : Props) => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);

@@ -1,16 +1,24 @@
+/**
+ * @file AuthContext.tsx
+ * @brief Context and provider for managing authentication state.
+ */
 import React, { useEffect } from "react";
 import { createContext, useState, useContext } from "react";
 import { getUsernameFromToken, getUserIdFromToken, getRoleFromToken } from "./DecodeToken";  // MODIFICAT
 import { UserDTORoleEnum } from "../../typescript-client";
 
+/**
+ * @interface IAuthContext
+ * @brief Interface for the authentication context state.
+ */
 interface IAuthContext {
-  authenticated: boolean;
-  isAdmin: boolean;
-  loading: boolean;
-  username: string | null;
-  userId: number | null;
-  refreshAuth: () => Promise<void>;
-  logout: () => void;
+  authenticated: boolean; ///< Whether the user is currently authenticated.
+  isAdmin: boolean; ///< Whether the authenticated user has admin privileges.
+  loading: boolean; ///< Whether the authentication state is still loading.
+  username: string | null; ///< The username of the authenticated user.
+  userId: number | null; ///< The user ID of the authenticated user.
+  refreshAuth: () => Promise<void>; ///< Function to refresh authentication state from storage.
+  logout: () => void; ///< Function to log out the user.
 }
 
 const AuthContext = createContext<IAuthContext>({
@@ -23,6 +31,10 @@ const AuthContext = createContext<IAuthContext>({
   logout: () => {},
 });
 
+/**
+ * @brief Provider component for authentication state.
+ * @param children The children components that need access to authentication state.
+ */
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [authenticated, setAuthenticated] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -78,4 +90,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
+/**
+ * @brief Hook to use the authentication context.
+ * @return The authentication context state and methods.
+ */
 export const useAuth = () => useContext(AuthContext);

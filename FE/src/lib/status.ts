@@ -1,5 +1,14 @@
+/**
+ * @file status.ts
+ * @brief Utilities and constants for task statuses.
+ */
 import { TaskDTOStatusEnum } from "../../typescript-client";
 
+/**
+ * @brief Formats a TaskDTOStatusEnum into a human-readable string.
+ * @param status The status enum value.
+ * @return The formatted status string.
+ */
 export const formatStatus = (status: TaskDTOStatusEnum): string => {
   switch (status) {
     case TaskDTOStatusEnum.Backlog:
@@ -15,6 +24,9 @@ export const formatStatus = (status: TaskDTOStatusEnum): string => {
   }
 };
 
+/**
+ * @brief List of all possible task categories/statuses.
+ */
 export const allCategories: TaskDTOStatusEnum[] = [
   TaskDTOStatusEnum.Backlog,
   TaskDTOStatusEnum.InProgress,
@@ -22,6 +34,9 @@ export const allCategories: TaskDTOStatusEnum[] = [
   TaskDTOStatusEnum.Completed,
 ];
 
+/**
+ * @brief Categories that are not directly assignable in certain contexts.
+ */
 export const unAssignableCategories: TaskDTOStatusEnum[] = [
   TaskDTOStatusEnum.InProgress,
   TaskDTOStatusEnum.OnHold,
