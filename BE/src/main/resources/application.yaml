@@ -1,6 +1,7 @@
 spring:
   application:
     name: BE
+<<<<<<< HEAD
   config:
     import: optional:file:env.yaml
 
@@ -22,6 +23,8 @@ spring:
 jwt:
   secret: MySecretKeyForJWTTokenGenerationThatShouldBeAtLeast256BitsLongForHS256Algorithm
   expiration: 86400000
+=======
+>>>>>>> production
 
 springdoc:
   api-docs:

@@ -1,3 +1,6 @@
 rootProject.name = 'BE'
+<<<<<<< HEAD
 include 'pmd-additional-rules'
 project(':pmd-additional-rules').projectDir = file('pmd')
+=======
+>>>>>>> production

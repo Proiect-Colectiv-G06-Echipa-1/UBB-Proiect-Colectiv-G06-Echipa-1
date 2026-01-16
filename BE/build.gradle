@@ -2,14 +2,18 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.1'
 	id 'io.spring.dependency-management' version '1.1.7'
+<<<<<<< HEAD
     id 'org.openapi.generator' version '7.17.0'
     id 'com.diffplug.spotless' version '8.1.0'
     id 'pmd'
+=======
+>>>>>>> production
 }
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 
+<<<<<<< HEAD
 def frontendPath = "$projectDir/../FE"
 
 // NOTE(DC): This is already configured to order imports, remove unused ones
@@ -33,6 +37,8 @@ tasks.named('pmdMain') {
     dependsOn(project(":pmd-additional-rules").tasks.named("jar"))
 }
 
+=======
+>>>>>>> production
 java {
 	toolchain {
 		languageVersion = JavaLanguageVersion.of(24)
@@ -45,6 +51,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+<<<<<<< HEAD
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
@@ -66,22 +73,19 @@ dependencies {
     pmd 'net.sourceforge.pmd:pmd-ant:7.19.0'
     pmd project(":pmd-additional-rules")
     testImplementation 'net.datafaker:datafaker:2.5.3'
+=======
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+>>>>>>> production
 }
 
 tasks.named('test') {
 	useJUnitPlatform()
 }
 
-openApiGenerate {
-    generatorName = "typescript-fetch"
-    inputSpec = "${projectDir}/openapi.yaml"
-    outputDir = "$frontendPath/typescript-client"
-    apiPackage = "api"
-    modelPackage = "model"
-}
-
 tasks.register('openApiExport', Test) {
-    group = 'openapi tools'
+    group = 'openapi'
     dependsOn testClasses
     useJUnitPlatform()
 
@@ -107,33 +111,5 @@ tasks.register('openApiExport', Test) {
         } else {
             println "WARNING: openapi.yaml was NOT generated!"
         }
-    }
-}
-
-tasks.named('openApiGenerate') {
-    dependsOn tasks.named('openApiExport')
-}
-
-tasks.register('populateDB', Test) {
-    group = 'database'
-    dependsOn testClasses
-    useJUnitPlatform()
-
-    testClassesDirs = sourceSets.test.output.classesDirs
-    classpath = sourceSets.test.runtimeClasspath
-
-    filter {
-        includeTestsMatching 'com.example.DBPopulationTest'
-    }
-
-    outputs.upToDateWhen { false }
-
-    doFirst {
-        println "======================================================"
-        println "---------- GENERATING FAKE DATABASE ENTRIES ----------"
-        println "======================================================"
-    }
-    doLast {
-        println "Database entries generated!"
     }
 }

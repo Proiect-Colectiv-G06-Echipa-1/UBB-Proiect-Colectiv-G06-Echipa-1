@@ -11,8 +11,11 @@ node_modules
 dist
 dist-ssr
 *.local
+<<<<<<< HEAD
 .env
 /typescript-client/
+=======
+>>>>>>> production
 
 # Editor directories and files
 .vscode/*
