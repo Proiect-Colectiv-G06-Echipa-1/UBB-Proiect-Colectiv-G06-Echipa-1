@@ -15,7 +15,7 @@ interface QuestCardProps {
 }
 
 export const QuestCard = ({ id, title, created, deadline, width, count, image, onClick }: QuestCardProps) => {
-  const truncatedTitle = title.length > 30 ? title.substring(0, 30) + '…' : title;
+  const truncatedTitle = title.length > 20 ? title.substring(0, 20) + '…' : title;
   
   return (
     <Link to={`/task/${id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
