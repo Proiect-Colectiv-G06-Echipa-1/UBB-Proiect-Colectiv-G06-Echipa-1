@@ -134,7 +134,15 @@ export const Home = () => {
           ))}
         </Box>
 
-        <Fab onClick={() => { navigator('/manage-task') }} />
+        <Fab 
+          onClick={() => { navigator('/manage-task') }} 
+          sx={{
+            position: 'fixed',
+            bottom: '16px',
+            right: '16px',
+            zIndex: 1000,
+          }}
+        />
       </Box>
     </Box>
   );
