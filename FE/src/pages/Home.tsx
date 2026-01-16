@@ -11,10 +11,12 @@ import { formatDate } from '../lib/date';
 import { toast } from 'react-toastify';
 import { allCategories } from '../lib/status';
 import { fontFamilyStyle } from '../lib/style';
+import { SearchBar } from '../components/Generic/SearchBar';
 
 export const Home = () => {
   const [tasks, setTasks] = useState<TaskDTO[]>([]);
   const [selected, setSelected] = useState<TaskDTOStatusEnum>(TaskDTOStatusEnum.Backlog);
+  const [search, setSearch] = useState('');
 
   const handleSelect = (status: TaskDTOStatusEnum) => {
     setSelected(status);
@@ -106,7 +108,10 @@ export const Home = () => {
               Quests
             </Typography>
           </Box>
-          <StatusDropdown categories={allCategories} selected={selected} handleSelect={handleSelect} />
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+            <SearchBar value={search} onChange={setSearch} placeholder="Search tasks..." />
+            <StatusDropdown categories={allCategories} selected={selected} handleSelect={handleSelect} />
+          </Box>
         </Box>
 
         {/* Card Grid */}
